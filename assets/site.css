@@ -41,6 +41,7 @@ nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--lin
 .chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;scroll-margin-top:64px;display:grid;gap:8px}
 .chart h2{font-size:1.35rem}
 .jv{font-family:var(--body);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:6px;font-size:1.05rem}
+.formula{margin:2px 0 0;font-family:var(--body);font-variant-numeric:tabular-nums}
 .note{margin:2px 0 0;color:var(--muted)}
 .facts{display:flex;flex-wrap:wrap;gap:6px 22px;margin:8px 0 0}
 .facts div{display:flex;gap:6px;align-items:baseline}
@@ -59,6 +60,8 @@ tr.rule td,tr.rule th{border-top:1.5px solid var(--ink);padding-top:4px}
 tr.r td.mk{color:var(--ink);font-weight:600;font-size:.78rem}
 tr.r td.nm{font-size:1.02rem;border-radius:4px}
 .foot{color:var(--muted);font-size:.85rem;max-width:70ch}
+.foot .github{display:inline-flex;color:var(--muted)}
+.foot .github:hover{color:var(--ink)}
 @media (max-width:520px){h1{font-size:1.7rem}}
 details.notation{border-top:1px solid var(--line);padding-top:10px}
 details.notation summary{cursor:pointer;font-weight:600;color:var(--accent)}
