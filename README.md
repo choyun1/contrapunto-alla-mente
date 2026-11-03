@@ -28,3 +28,5 @@ npm run serve   # serve the site at http://localhost:8000
 Live notation in the browser (the workbench and drills) will use abcjs or
 Verovio. LilyPond is only for the fixed examples, because it can't run in a
 browser.
+
+See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
