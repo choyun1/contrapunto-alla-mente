@@ -41,6 +41,7 @@ nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--lin
 .chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;scroll-margin-top:64px;display:grid;gap:8px}
 .chart h2{font-size:1.35rem}
 .jv{font-family:var(--body);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:6px;font-size:1.05rem}
+.formula{margin:2px 0 0;font-family:var(--body);font-variant-numeric:tabular-nums}
 .note{margin:2px 0 0;color:var(--muted)}
 .facts{display:flex;flex-wrap:wrap;gap:6px 22px;margin:8px 0 0}
 .facts div{display:flex;gap:6px;align-items:baseline}
