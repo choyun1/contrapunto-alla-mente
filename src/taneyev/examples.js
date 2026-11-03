@@ -7,6 +7,23 @@
 import { MIDDLE_C } from '../common/diatonic.js';
 import { chart, parallelSurvives, isConsonant, isPerfect, intervalName } from './rules.js';
 
+/** Lowest note an example may use: the C an octave below middle C. */
+const LOWEST = MIDDLE_C - 7;
+
+/**
+ * Moves a list of dyads up by whole octaves until nothing is below LOWEST.
+ * Wide inverse shifts (−11 to −14) otherwise put voice I near the bottom of
+ * the bass staff; moving both voices by octaves leaves every interval as it is.
+ * Returns new dyads.
+ */
+export function intoSingingRange(dyads) {
+  const lowest = Math.min(...dyads.map((d) => Math.min(d.voiceI, d.voiceII)));
+  let octaves = 0;
+  while (lowest + 7 * octaves < LOWEST) octaves += 1;
+  const shift = 7 * octaves;
+  return dyads.map((d) => ({ ...d, voiceI: d.voiceI + shift, voiceII: d.voiceII + shift }));
+}
+
 /**
  * One dyad per original interval m: the original and its derivative.
  * Returns [{ m, n, kind, original: {voiceI, voiceII}, derivative: {voiceI, voiceII} }].
