@@ -1,3 +1,5 @@
+<img src="assets/logo-staff.svg" width="180" alt="">
+
 # Contrapunto alla mente
 
 Tools for learning to improvise counterpoint, published at
@@ -12,7 +14,7 @@ https://choyun1.github.io/contrapunto-alla-mente/.
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/notation/abc.js`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG and MIDI under `scores/` on the site. |
-| `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads) and the browser-tab icon (`favicon.svg`, the same canon on a tile). |
+| `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), and the browser-tab icon (`favicon.svg`, the canon on a tile). |
 | `test/` | Tests for the rules core, including the charts from Movable Counterpoint video 2. |
 
 ## Conventions

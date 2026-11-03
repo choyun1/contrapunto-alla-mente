@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 80" role="img" aria-label="Contrapunto alla mente">
+  <!-- The large logo, for places where it is shown big (the README, a social card): the canon
+       from logo.svg set on a faint five-line staff, so the notes have real pitches. The leader
+       (ink) goes up a third and back a step; the follower (accent) answers a fifth lower.
+       logo.svg and favicon.svg leave the staff out, since its lines blur at small sizes.
+       Colors are the site's ink, accent and rule colors (assets/site.css), light and dark. -->
+  <style>
+    .staff { stroke: #c4cad3; } .leader { fill: #1a2130; } .follower { fill: #1f5f6b; }
+    @media (prefers-color-scheme: dark) {
+      .staff { stroke: #3a4250; } .leader { fill: #e7eaf0; } .follower { fill: #7cc3cf; }
+    }
+  </style>
+  <!-- staff lines 10 apart; a note one step higher sits 5 higher (a line, then a space) -->
+  <g class="staff" stroke-width="1.6" stroke-linecap="round">
+    <line x1="6" x2="114" y1="20" y2="20"/>
+    <line x1="6" x2="114" y1="30" y2="30"/>
+    <line x1="6" x2="114" y1="40" y2="40"/>
+    <line x1="6" x2="114" y1="50" y2="50"/>
+    <line x1="6" x2="114" y1="60" y2="60"/>
+  </g>
+  <!-- leader: third space, top space, fourth line (counting from the bottom): up a third, down a step -->
+  <g class="leader">
+    <ellipse cx="22" cy="35" rx="7.2" ry="5.2" transform="rotate(-22 22 35)"/>
+    <ellipse cx="42" cy="25" rx="7.2" ry="5.2" transform="rotate(-22 42 25)"/>
+    <ellipse cx="62" cy="30" rx="7.2" ry="5.2" transform="rotate(-22 62 30)"/>
+  </g>
+  <!-- follower: the same figure two beats later, four steps (a fifth) lower -->
+  <g class="follower" transform="translate(28 20)">
+    <ellipse cx="22" cy="35" rx="7.2" ry="5.2" transform="rotate(-22 22 35)"/>
+    <ellipse cx="42" cy="25" rx="7.2" ry="5.2" transform="rotate(-22 42 25)"/>
+    <ellipse cx="62" cy="30" rx="7.2" ry="5.2" transform="rotate(-22 62 30)"/>
+  </g>
+</svg>

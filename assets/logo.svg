@@ -8,14 +8,14 @@
   </style>
   <!-- each notehead is an ellipse tilted like an engraved one -->
   <g class="leader">
-    <ellipse cx="15" cy="32" rx="11" ry="8" transform="rotate(-22 15 32)"/>
-    <ellipse cx="36" cy="16" rx="11" ry="8" transform="rotate(-22 36 16)"/>
-    <ellipse cx="57" cy="28" rx="11" ry="8" transform="rotate(-22 57 28)"/>
+    <ellipse cx="15" cy="42" rx="11" ry="8" transform="rotate(-22 15 42)"/>
+    <ellipse cx="36" cy="32" rx="11" ry="8" transform="rotate(-22 36 32)"/>
+    <ellipse cx="57" cy="39" rx="11" ry="8" transform="rotate(-22 57 39)"/>
   </g>
-  <!-- the same three notes, moved 28 right and 52 down -->
-  <g class="follower" transform="translate(28 52)">
-    <ellipse cx="15" cy="32" rx="11" ry="8" transform="rotate(-22 15 32)"/>
-    <ellipse cx="36" cy="16" rx="11" ry="8" transform="rotate(-22 36 16)"/>
-    <ellipse cx="57" cy="28" rx="11" ry="8" transform="rotate(-22 57 28)"/>
+  <!-- the same three notes, moved 28 right and 30 down -->
+  <g class="follower" transform="translate(28 30)">
+    <ellipse cx="15" cy="42" rx="11" ry="8" transform="rotate(-22 15 42)"/>
+    <ellipse cx="36" cy="32" rx="11" ry="8" transform="rotate(-22 36 32)"/>
+    <ellipse cx="57" cy="39" rx="11" ry="8" transform="rotate(-22 57 39)"/>
   </g>
 </svg>
