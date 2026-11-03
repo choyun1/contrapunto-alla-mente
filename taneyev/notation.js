@@ -9,7 +9,6 @@ const RENDER_OPTIONS = {
   add_classes: true,
   foregroundColor: 'currentColor', // follows the page's light or dark theme
   responsive: 'resize',
-  wrap: { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine: 8 },
   staffwidth: 640,
 };
 
@@ -44,6 +43,9 @@ function show(wrap, abc, colorMeasure) {
   wrap.querySelector('button').addEventListener('click', () => play(tune));
 }
 
+/** Quarter notes per minute on playback: 320 plays a whole note every 0.75 s. */
+const PLAYBACK_QPM = 320;
+
 let current = null;
 let audioContext = null;
 
@@ -60,23 +62,29 @@ function play(tune) {
   const synth = new ABCJS.synth.CreateSynth();
   current = synth;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
-  synth.init({ visualObj: tune, audioContext, options: {} })
+  // qpm 320 = one whole note every 0.75 s, set here so no tempo mark is printed.
+  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM } })
     .then(() => synth.prime())
     .then(() => synth.start())
     .catch((error) => console.error('Playback failed:', error));
 }
 
-/** Every original interval as a dyad, then the same dyads after the shift. */
+/**
+ * Every original interval after the shift, labelled m→n. The original strip
+ * is the same for every chart, so it is drawn only for Jv = 0.
+ */
 function renderStrip(parent, jv) {
   const strip = intervalStrip(jv);
   const color = (measure) => KIND_COLORS[strip[measure].kind];
-  const original = strip.map((d) => ({ ...d.original, textI: d.m }));
-  show(block(parent, 'Original', 'Voice II holds middle C; the number above is the interval m.'),
-    twoVoiceTune(original), color);
-  if (jv === 0) return;
-  const derivative = strip.map((d) => ({ ...d.derivative, textI: minus(d.n) }));
-  show(block(parent, `After shifting voice I by ${minus(jv)}`,
-    'Same colours as the chart: each note keeps the class of its original interval.'),
+  if (jv === 0) {
+    const original = strip.map((d) => ({ ...d.original, textI: d.m }));
+    show(block(parent, 'Every interval', 'Voice II holds middle C; the number above is the interval.'),
+      twoVoiceTune(original), color);
+    return;
+  }
+  const derivative = strip.map((d) => ({ ...d.derivative, textI: `${d.m}→${minus(d.n)}` }));
+  show(block(parent, `Every interval after shifting voice I by ${minus(jv)}`,
+    'Voice II holds middle C. Above each dyad: original interval → derivative. Colours match the chart.'),
   twoVoiceTune(derivative), color);
 }
 
