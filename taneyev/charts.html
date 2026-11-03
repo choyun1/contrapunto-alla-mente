@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Taneyev consonance charts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="crumb"><a href="../">Contrapunto alla mente</a></p>
+<h1>Taneyev consonance charts</h1>
+<p class="lead">Each chart shows what every interval of the original becomes when the voices shift by J<sub>v</sub>, and the suspension rules that follow. Intervals are zero-indexed (unison 0, octave 7, 12th 11). The charts are generated from the same rules code the checker will use. The J<sub>v</sub> = −11 chart matches Movable Counterpoint 2 (frame 0071).</p>
+</header>
+<nav class="jump" aria-label="Jump to chart"><span>J<sub>v</sub></span><span id="links"></span>
+<form id="custom"><label><span class="sr">Any J<sub>v</sub></span> <input id="jvin" type="number" min="-21" max="21" step="1" placeholder="e.g. −8"></label> <button>Show</button></form></nav>
+<section class="legend" aria-label="How to read the charts">
+<div><h3>Colour of the bottom numeral</h3><ul>
+<li><span class="sw k-fixed-consonance">2</span>Fixed consonance: consonant in both versions</li>
+<li><span class="sw k-variable-consonance">5</span>Variable consonance: becomes dissonant</li>
+<li><span class="sw k-variable-dissonance">6</span>Variable dissonance: becomes consonant</li>
+<li><span class="sw k-fixed-dissonance">1</span>Fixed dissonance</li>
+<li><span class="sw"><b>4</b></span>Bold: perfect in either version, so no parallel or similar motion into it</li></ul></div>
+<div><h3>Suspension marks</h3><ul>
+<li><span class="sym">(—)</span>Can’t form a suspension</li>
+<li><span class="sym">—</span>On a downbeat it must be a suspension (prepared, resolving down by step)</li>
+<li><span class="sym">— x</span>Its resolution is dissonant: move the free voice, or treat the resolution as a passing or neighbour tone (§§152, 167)</li>
+<li><span class="sym">---</span>If suspended, its resolution is consonant and free</li></ul></div>
+<div><h3>Reading a column</h3><ul>
+<li>A mark above the numeral applies when the upper voice is suspended, a mark below when the lower voice is.</li>
+<li>Grey rows show the working: the original’s marks, and the derivative’s marks, flipped where the voices cross.</li>
+<li>The bottom row is the rule to follow when writing the original.</li></ul></div>
+</section>
+<div id="custom-chart"></div>
+<div id="charts" style="display:grid;gap:28px"></div>
+<p class="foot">The 4th counts as a dissonance, as in two-voice writing. Between upper voices over a consonant bass it can act as an imperfect consonance (Movable Counterpoint 4, 10:23). Sources: Taneyev §§81–82, 90, 101, 128, 135; Segall, <a href="https://mtosmt.org/issues/mto.14.20.3/mto.14.20.3.segall.php"><i>Music Theory Online</i> 20.3</a>.</p>
+</main>
+<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}#custom{display:flex;gap:6px;margin-left:auto}</style>
+<script type="module" src="charts.js"></script>
+</body>
+</html>
