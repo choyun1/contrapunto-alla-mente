@@ -38,7 +38,7 @@ nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--lin
 .k-fixed-consonance{background:var(--fc);color:var(--fc-ink)} .k-variable-consonance{background:var(--vc);color:var(--vc-ink)}
 .k-variable-dissonance{background:var(--vd);color:var(--vd-ink)} .k-fixed-dissonance{background:var(--fd);color:var(--fd-ink)}
 .sym{display:inline-block;min-width:2.2em;text-align:center;font-weight:600}
-.chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 18px 12px;scroll-margin-top:64px;display:grid;gap:12px}
+.chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;scroll-margin-top:64px;display:grid;gap:8px}
 .chart h2{font-size:1.35rem}
 .jv{font-family:var(--body);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:6px;font-size:1.05rem}
 .note{margin:2px 0 0;color:var(--muted)}
@@ -49,15 +49,15 @@ nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--lin
 .yes{color:var(--yes)} .no{color:var(--no)}
 .scroll{overflow-x:auto;min-width:0}
 table{border-collapse:collapse;font-variant-numeric:tabular-nums}
-th{font-weight:600;font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:right;padding:0 12px 0 0;white-space:nowrap;position:sticky;left:0;background:var(--panel)}
-td{text-align:center;min-width:2.9em;padding:0 2px}
-td.mk{font-size:.8rem;height:1.25em;color:var(--muted);white-space:nowrap}
-td.nm{font-size:1.05rem;height:1.6em}
+th{font-weight:600;font-size:.66rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:right;padding:0 12px 0 0;white-space:nowrap;position:sticky;left:0;background:var(--panel)}
+td{text-align:center;min-width:2.1em;padding:0 1px;line-height:1.15}
+td.mk{font-size:.7rem;height:1em;color:var(--muted);white-space:nowrap}
+td.nm{font-size:.9rem;height:1.3em}
 tr.w td.nm{color:var(--muted)}
-tr.sep td,tr.sep th{padding-top:6px}
-tr.rule td,tr.rule th{border-top:1.5px solid var(--ink);padding-top:8px}
-tr.r td.mk{color:var(--ink);font-weight:600;font-size:.85rem}
-tr.r td.nm{font-size:1.2rem;border-radius:5px}
+tr.sep td,tr.sep th{padding-top:3px}
+tr.rule td,tr.rule th{border-top:1.5px solid var(--ink);padding-top:4px}
+tr.r td.mk{color:var(--ink);font-weight:600;font-size:.78rem}
+tr.r td.nm{font-size:1.02rem;border-radius:4px}
 .foot{color:var(--muted);font-size:.85rem;max-width:70ch}
 @media (max-width:520px){h1{font-size:1.7rem}}
 details.notation{border-top:1px solid var(--line);padding-top:10px}

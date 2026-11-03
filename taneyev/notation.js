@@ -45,15 +45,25 @@ function show(wrap, abc, colorMeasure) {
 }
 
 let current = null;
+let audioContext = null;
 
-/** Plays one tune, stopping whatever was playing. */
-async function play(tune) {
+/**
+ * Plays one tune, stopping whatever was playing.
+ * The audio context is created and resumed inside the click itself, before any
+ * await, because Safari only allows sound to start from a user gesture.
+ */
+function play(tune) {
   if (!ABCJS.synth.supportsAudio()) return;
+  audioContext ??= new AudioContext();
+  audioContext.resume();
   if (current) current.stop();
-  current = new ABCJS.synth.CreateSynth();
-  await current.init({ visualObj: tune });
-  await current.prime();
-  current.start();
+  const synth = new ABCJS.synth.CreateSynth();
+  current = synth;
+  // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
+  synth.init({ visualObj: tune, audioContext, options: {} })
+    .then(() => synth.prime())
+    .then(() => synth.start())
+    .catch((error) => console.error('Playback failed:', error));
 }
 
 /** Every original interval as a dyad, then the same dyads after the shift. */
