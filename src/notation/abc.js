@@ -5,6 +5,7 @@
 // src/common/diatonic.js; every measure holds one whole-note dyad.
 
 import { letterOf, octaveOf } from '../common/diatonic.js';
+import { clefsForVoice } from './clefs.js';
 
 /** One pitch in abc spelling: C4 → 'C', C5 → 'c', C6 → "c'", C3 → 'C,'. */
 export function abcPitch(step) {
@@ -14,45 +15,23 @@ export function abcPitch(step) {
   return letter + ','.repeat(4 - octave);
 }
 
-/** Middle pitch of a voice, used to place its staff and pick its clef. */
+/** Middle pitch of a voice, used to decide which staff goes on top. */
 function median(steps) {
   const sorted = [...steps].sort((a, b) => a - b);
   return sorted[Math.floor(sorted.length / 2)];
 }
 
-/** Treble clef unless most of the voice sits below A3. */
-export function clefFor(steps) {
-  return median(steps) >= 26 ? 'treble' : 'bass'; // 26 = A3
-}
-
-/** Splits measures into sections at each double bar. */
-function sections(measures) {
-  const result = [[]];
-  for (const measure of measures) {
-    result.at(-1).push(measure);
-    if (measure.doubleBarAfter) result.push([]);
-  }
-  return result.filter((section) => section.length > 0);
-}
-
 /**
  * abc text for one voice: whole notes, optional text above, bars between.
- * Each section after a double bar picks its own clef, so a voice that moves
- * an octave or more after the shift doesn't sit on ledger lines.
+ * An inline [K:clef=...] marks each clef change (see clefs.js).
  */
-function voiceLine(measures, voice, textKey) {
-  let clef = clefFor(sections(measures)[0].map((m) => m[voice]));
-  const parts = [];
-  for (const section of sections(measures)) {
-    const sectionClef = clefFor(section.map((m) => m[voice]));
-    if (sectionClef !== clef) parts.push(`[K:clef=${sectionClef}]`);
-    clef = sectionClef;
-    for (const measure of section) {
-      const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
-      const bar = measure.doubleBarAfter ? '||' : '|';
-      parts.push(`${text}${abcPitch(measure[voice])}1 ${bar}`);
-    }
-  }
+function voiceLine(measures, voice, textKey, clefs) {
+  const parts = measures.map((measure, k) => {
+    const clefChange = k > 0 && clefs[k] !== clefs[k - 1] ? `[K:clef=${clefs[k]}] ` : '';
+    const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
+    const bar = measure.doubleBarAfter ? '||' : '|';
+    return `${clefChange}${text}${abcPitch(measure[voice])}1 ${bar}`;
+  });
   return `${parts.join(' ').replace(/\|\|?$/, '')}|]`;
 }
 
@@ -66,21 +45,21 @@ function voiceLine(measures, voice, textKey) {
 export function twoVoiceTune(measures) {
   const stepsI = measures.map((m) => m.voiceI);
   const stepsII = measures.map((m) => m.voiceII);
-  const clefI = clefFor(sections(measures)[0].map((m) => m.voiceI));
-  const clefII = clefFor(sections(measures)[0].map((m) => m.voiceII));
+  const clefsI = clefsForVoice(stepsI);
+  const clefsII = clefsForVoice(stepsII);
   const staffOrder = median(stepsI) >= median(stepsII) ? '(I) (II)' : '(II) (I)';
   return [
     'X:1',
     'M:none',
     'L:1',
-    'Q:1=40', // one whole note every 1.5 seconds on playback
+    'Q:1/1=80', // one whole note every 0.75 seconds on playback
     'K:C',
     `%%score ${staffOrder}`,
-    `V:I clef=${clefI} name="I"`,
-    `V:II clef=${clefII} name="II"`,
+    `V:I clef=${clefsI[0]} name="I"`,
+    `V:II clef=${clefsII[0]} name="II"`,
     '[V:I]',
-    voiceLine(measures, 'voiceI', 'textI'),
+    voiceLine(measures, 'voiceI', 'textI', clefsI),
     '[V:II]',
-    voiceLine(measures, 'voiceII', 'textII'),
+    voiceLine(measures, 'voiceII', 'textII', clefsII),
   ].join('\n');
 }
