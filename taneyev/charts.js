@@ -1,18 +1,20 @@
 import { renderNotation } from './notation.js';
 import { chart, baseMarks, isPerfect, intervalName, forbidsSimilarMotion, parallelSurvives } from '../src/taneyev/rules.js';
 
+// Order: Jv = 0, then the octave family (−7, −14), the 12th and 10th, their
+// octave-reduced forms (−4 = −11 + 7, −2 = −9 + 7), direct shifts, then the rare ones.
 const CHARTS = [
   [0, 'Simple counterpoint', 'The reference marks that every other chart is built from.'],
   [-7, 'Invertible at the octave', 'The textbook case. Sixth in Taneyev’s practice order.'],
-  [-9, 'Invertible at the 10th', 'Second in the practice order, without suspensions or similar motion.'],
-  [-11, 'Invertible at the 12th', 'Taneyev’s most important kind. Third in the practice order.'],
   [-14, 'Invertible at the 15th', 'Common in Bach’s keyboard openings.'],
+  [-11, 'Invertible at the 12th', 'Taneyev’s most important kind. Third in the practice order.'],
+  [-9, 'Invertible at the 10th', 'Second in the practice order, without suspensions or similar motion.'],
   [-4, 'Invertible at the 5th', 'Fourth in the practice order.'],
   [-2, 'Invertible at the 3rd', 'Seventh in the practice order.'],
-  [-12, 'Invertible at the 13th', 'Ninth in the practice order.'],
-  [-13, 'Invertible at the 14th', 'Tenth in the practice order. Rare in real music.'],
   [3, 'Direct shift up a 4th', 'Voices move apart without crossing. Fifth in the practice order.'],
   [5, 'Direct shift up a 6th', 'Eighth in the practice order.'],
+  [-12, 'Invertible at the 13th', 'Ninth in the practice order.'],
+  [-13, 'Invertible at the 14th', 'Tenth in the practice order. Rare in real music.'],
 ];
 
 const fmt = (n) => (n < 0 ? `−${-n}` : String(n));
