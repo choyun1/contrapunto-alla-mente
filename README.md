@@ -10,7 +10,8 @@ https://choyun1.github.io/contrapunto-alla-mente/.
 | Path | What it holds |
 | --- | --- |
 | `src/taneyev/rules.js` | The rules core for Taneyev's vertical-shifting counterpoint. Every page and checker uses it. |
-| `taneyev/` | The consonance charts page, generated in the browser from the rules core, with notation examples under each chart. |
+| `taneyev/` | The consonance charts page and the three-voice shifts page, generated in the browser from the rules core. `chart-card.js` draws one chart card for both. |
+| `src/taneyev/three-voices.js` | Splits an outer shift between the two inner pairs of a three-voice texture (Jv(upper, lower) = Jv(upper, middle) + Jv(middle, lower)). |
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/notation/abc.js`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG and MIDI under `scores/` on the site. |
