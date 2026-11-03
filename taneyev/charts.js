@@ -6,7 +6,7 @@ import { chart, baseMarks, isPerfect, intervalName, forbidsSimilarMotion, parall
 const CHARTS = [
   [0, 'Simple counterpoint', 'The reference marks that every other chart is built from.'],
   [-7, 'Invertible at the octave', 'The textbook case. Sixth in Taneyev’s practice order.'],
-  [-14, 'Invertible at the 15th', 'Common in Bach’s keyboard openings.'],
+  [-14, 'Invertible at the 15th', 'The same as −7 up to the 10th. It differs at the 11th and 12th (10 and 11): at −7 a 12th becomes a 5th, at −14 it becomes a 4th. Use it when the voices sit more than an octave apart, as in Bach’s keyboard openings.'],
   [-11, 'Invertible at the 12th', 'Taneyev’s most important kind. Third in the practice order.'],
   [-9, 'Invertible at the 10th', 'Second in the practice order, without suspensions or similar motion.'],
   [-4, 'Invertible at the 5th', 'Fourth in the practice order.'],

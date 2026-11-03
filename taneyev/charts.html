@@ -14,6 +14,11 @@
 <p class="crumb"><a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a></p>
 <h1>Taneyev consonance charts</h1>
 <p class="lead">Each chart shows what every interval of the original becomes when the voices shift by J<sub>v</sub>, and the suspension rules that follow. Intervals are zero-indexed (unison 0, octave 7, 12th 11). The charts are generated from the same rules code the checker will use. The J<sub>v</sub> = −11 chart matches Movable Counterpoint 2 (frame 0071).</p>
+<dl class="terms">
+<div><dt>J<sub>v</sub></dt><dd>How far one voice moves against the other, in steps. Negative: the voices cross (inverse shift). Positive: they move apart (direct shift).</dd></div>
+<div><dt><i>m</i></dt><dd>An interval between the voices in the original.</dd></div>
+<div><dt><i>n</i></dt><dd>The same pair of notes in the derivative, after the shift: <i>n</i> = <i>m</i> + J<sub>v</sub>. A negative <i>n</i> means the voices have crossed.</dd></div>
+</dl>
 </header>
 <nav class="jump" aria-label="Jump to chart"><span>J<sub>v</sub></span><span id="links"></span>
 <form id="custom"><label><span class="sr">Any J<sub>v</sub></span> <input id="jvin" type="number" min="-21" max="21" step="1" placeholder="e.g. −8"></label> <button>Show</button></form></nav>
