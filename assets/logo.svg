@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Contrapunto alla mente">
+  <!-- The mark: two voices trade places, the upper (accent) ending below and the lower (ink)
+       ending above, as in invertible counterpoint. A gap in the ink line shows which voice
+       passes in front. Colors are the site's ink and accent (assets/site.css), light and dark. -->
+  <style>
+    .ink { stroke: #1a2130; } .accent { stroke: #1f5f6b; } .gap { stroke: #f6f7f9; }
+    @media (prefers-color-scheme: dark) {
+      .ink { stroke: #e7eaf0; } .accent { stroke: #7cc3cf; } .gap { stroke: #12161d; }
+    }
+  </style>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- lower voice, rising -->
+    <path class="ink" stroke-width="11" d="M10,76 H30 C44,76 56,24 70,24 H90"/>
+    <!-- page-colored band where the upper voice crosses in front -->
+    <path class="gap" stroke-width="21" stroke-linecap="butt" d="M42,40 C46,46 54,54 58,60"/>
+    <!-- upper voice, falling -->
+    <path class="accent" stroke-width="11" d="M10,24 H30 C44,24 56,76 70,76 H90"/>
+  </g>
+</svg>

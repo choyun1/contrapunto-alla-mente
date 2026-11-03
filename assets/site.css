@@ -67,3 +67,6 @@ details.notation summary{cursor:pointer;font-weight:600;color:var(--accent)}
 .example h3{font-size:.95rem;margin:0}
 .example button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
 .score{color:var(--ink);max-width:720px}
+/* the logo (assets/logo.svg) before the site name, sized to the text it sits in */
+.brand{display:inline-flex;align-items:center;gap:.35em}
+.brand img{width:1.1em;height:1.1em;flex:none}
