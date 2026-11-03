@@ -56,7 +56,7 @@ test('parallel chains: 3rds survive −7 as 6ths, but become octaves at −9', (
 test('a two-voice tune puts each voice on its own staff', () => {
   const abc = twoVoiceTune([{ voiceI: 30, voiceII: 28, textI: '2' }]);
   assert.match(abc, /V:I clef=treble name="I"/);
-  assert.match(abc, /\[V:I\]\n"\^2"E1 \|]/);
+  assert.match(abc, /\[V:I clef=treble\]\n"\^2"E1 \|]/);
 });
 
 test('a voice that drops after the double bar switches clef inline', () => {
@@ -66,5 +66,13 @@ test('a voice that drops after the double bar switches clef inline', () => {
     { voiceI: 20, voiceII: 28 },
     { voiceI: 21, voiceII: 28 },
   ]);
-  assert.match(abc, /\[V:I\]\nG1 \|\| \[K:clef=bass\] A,,1 \| B,,1 \| C,1 \|]/);
+  assert.match(abc, /\[V:I clef=treble\]\nG1 \|\| \[K:clef=bass\] A,,1 \| B,,1 \| C,1 \|]/);
+});
+
+test('every printed line restates its clef (abcjs drops inline clefs at line breaks)', () => {
+  // Voice I: seven low notes in bass, then three in treble; the break falls after 8 measures.
+  const steps = [21, 22, 23, 24, 25, 26, 27, 28, 29, 30];
+  const abc = twoVoiceTune(steps.map((voiceI) => ({ voiceI, voiceII: 28 })));
+  const markersI = abc.split('\n').filter((line) => line.startsWith('[V:I '));
+  assert.deepEqual(markersI, ['[V:I clef=bass]', '[V:I clef=treble]']);
 });

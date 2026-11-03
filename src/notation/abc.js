@@ -21,18 +21,29 @@ function median(steps) {
   return sorted[Math.floor(sorted.length / 2)];
 }
 
+/** Measures per printed line. We break lines ourselves (see voiceLines). */
+export const MEASURES_PER_LINE = 8;
+
 /**
- * abc text for one voice: whole notes, optional text above, bars between.
- * An inline [K:clef=...] marks each clef change (see clefs.js).
+ * abc text for one voice, one string per printed line: whole notes, optional
+ * text above, bars between. Clef changes inside a line are inline fields;
+ * the clef at the start of each line goes on its voice marker (see interleave).
  */
-function voiceLine(measures, voice, textKey, clefs) {
-  const parts = measures.map((measure, k) => {
-    const clefChange = k > 0 && clefs[k] !== clefs[k - 1] ? `[K:clef=${clefs[k]}] ` : '';
-    const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
-    const bar = measure.doubleBarAfter ? '||' : '|';
-    return `${clefChange}${text}${abcPitch(measure[voice])}1 ${bar}`;
-  });
-  return `${parts.join(' ').replace(/\|\|?$/, '')}|]`;
+function voiceLines(measures, voice, textKey, clefs) {
+  const lines = [];
+  for (let start = 0; start < measures.length; start += MEASURES_PER_LINE) {
+    const parts = [];
+    for (let k = start; k < Math.min(start + MEASURES_PER_LINE, measures.length); k++) {
+      const measure = measures[k];
+      const clefChange = k > start && clefs[k] !== clefs[k - 1] ? `[K:clef=${clefs[k]}] ` : '';
+      const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
+      const bar = measure.doubleBarAfter ? '||' : '|';
+      parts.push(`${clefChange}${text}${abcPitch(measure[voice])}1 ${bar}`);
+    }
+    lines.push(parts.join(' '));
+  }
+  lines[lines.length - 1] = lines.at(-1).replace(/\|\|?$/, '|]');
+  return lines;
 }
 
 /**
@@ -52,14 +63,30 @@ export function twoVoiceTune(measures) {
     'X:1',
     'M:none',
     'L:1',
-    'Q:1/1=80', // one whole note every 0.75 seconds on playback
     'K:C',
     `%%score ${staffOrder}`,
     `V:I clef=${clefsI[0]} name="I"`,
     `V:II clef=${clefsII[0]} name="II"`,
-    '[V:I]',
-    voiceLine(measures, 'voiceI', 'textI', clefsI),
-    '[V:II]',
-    voiceLine(measures, 'voiceII', 'textII', clefsII),
+    ...interleave(
+      voiceLines(measures, 'voiceI', 'textI', clefsI), lineStartClefs(clefsI),
+      voiceLines(measures, 'voiceII', 'textII', clefsII), lineStartClefs(clefsII),
+    ),
   ].join('\n');
+}
+
+/** The clef in force at the start of each printed line. */
+function lineStartClefs(clefs) {
+  return clefs.filter((_, k) => k % MEASURES_PER_LINE === 0);
+}
+
+/**
+ * Alternates the two voices line by line, so each system holds both. Each
+ * line's voice marker restates its clef, because abcjs forgets an inline
+ * clef change when it starts a new line.
+ */
+function interleave(linesI, startClefsI, linesII, startClefsII) {
+  return linesI.flatMap((line, k) => [
+    `[V:I clef=${startClefsI[k]}]`, line,
+    `[V:II clef=${startClefsII[k]}]`, linesII[k],
+  ]);
 }
