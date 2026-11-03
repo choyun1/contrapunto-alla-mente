@@ -16,3 +16,14 @@ export const letterOf = (step) => LETTERS[((step % 7) + 7) % 7];
 
 /** Scientific pitch name, e.g. 'E4'. */
 export const pitchName = (step) => `${letterOf(step)}${octaveOf(step)}`;
+
+/**
+ * Step number of a scientific pitch name such as 'E4' or 'g3' (case ignored).
+ * Returns null for anything else. Accidentals are not read: steps are diatonic.
+ */
+export function parsePitch(name) {
+  const match = /^([A-Ga-g])(-?\d)$/.exec(name.trim());
+  if (!match) return null;
+  const letter = LETTERS.indexOf(match[1].toUpperCase());
+  return Number(match[2]) * 7 + letter;
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canon proposta intervals</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<p class="crumb"><a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a></p>
+<h1>Canon proposta intervals</h1>
+<p class="lead">In a two-voice canon the risposta plays what the proposta played one delay ago, moved by the interval of entrance. So every melodic interval the proposta makes across the delay turns into a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant. Intervals are zero-indexed (step 1, 3rd 2, octave 7).</p>
+<dl class="terms">
+<div><dt>span</dt><dd>The proposta’s melodic interval from a note to the note one delay later. Positive: rising. With a delay of one measure in whole notes, that is from one note to the next; with two measures, from one note to the note after next.</dd></div>
+<div><dt>J<sub>v</sub></dt><dd>The interval of entrance, in steps. Positive: the risposta is above.</dd></div>
+<div><dt><i>n</i></dt><dd>The interval the risposta forms against the proposta: <i>n</i> = J<sub>v</sub> − span. This is Taneyev’s <i>n</i> = <i>m</i> + J<sub>v</sub>, with the canon at the unison as the original (<i>m</i> = −span). A negative <i>n</i> means the risposta is below.</dd></div>
+</dl>
+</header>
+<nav class="jump" aria-label="Interval of entrance"><span>J<sub>v</sub></span><span id="links"></span>
+<form id="custom"><label><span class="sr">Any interval of entrance</span> <input id="jvin" type="number" min="-21" max="21" step="1" placeholder="e.g. 11"></label> <button>Show</button></form></nav>
+<section class="legend" aria-label="How to read the table">
+<div><h3>Verdict</h3><ul>
+<li><span class="sw k-fixed-consonance">free</span>Imperfect consonance: use it freely</li>
+<li><span class="sw k-variable-consonance"><b>perfect</b></span>Perfect consonance: not twice in a row while both voices move</li>
+<li><span class="sw k-fixed-dissonance">susp.</span>Dissonance: on a strong beat only as a prepared suspension</li></ul></div>
+<div><h3>Suspension marks</h3><ul>
+<li><span class="sym">—</span>This voice may be the suspended one, resolving down by step</li>
+<li><span class="sym">(—)</span>This voice can’t be suspended here</li>
+<li>A suspension in the risposta means the proposta was suspended one delay earlier.</li></ul></div>
+</section>
+<section class="chart" id="table"></section>
+<section class="chart" aria-labelledby="check-h">
+<header><h2 id="check-h">Check a proposta</h2>
+<p class="note">Write the proposta as pitch names in equal note values, one per time unit (C4 is middle C). The delay is counted in the same units. Every note is treated as a strong beat, as in a whole-note framework.</p></header>
+<form id="check" class="checkform">
+<label><span>Proposta</span> <input id="notes" type="text" value="D4 F4 A4 F4 D4 G4 E4 C4 F4 D4 E4" spellcheck="false"></label>
+<label><span>J<sub>v</sub></span> <input id="entry" type="number" min="-21" max="21" step="1" value="7"></label>
+<label><span>Delay</span> <input id="delay" type="number" min="1" max="16" step="1" value="1"></label>
+<button>Check</button>
+</form>
+<div id="report"></div>
+</section>
+<p class="foot">The 4th counts as a dissonance, as in two-voice writing. Between upper voices over a consonant bass it can act as an imperfect consonance (Movable Counterpoint 4, 10:23). Steps are diatonic, so a tritone counts as its diatonic size. These rules are derived from the rules core, not yet checked against a § of Taneyev’s <i>Doctrine of the Canon</i>.</p>
+<footer class="foot">
+  <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
+    <!-- GitHub mark, from Primer Octicons (MIT) -->
+    <svg viewBox="0 0 16 16" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+</footer>
+</main>
+<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}#custom{display:flex;gap:6px;margin-left:auto}
+.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}
+#links{display:flex;flex-wrap:wrap;gap:6px;margin:0;min-width:0}.legend .sw{flex:none}
+.checkform{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.checkform label{display:grid;gap:2px;font-size:.8rem;color:var(--muted)}
+.checkform input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px;width:5em}
+.checkform #notes{width:min(28em,80vw)}.checkform button{font:inherit;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 14px;cursor:pointer}
+table.spans td{padding:3px 10px;text-align:left}table.spans th{text-align:left;padding:3px 10px}table.spans td.c{text-align:center}</style>
+<script type="module" src="proposta.js"></script>
+</body>
+</html>
