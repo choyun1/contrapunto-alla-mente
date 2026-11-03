@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Contrapunto alla mente">
+  <!-- The mark: a canon in noteheads. The leader (ink) sings a short figure that turns, up a
+       step and back down a little; the follower (accent) sings the same figure later and lower.
+       Colors are the site's ink and accent (assets/site.css), light and dark. -->
+  <style>
+    .leader { fill: #1a2130; } .follower { fill: #1f5f6b; }
+    @media (prefers-color-scheme: dark) { .leader { fill: #e7eaf0; } .follower { fill: #7cc3cf; } }
+  </style>
+  <!-- each notehead is an ellipse tilted like an engraved one -->
+  <g class="leader">
+    <ellipse cx="15" cy="42" rx="11" ry="8" transform="rotate(-22 15 42)"/>
+    <ellipse cx="36" cy="32" rx="11" ry="8" transform="rotate(-22 36 32)"/>
+    <ellipse cx="57" cy="39" rx="11" ry="8" transform="rotate(-22 57 39)"/>
+  </g>
+  <!-- the same three notes, moved 28 right and 30 down -->
+  <g class="follower" transform="translate(28 30)">
+    <ellipse cx="15" cy="42" rx="11" ry="8" transform="rotate(-22 15 42)"/>
+    <ellipse cx="36" cy="32" rx="11" ry="8" transform="rotate(-22 36 32)"/>
+    <ellipse cx="57" cy="39" rx="11" ry="8" transform="rotate(-22 57 39)"/>
+  </g>
+</svg>
