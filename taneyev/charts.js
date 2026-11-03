@@ -1,3 +1,4 @@
+import { renderNotation } from './notation.js';
 import { chart, baseMarks, isPerfect, intervalName, forbidsSimilarMotion, parallelSurvives } from '../src/taneyev/rules.js';
 
 const CHARTS = [
@@ -48,18 +49,32 @@ function render(jv, title, note) {
       <div><dt>Parallel 3rds</dt><dd>${yn(parallelSurvives(2, jv))}</dd></div>
       <div><dt>Parallel 6ths</dt><dd>${yn(parallelSurvives(5, jv))}</dd></div>
       <div><dt>Parallel 10ths</dt><dd>${yn(parallelSurvives(9, jv))}</dd></div>${similar}</dl></header>
-    <div class="scroll"><table><tbody>${working}${result}</tbody></table></div></section>`;
+    <div class="scroll"><table><tbody>${working}${result}</tbody></table></div>
+    <details class="notation" data-jv="${jv}"><summary>See and hear it in notation</summary>
+      <div class="examples"></div></details></section>`;
 }
 
 document.getElementById('links').innerHTML = CHARTS
   .map(([jv]) => `<a href="#${slug(jv)}">${sign(jv)}</a>`).join(' ');
 document.getElementById('charts').innerHTML = CHARTS.map((c) => render(...c)).join('');
 
+/** Draws a chart's notation the first time its panel is opened. */
+function wireNotation(root) {
+  root.querySelectorAll('details.notation').forEach((panel) => {
+    panel.addEventListener('toggle', () => {
+      const box = panel.querySelector('.examples');
+      if (panel.open && !box.hasChildNodes()) renderNotation(box, Number(panel.dataset.jv));
+    });
+  });
+}
+wireNotation(document.getElementById('charts'));
+
 const form = document.getElementById('custom');
 const showCustom = (jv) => {
   const box = document.getElementById('custom-chart');
   box.innerHTML = render(jv, jv < 0 ? 'Inverse shift' : jv > 0 ? 'Direct shift' : 'Simple counterpoint',
     'Generated on request.');
+  wireNotation(box);
   box.scrollIntoView({ behavior: 'smooth' });
 };
 form.addEventListener('submit', (e) => {

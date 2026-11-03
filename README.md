@@ -8,7 +8,9 @@ https://choyun1.github.io/contrapunto-alla-mente/.
 | Path | What it holds |
 | --- | --- |
 | `src/taneyev/rules.js` | The rules core for Taneyev's vertical-shifting counterpoint. Every page and checker uses it. |
-| `taneyev/` | The consonance charts page, generated in the browser from the rules core. |
+| `taneyev/` | The consonance charts page, generated in the browser from the rules core, with notation examples under each chart. |
+| `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
+| `src/notation/abc.js`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG and MIDI under `scores/` on the site. |
 | `test/` | Tests for the rules core, including the charts from Movable Counterpoint video 2. |
 
@@ -25,8 +27,7 @@ npm test        # run the rules tests (Node 22, no dependencies)
 npm run serve   # serve the site at http://localhost:8000
 ```
 
-Live notation in the browser (the workbench and drills) will use abcjs or
-Verovio. LilyPond is only for the fixed examples, because it can't run in a
+Live notation in the browser uses abcjs. LilyPond is only for the fixed examples, because it can't run in a
 browser.
 
 See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
