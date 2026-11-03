@@ -60,6 +60,8 @@ tr.rule td,tr.rule th{border-top:1.5px solid var(--ink);padding-top:4px}
 tr.r td.mk{color:var(--ink);font-weight:600;font-size:.78rem}
 tr.r td.nm{font-size:1.02rem;border-radius:4px}
 .foot{color:var(--muted);font-size:.85rem;max-width:70ch}
+.foot .github{display:inline-flex;color:var(--muted)}
+.foot .github:hover{color:var(--ink)}
 @media (max-width:520px){h1{font-size:1.7rem}}
 details.notation{border-top:1px solid var(--line);padding-top:10px}
 details.notation summary{cursor:pointer;font-weight:600;color:var(--accent)}
