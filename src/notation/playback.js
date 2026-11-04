@@ -44,10 +44,61 @@ export function show(wrap, abc, colorMeasure) {
 const PLAYBACK_QPM = 213;
 
 /**
- * General MIDI program for playback, counted from 0: 52 is choir "aahs",
- * a sung vowel sound, softer than the church organ (19) used before.
+ * Sounds a listener can pick, as General MIDI programs counted from 0. The
+ * first is the default: a flute, the nearest General MIDI sound to an organ
+ * flute stop. Church organ (19) and choir aahs (52) were tried and were too much.
  */
-const CHOIR_AAHS = 52;
+export const SOUNDS = [
+  { program: 73, name: 'Flute (like a flute stop)' },
+  { program: 74, name: 'Recorder' },
+  { program: 16, name: 'Drawbar organ' },
+  { program: 20, name: 'Reed organ' },
+  { program: 48, name: 'Strings' },
+  { program: 89, name: 'Warm pad' },
+];
+
+const SOUND_KEY = 'contrapunto-sound'; // browser storage key for the pick
+
+/** The picked General MIDI program, or the default if none is saved. */
+function currentProgram() {
+  let saved = null;
+  try {
+    saved = Number(localStorage.getItem(SOUND_KEY));
+  } catch {
+    // Storage can be blocked (private windows); fall back to the default.
+  }
+  const known = SOUNDS.some((sound) => sound.program === saved);
+  return known ? saved : SOUNDS[0].program;
+}
+
+/** Saves a picked program, if the browser allows storage. */
+function saveProgram(program) {
+  try {
+    localStorage.setItem(SOUND_KEY, String(program));
+  } catch {
+    // Not saved; the pick still applies until the page is reloaded.
+  }
+}
+
+let pickedProgram = null; // set on first use, then by the picker
+
+/** Adds a "Sound" menu to a page element; the pick applies to every example. */
+export function addSoundPicker(parent) {
+  const label = document.createElement('label');
+  label.className = 'sound-picker';
+  const options = SOUNDS
+    .map((sound) => `<option value="${sound.program}">${sound.name}</option>`)
+    .join('');
+  label.innerHTML = `Sound <select>${options}</select>`;
+  const select = label.querySelector('select');
+  select.value = String(pickedProgram ?? currentProgram());
+  select.addEventListener('change', () => {
+    pickedProgram = Number(select.value);
+    saveProgram(pickedProgram);
+    stop();
+  });
+  parent.append(label);
+}
 
 let current = null; // { synth, button, timer } for the tune that is playing
 let audioContext = null;
@@ -86,7 +137,8 @@ function play(tune, button) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program: CHOIR_AAHS } })
+  const program = pickedProgram ?? currentProgram();
+  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program } })
     .then(() => synth.prime())
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
