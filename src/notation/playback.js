@@ -22,6 +22,11 @@ export function block(parent, title, caption) {
   return wrap;
 }
 
+/** Draws a small score with no play button, `width` pixels of staff wide. */
+export function drawSmall(element, abc, width) {
+  ABCJS.renderAbc(element, abc, { ...RENDER_OPTIONS, responsive: undefined, staffwidth: width });
+}
+
 /** Renders abc into a block and wires its play button. */
 export function show(wrap, abc, colorMeasure) {
   const [tune] = ABCJS.renderAbc(wrap.querySelector('.score'), abc, RENDER_OPTIONS);

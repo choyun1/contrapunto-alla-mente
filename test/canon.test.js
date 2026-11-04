@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  canonInterval, canonMarks, spanVerdict, consonantSpans, consecutivePerfects, checkProposta,
+  canonInterval, canonMarks, spanVerdict, consonantSpans, consecutivePerfects, checkProposta, moveChord,
 } from '../src/taneyev/canon.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
 
@@ -78,4 +78,26 @@ test('pitch names parse to diatonic steps', () => {
   assert.equal(parsePitch('E4'), 30);
   assert.equal(pitchName(parsePitch('g3')), 'G3');
   assert.equal(parsePitch('H4'), null);
+});
+
+test('move chord at the 5th: bass proposta B C E G, soprano proposta F A C D (Cho’s chart)', () => {
+  assert.deepEqual(moveChord(4), [-1, 0, 2, 4]);
+  assert.deepEqual(moveChord(-4), [-4, -2, 0, 1]);
+  assert.deepEqual(moveChord(11), moveChord(4)); // the 12th folds onto the 5th
+});
+
+test('the two move chords mirror each other around the proposta’s note', () => {
+  for (const entry of [2, 3, 4, 5, 7, 9, 11, 12, 13, 14]) {
+    // 0 - span, not -span, so a unison stays 0 rather than −0.
+    const mirrored = moveChord(entry).map((span) => 0 - span).sort((a, b) => a - b);
+    assert.deepEqual(moveChord(-entry), mirrored, `entry ${entry}`);
+  }
+});
+
+test('soprano move chord = consonance chord (0 2 4 5) transposed down by the entry', () => {
+  const noteClass = (step) => ((step % 7) + 7) % 7;
+  for (const entry of [2, 3, 4, 5, 7, 9, 11]) {
+    const expected = [0, 2, 4, 5].map((c) => noteClass(c - entry)).sort();
+    assert.deepEqual(moveChord(-entry).map(noteClass).sort(), expected, `entry ${entry}`);
+  }
 });

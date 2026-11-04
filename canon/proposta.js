@@ -2,13 +2,13 @@
 // src/taneyev/canon.js; this file only builds the page.
 // Intervals and spans are zero-indexed (step 1, 3rd 2, octave 7).
 
-import { spanTable, checkProposta, VERDICT } from '../src/taneyev/canon.js';
+import { spanTable, checkProposta, moveChord, VERDICT } from '../src/taneyev/canon.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { examplesBothWays, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
-import { parsePitch, pitchName } from '../src/common/diatonic.js';
-import { twoVoiceTune } from '../src/notation/abc.js';
+import { parsePitch, pitchName, letterOf, MIDDLE_C } from '../src/common/diatonic.js';
+import { twoVoiceTune, chordTune } from '../src/notation/abc.js';
 import { intoVocalRange } from '../src/notation/range.js';
-import { block, show } from '../src/notation/playback.js';
+import { block, show, drawSmall } from '../src/notation/playback.js';
 
 /** Display name for an interval of entrance, e.g. "octave above". */
 function entryName(entry) {
@@ -19,12 +19,14 @@ function entryName(entry) {
 const fmt = (n) => (n < 0 ? `−${-n}` : String(n));
 const sign = (n) => (n > 0 ? `+${n}` : fmt(n));
 
+/** An interval name with "a" or "an", e.g. "an octave", "a 3rd". */
+const withArticle = (name) => `${/^(octave|8|11)/.test(name) ? 'an' : 'a'} ${name}`;
+
 /** Plain words for a span, e.g. "up a 3rd", "repeat". */
 function spanName(span) {
   if (span === 0) return 'repeat the note';
   const size = Math.abs(span) === 1 ? 'step' : intervalName(Math.abs(span));
-  const article = /^(octave|8|11)/.test(size) ? 'an' : 'a';
-  return `${span > 0 ? 'up' : 'down'} ${article} ${size}`;
+  return `${span > 0 ? 'up' : 'down'} ${withArticle(size)}`;
 }
 
 /** Display name for a canon interval n, saying which voice is on top. */
@@ -82,6 +84,31 @@ function renderExample(parent, example) {
     : `${leaderName(entry)}: risposta (R) one bar later at the ${entryName(entry)} (J<sub>v</sub> = ${sign(entry)})`;
   const wrap = block(parent, title, caption);
   show(wrap, twoVoiceTune(intoVocalRange(measures), { names: ['P', 'R'] }));
+  renderMoveChord(wrap, entry);
+}
+
+/**
+ * Adds the allowed-move chord under an example: from C, every note the
+ * proposta may reach one delay later, stacked (Cho's compact chart).
+ */
+function renderMoveChord(wrap, entry) {
+  // Around C5 when the proposta is on top, C4 otherwise, so both sit on the treble staff.
+  const start = entry < 0 ? MIDDLE_C + 7 : MIDDLE_C;
+  const steps = moveChord(entry).map((span) => start + span);
+  const names = steps.map(letterOf).join(', ');
+  const box = document.createElement('div');
+  box.className = 'move-chord';
+  box.innerHTML = `<div class="chord-score"></div>
+    <p class="note">From C, the proposta may move to <b>${names}</b> (one delay later). This is the consonance chord C–E–G–A, ${chordHow(entry)}.</p>`;
+  wrap.append(box);
+  drawSmall(box.querySelector('.chord-score'), chordTune(steps), 90);
+}
+
+/** How the move chord comes from the consonance chord, in words. */
+function chordHow(entry) {
+  if (entry === 0) return 'above and below the note, since at the unison the voices cross';
+  if (entry < 0) return `transposed down ${withArticle(intervalName(-entry))}`;
+  return `turned upside down and transposed up ${withArticle(intervalName(entry))}`;
 }
 
 /** Draws the canon at one interval both ways round, so each voice leads in turn. */
