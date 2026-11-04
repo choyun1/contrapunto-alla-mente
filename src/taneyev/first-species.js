@@ -16,7 +16,7 @@ import { motion, moveSurvivesShift } from './motion.js';
 const C4 = MIDDLE_C;
 
 /** Cantus firmi to try, in voice II. Each ends with the step D–C (Fux). */
-const CANTI = [
+export const CANTI = [
   [C4, C4 + 2, C4 + 1, C4], // C E D C
   [C4, C4 + 3, C4 + 1, C4], // C F D C
   [C4, C4 - 1, C4 + 1, C4], // C B D C

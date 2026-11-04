@@ -41,6 +41,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | --- | --- |
 | `src/taneyev/rules.js` | The rules core for Taneyev's vertical-shifting counterpoint. Every page and checker uses it. |
 | `src/taneyev/three-voices.js` | Splits an outer shift between the two inner pairs of a three-voice texture. |
+| `src/taneyev/three-voice-examples.js` | Finds a four-bar, note-against-note example in three voices that stays correct under a split, for the three-voice page to draw and play. |
 | `src/taneyev/canon.js` | The canon rules: which proposta intervals stay consonant at an interval of entrance, and the proposta checker. |
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
