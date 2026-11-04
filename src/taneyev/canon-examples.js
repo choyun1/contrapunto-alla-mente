@@ -32,11 +32,15 @@ const MOVES = [1, -1, 2, -2, 3, -3, 4, -4];
 const MOVES_WITH_REPEATS = [...MOVES, 0];
 
 /**
- * First note of the proposta: D, as in Fux's Dorian examples. It starts an
- * octave higher when the risposta enters a 5th or more below, so both voices
- * stay in singing range.
+ * First note of the proposta: D, as in Fux's Dorian examples. D4 by default;
+ * D5 when the risposta enters a 6th or more below, D3 when it enters an octave
+ * or more above, so both voices stay in singing range.
  */
-const startNote = (entry) => parsePitch(entry <= -4 ? 'D5' : 'D4');
+function startNote(entry) {
+  if (entry <= -5) return parsePitch('D5');
+  if (entry >= 7) return parsePitch('D3');
+  return parsePitch('D4');
+}
 
 /** How far the proposta may wander from its first note, in steps (a 5th). */
 const RANGE = 4;
@@ -132,4 +136,16 @@ export function canonExample(entry) {
   const risposta = rispostaOf(proposta, entry);
   const intervals = proposta.map((step, bar) => (risposta[bar] === null ? null : risposta[bar] - step));
   return { entry, proposta, risposta, intervals };
+}
+
+/**
+ * The canon at one interval both ways round: first with the proposta in the
+ * upper voice (risposta below), then in the lower voice (risposta above), so
+ * each voice takes a turn leading. At the unison there is only one way.
+ * Returns a list of canonExample results (null where none exists).
+ */
+export function examplesBothWays(entry) {
+  const size = Math.abs(entry);
+  if (size === 0) return [canonExample(0)];
+  return [canonExample(-size), canonExample(size)];
 }

@@ -4,7 +4,7 @@
 
 import { spanTable, checkProposta, VERDICT } from '../src/taneyev/canon.js';
 import { intervalName } from '../src/taneyev/rules.js';
-import { canonExample, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
+import { examplesBothWays, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
@@ -61,32 +61,41 @@ function renderTable(entry) {
     <tbody>${rows.join('')}</tbody></table></div>`;
 }
 
-/** Draws the generated first-species canon for one interval of entrance. */
-function renderExample(parent, entry) {
-  const example = canonExample(entry);
-  if (!example) {
-    parent.innerHTML = '<p class="note">No four-bar first-species canon at this interval keeps every rule.</p>';
-    return;
-  }
-  const { proposta, risposta, intervals } = example;
+/** Which voice leads, in words, e.g. "Proposta in the upper voice". */
+const leaderName = (entry) => (entry < 0 ? 'Proposta in the upper voice' : 'Proposta in the lower voice');
+
+/** Draws one generated first-species canon. */
+function renderExample(parent, example) {
+  const { entry, proposta, risposta, intervals } = example;
   const measures = proposta.map((step, bar) => ({
     voiceI: step,
     voiceII: risposta[bar],
     textI: intervals[bar] === null ? undefined : `${bar === 1 ? 'n = ' : ''}${fmt(intervals[bar])}`,
   }));
   const moves = proposta.slice(1).map((step, k) => spanName(step - proposta[k]));
-  const sounding = intervals.filter((n) => n !== null).map(canonName);
+  const sounding = intervals.filter((n) => n !== null).map((n) => intervalName(Math.abs(n)));
   const caption = `Proposta (P): ${moves.join(', ')}. Between the voices: ${sounding.join(', ')}. `
-    + 'The number over each bar is n, zero-indexed.';
-  const wrap = block(parent, `First species, risposta (R) one bar later at the ${entryName(entry)}`, caption);
+    + `The number over each bar is n = ${fmt(entry)} − span, zero-indexed.`;
+  const title = entry === 0
+    ? 'First species, risposta (R) one bar later at the unison'
+    : `${leaderName(entry)}: risposta (R) one bar later at the ${entryName(entry)} (J<sub>v</sub> = ${sign(entry)})`;
+  const wrap = block(parent, title, caption);
   show(wrap, twoVoiceTune(measures, { names: ['P', 'R'] }));
+}
+
+/** Draws the canon at one interval both ways round, so each voice leads in turn. */
+function renderExamples(parent, entry) {
+  for (const example of examplesBothWays(entry)) {
+    if (example) renderExample(parent, example);
+    else parent.insertAdjacentHTML('beforeend', '<p class="note">No four-bar first-species canon this way round keeps every rule.</p>');
+  }
 }
 
 /** Shows the table and example for one interval of entrance. */
 function showTable(entry) {
   const section = document.getElementById('table');
   section.innerHTML = renderTable(entry);
-  renderExample(section.querySelector('.examples'), entry);
+  renderExamples(section.querySelector('.examples'), entry);
 }
 
 /** HTML report for a proposta, or an error message. */
