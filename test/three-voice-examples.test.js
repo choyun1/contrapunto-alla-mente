@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { threeVoiceExample } from '../src/taneyev/three-voice-examples.js';
-import { splitShift, pairShifts } from '../src/taneyev/three-voices.js';
+import { splitShift, pairShifts, isChordConsonance } from '../src/taneyev/three-voices.js';
 import { isConsonant } from '../src/taneyev/rules.js';
 import { moveSurvivesShift } from '../src/taneyev/motion.js';
 import { voicesTune } from '../src/notation/abc.js';
@@ -31,12 +31,24 @@ test('the lower voice is the cantus and stays put; the others move by their shif
   }
 });
 
-test('every pair is consonant in both versions (two-voice rules, Taneyev §90)', () => {
+test('both voices are consonant with the lowest; a 4th only between the two above it (Movable Counterpoint 4, 10:23)', () => {
   for (const { example } of examples) {
     for (const chord of [...example.original, ...example.shifted]) {
-      for (const [high, low] of PAIRS) assert.ok(isConsonant(chord[high] - chord[low]));
+      const lowest = Math.min(chord.upper, chord.middle, chord.lower);
+      for (const [high, low] of PAIRS) {
+        const i = chord[high] - chord[low];
+        const touchesLowest = Math.min(chord[high], chord[low]) === lowest;
+        assert.ok(touchesLowest ? isConsonant(i) : isChordConsonance(i, true));
+      }
     }
   }
+});
+
+test('a 4th is consonant only between two voices above the lowest', () => {
+  assert.equal(isChordConsonance(3, true), true);
+  assert.equal(isChordConsonance(-10, true), true); // an 11th, voices crossed
+  assert.equal(isChordConsonance(3, false), false);
+  assert.equal(isChordConsonance(6, true), false);
 });
 
 test('no pair moves into a forbidden perfect consonance, before or after the shift (Fux; §101)', () => {
@@ -53,9 +65,8 @@ test('no pair moves into a forbidden perfect consonance, before or after the shi
   }
 });
 
-test('−7 + −7 has no example while the 4th counts as a dissonance', () => {
-  // Every usable chord has the outer voices an octave apart, so they move in parallel octaves.
-  assert.equal(threeVoiceExample({ upper: -7, lower: -7 }), null);
+test('−7 + −7 (triple counterpoint at the octave) has an example once the upper 4th is allowed', () => {
+  assert.ok(threeVoiceExample({ upper: -7, lower: -7 }));
 });
 
 test('voicesTune keeps the given staff order unless asked to sort', () => {

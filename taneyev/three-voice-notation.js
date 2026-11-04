@@ -43,7 +43,7 @@ export function renderThreeVoiceExample(parent, split) {
   parent.replaceChildren();
   const example = threeVoiceExample(split);
   if (!example) {
-    parent.innerHTML = '<p class="note">No four-bar example exists for this split under the two-voice rules: the three pairs share too few fixed consonances, or every way between them makes forbidden parallels.</p>';
+    parent.innerHTML = '<p class="note">No four-bar example exists for this split: the three pairs share too few fixed consonances, or every way between them makes forbidden parallels.</p>';
     return;
   }
   const original = example.original.map((c, k) => ({ ...c, text: k === 0 ? 'original' : undefined }));

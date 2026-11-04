@@ -10,15 +10,14 @@
 //
 // Intervals are zero-indexed (unison 0, 5th 4, octave 7). Pitches are diatonic
 // steps in C major (src/common/diatonic.js). Each pair is checked by the
-// two-voice rules, so the 4th counts as a dissonance even between the upper
-// voices, which is stricter than three-voice practice (Movable Counterpoint 4,
-// 10:23).
+// two-voice rules, except that a 4th is allowed between the two voices above
+// the lowest-sounding one (see isChordConsonance in three-voices.js).
 
 import { isTritone } from '../common/diatonic.js';
-import { isConsonant, isPerfect } from './rules.js';
+import { isPerfect } from './rules.js';
 import { motion, moveSurvivesShift } from './motion.js';
 import { CANTI } from './first-species.js';
-import { pairShifts } from './three-voices.js';
+import { pairShifts, isChordConsonance } from './three-voices.js';
 
 /** Widest interval in either inner pair of the original: a 10th (9). */
 const WIDEST = 9;
@@ -50,22 +49,26 @@ function pairsOf(chord, split) {
 }
 
 /**
- * Is one pair usable in one version? It must be consonant and not a tritone,
+ * Is one chord, in one version, usable? First the lowest-sounding voice: both
+ * other voices must be consonant with it (two-voice rules). Then the pair above
+ * it, which may also form a 4th (isChordConsonance). No pair may be a tritone,
  * and a unison only belongs at the start or the end (Fux).
  */
-function goodPair(high, low, isEdge) {
-  const i = high - low;
-  if (!isConsonant(i) || isTritone(high, low)) return false;
-  return isEdge || i !== 0;
+function goodVersion(chord, isEdge) {
+  const pitches = [chord.upper, chord.middle, chord.lower];
+  const lowest = Math.min(...pitches);
+  const pairs = [[chord.upper, chord.middle], [chord.middle, chord.lower], [chord.upper, chord.lower]];
+  return pairs.every(([a, b]) => {
+    const bothAboveLowest = Math.min(a, b) > lowest;
+    if (!isChordConsonance(a - b, bothAboveLowest) || isTritone(a, b)) return false;
+    return isEdge || a !== b;
+  });
 }
 
 /** Is a chord good in the original and the shifted version? */
 function goodChord(chord, split, isEdge) {
-  const moves = voiceMoves(split);
-  const shifted = shiftChord(chord, moves);
-  return [chord, shifted].every((c) => goodPair(c.upper, c.middle, isEdge)
-    && goodPair(c.middle, c.lower, isEdge)
-    && goodPair(c.upper, c.lower, isEdge));
+  const shifted = shiftChord(chord, voiceMoves(split));
+  return goodVersion(chord, isEdge) && goodVersion(shifted, isEdge);
 }
 
 /** A chord with each voice moved by its shift. */

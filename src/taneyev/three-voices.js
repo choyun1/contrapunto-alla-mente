@@ -11,7 +11,7 @@
 // check against the book). Intervals and shifts are zero-indexed, as in
 // rules.js: −7 is the octave, −9 the 10th, −11 the 12th.
 
-import { chart } from './rules.js';
+import { chart, isConsonant, simple } from './rules.js';
 
 /**
  * Inner-pair shifts that are comfortable to write against: inversion at the
@@ -60,3 +60,15 @@ export function fixedConsonances(jv) {
  * middle voice's entry step for a split.
  */
 export const middleEntry = (lowerStep, { lower }) => lowerStep + Math.abs(lower);
+
+/**
+ * Is interval i consonant between two voices of a three-voice chord? As in two
+ * voices, except that a perfect 4th (3, or a compound of it) is consonant
+ * between two voices that both sit above the lowest-sounding voice, provided
+ * each is consonant with that voice (Movable Counterpoint 4, 10:23). The
+ * augmented 4th is still out: callers check tritones separately.
+ */
+export function isChordConsonance(i, bothAboveLowest) {
+  if (isConsonant(i)) return true;
+  return bothAboveLowest && simple(i) === 3;
+}
