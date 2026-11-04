@@ -1,4 +1,4 @@
-// Builds abc notation (https://abcnotation.com) for two-voice examples.
+// Builds abc notation (https://abcnotation.com) for two- and three-voice examples.
 //
 // Each voice gets its own staff, labelled I (upper voice of the original) and
 // II (lower voice), as in Taneyev. Pitches are diatonic steps from
@@ -94,37 +94,56 @@ function voiceLines(measures, voice, textKey, clefs, starts) {
  * voice II is drawn above voice I.
  */
 export function twoVoiceTune(measures, { names = ['I', 'II'] } = {}) {
-  const stepsI = fillRests(measures.map((m) => m.voiceI));
-  const stepsII = fillRests(measures.map((m) => m.voiceII));
-  const clefsI = clefsForVoice(stepsI);
-  const clefsII = clefsForVoice(stepsII);
-  const staffOrder = median(stepsI) >= median(stepsII) ? '(I) (II)' : '(II) (I)';
+  return voicesTune(measures, [
+    { id: 'I', key: 'voiceI', textKey: 'textI', name: names[0] },
+    { id: 'II', key: 'voiceII', textKey: 'textII', name: names[1] },
+  ]);
+}
+
+/**
+ * A tune with any number of voices, one staff each.
+ * voices: [{ id, key, textKey, name }], where `key` names each measure's pitch
+ * for that voice and `textKey` its text. With sortByPitch, higher-sounding
+ * voices get higher staves (voices that sit level keep the order given);
+ * without it, the staves keep the order given.
+ */
+export function voicesTune(measures, voices, { sortByPitch = true } = {}) {
   const starts = lineStarts(measures);
+  const staves = voices.map((voice) => {
+    const steps = fillRests(measures.map((m) => m[voice.key]));
+    const clefs = clefsForVoice(steps);
+    return {
+      ...voice,
+      middle: median(steps),
+      clefs,
+      lines: voiceLines(measures, voice.key, voice.textKey, clefs, starts),
+      startClefs: starts.map((k) => clefs[k]),
+    };
+  });
+  const sorted = sortByPitch ? [...staves].sort((a, b) => b.middle - a.middle) : staves;
+  const order = sorted.map((staff) => `(${staff.id})`);
   return [
     'X:1',
     'M:none',
     'L:1',
     'K:C',
-    `%%score ${staffOrder}`,
-    `V:I clef=${clefsI[0]} name="${names[0]}"`,
-    `V:II clef=${clefsII[0]} name="${names[1]}"`,
-    ...interleave(
-      voiceLines(measures, 'voiceI', 'textI', clefsI, starts), starts.map((k) => clefsI[k]),
-      voiceLines(measures, 'voiceII', 'textII', clefsII, starts), starts.map((k) => clefsII[k]),
-    ),
+    `%%score ${order.join(' ')}`,
+    ...staves.map((staff) => `V:${staff.id} clef=${staff.clefs[0]} name="${staff.name}"`),
+    ...interleave(staves, starts.length),
   ].join('\n');
 }
 
 /**
- * Alternates the two voices line by line, so each system holds both. Each
+ * Alternates the voices line by line, so each system holds all of them. Each
  * line's voice marker restates its clef, because abcjs forgets an inline
  * clef change when it starts a new line.
  */
-function interleave(linesI, startClefsI, linesII, startClefsII) {
-  return linesI.flatMap((line, k) => [
-    `[V:I clef=${startClefsI[k]}]`, line,
-    `[V:II clef=${startClefsII[k]}]`, linesII[k],
-  ]);
+function interleave(staves, lineCount) {
+  const out = [];
+  for (let k = 0; k < lineCount; k += 1) {
+    for (const staff of staves) out.push(`[V:${staff.id} clef=${staff.startClefs[k]}]`, staff.lines[k]);
+  }
+  return out;
 }
 
 /**

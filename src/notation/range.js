@@ -37,7 +37,11 @@ function offCentre(pitches, shift) {
  * example between LOWEST and HIGHEST; ties go to the one closest to middle C.
  */
 export function vocalShift(measures) {
-  const pitches = pitchesOf(measures);
+  return octaveShiftFor(pitchesOf(measures));
+}
+
+/** The same octave shift for a plain list of pitches, with any number of voices. */
+export function octaveShiftFor(pitches) {
   if (pitches.length === 0) return 0;
   let best = 0;
   for (const shift of [-21, -14, -7, 0, 7, 14, 21]) {

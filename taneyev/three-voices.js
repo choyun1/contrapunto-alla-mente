@@ -3,6 +3,7 @@
 // src/taneyev/three-voices.js and rules.js; this file only builds the page.
 
 import { renderChart, wireNotation, sign } from './chart-card.js';
+import { renderThreeVoiceExample } from './three-voice-notation.js';
 import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances, middleEntry } from '../src/taneyev/three-voices.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
 
@@ -65,6 +66,7 @@ function showSplit(split, index) {
     renderChart(upperLower, 'Upper and lower voices', 'The outer pair, at the total shift.', { id: 'pair-upper-lower' }),
   ].join('');
   wireNotation(chartsBox);
+  renderThreeVoiceExample(document.getElementById('demo'), split);
   splitsBox.querySelectorAll('tr.picked').forEach((tr) => tr.classList.remove('picked'));
   splitsBox.querySelector(`tr[data-index="${index}"]`).classList.add('picked');
 }
@@ -81,7 +83,7 @@ function update() {
     const index = Number(tr.dataset.index);
     tr.querySelector('button').addEventListener('click', () => {
       showSplit(splits[index], index);
-      chartsBox.scrollIntoView({ behavior: 'smooth' });
+      document.getElementById('demo').parentElement.scrollIntoView({ behavior: 'smooth' });
     });
   });
   const firstEasy = Math.max(0, splits.findIndex(isEasySplit));
