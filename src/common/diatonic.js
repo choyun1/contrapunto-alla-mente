@@ -27,3 +27,12 @@ export function parsePitch(name) {
   const letter = LETTERS.indexOf(match[1].toUpperCase());
   return Number(match[2]) * 7 + letter;
 }
+
+/** Semitones above C of each letter in C major. */
+const SEMITONES = [0, 2, 4, 5, 7, 9, 11];
+
+/** Semitones from C0 to a step, e.g. 48 for middle C. */
+export const semitonesOf = (step) => octaveOf(step) * 12 + SEMITONES[((step % 7) + 7) % 7];
+
+/** Is the distance between two steps a tritone (augmented 4th or diminished 5th)? */
+export const isTritone = (a, b) => Math.abs(semitonesOf(a) - semitonesOf(b)) % 12 === 6;
