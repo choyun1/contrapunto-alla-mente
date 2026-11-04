@@ -11,7 +11,13 @@
 <body>
 <main class="wrap">
 <header>
-<p class="crumb"><a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a></p>
+<!-- site navigation: the same on every page, in site order; aria-current marks this page -->
+<nav class="site" aria-label="Site">
+<a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
+<a href="../taneyev/charts.html" aria-current="page">Consonance charts</a>
+<a href="../canon/proposta.html">Canon proposta</a>
+<a href="../taneyev/three-voices.html">Three-voice shifts</a>
+</nav>
 <h1>Taneyev consonance charts</h1>
 <p class="lead">Each chart shows what every interval of the original becomes when the voices shift by J<sub>v</sub>, and the suspension rules that follow. Intervals are zero-indexed (unison 0, octave 7, 12th 11). The charts are generated from the same rules code the checker will use. The J<sub>v</sub> = −11 chart matches Movable Counterpoint 2 (frame 0071).</p>
 <dl class="terms">

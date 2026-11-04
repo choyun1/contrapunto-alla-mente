@@ -20,7 +20,13 @@ a{color:var(--accent)}
 h1,h2{font-family:var(--display);font-weight:600;text-wrap:balance;margin:0}
 h1{font-size:2.1rem;line-height:1.15}
 .lead{max-width:65ch;color:var(--muted);margin:8px 0 0}
-.crumb{font-size:.85rem;margin:0 0 6px}
+/* site navigation at the top of every page; the current page is plain text, not a link colour */
+nav.site{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;font-size:.85rem;margin:0 0 10px}
+nav.site a{text-decoration:none}
+nav.site a:hover{text-decoration:underline}
+nav.site a[aria-current="page"]{color:var(--ink);font-weight:600}
+nav.site .brand{margin-right:auto}
+@media (max-width:600px){nav.site .brand{flex-basis:100%}}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
 .card h2{font-size:1.35rem;margin-bottom:4px}
