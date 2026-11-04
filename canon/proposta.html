@@ -13,7 +13,7 @@
 <header>
 <p class="crumb"><a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a></p>
 <h1>Canon proposta intervals</h1>
-<p class="lead">In a two-voice canon the risposta plays what the proposta played one delay ago, moved by the interval of entrance. So every melodic interval the proposta makes across the delay turns into a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant. Intervals are zero-indexed (step 1, 3rd 2, octave 7).</p>
+<p class="lead">In a two-voice canon the risposta plays what the proposta played one delay ago, moved by the interval of entrance. So every melodic interval the proposta makes across the delay turns into a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, with a short first-species canon to see and hear. The order follows the consonance charts page. Intervals are zero-indexed (step 1, 3rd 2, octave 7).</p>
 <dl class="terms">
 <div><dt>span</dt><dd>The proposta’s melodic interval from a note to the note one delay later. Positive: rising. With a delay of one measure in whole notes, that is from one note to the next; with two measures, from one note to the note after next.</dd></div>
 <div><dt>J<sub>v</sub></dt><dd>The interval of entrance, in steps. Positive: the risposta is above.</dd></div>
@@ -59,6 +59,7 @@
 .checkform input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px;width:5em}
 .checkform #notes{width:min(28em,80vw)}.checkform button{font:inherit;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 14px;cursor:pointer}
 table.spans td{padding:3px 10px;text-align:left}table.spans th{text-align:left;padding:3px 10px}table.spans td.c{text-align:center}</style>
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
 <script type="module" src="proposta.js"></script>
 </body>
 </html>

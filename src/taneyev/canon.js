@@ -95,12 +95,25 @@ export function consecutivePerfects(first, second, bothMove) {
 }
 
 /**
+ * Do both voices move the same way into a perfect consonance (a hidden or
+ * direct 5th or octave)? Forbidden in two-voice strict style (Fux, Gradus,
+ * first species).
+ * `motionA` and `motionB` are each voice's signed melodic step.
+ */
+export function similarIntoPerfect(motionA, motionB, n) {
+  if (!isConsonant(n) || !isPerfect(n)) return false;
+  return Math.sign(motionA) !== 0 && Math.sign(motionA) === Math.sign(motionB);
+}
+
+/**
  * Checks a proposta written as equal note values, one per time unit.
  * `steps` are diatonic pitch steps (src/common/diatonic.js) and `delay` is the
  * distance of entrance in those units. Every note is treated as a strong beat,
  * as in a whole-note framework.
  * Returns one entry per note from the risposta's entrance on:
- * { index, span, n, verdict, risposta, proposta, consecutive }.
+ * { index, span, n, verdict, risposta, proposta, consecutive, similar }.
+ * `similar` marks similar motion into a perfect consonance that is not
+ * already counted as consecutive perfects.
  */
 export function checkProposta(steps, entry, delay) {
   const results = [];
@@ -109,12 +122,14 @@ export function checkProposta(steps, entry, delay) {
     const rule = spanRule(span, entry);
     const previous = results[results.length - 1];
     let consecutive = false;
+    let similar = false;
     if (previous) {
-      const propostaMoves = steps[i] !== steps[i - 1];
-      const rispostaMoves = steps[i - delay] !== steps[i - delay - 1];
-      consecutive = consecutivePerfects(previous.n, rule.n, propostaMoves && rispostaMoves);
+      const propostaMotion = steps[i] - steps[i - 1];
+      const rispostaMotion = steps[i - delay] - steps[i - delay - 1];
+      consecutive = consecutivePerfects(previous.n, rule.n, propostaMotion !== 0 && rispostaMotion !== 0);
+      similar = !consecutive && similarIntoPerfect(propostaMotion, rispostaMotion, rule.n);
     }
-    results.push({ index: i, ...rule, consecutive });
+    results.push({ index: i, ...rule, consecutive, similar });
   }
   return results;
 }

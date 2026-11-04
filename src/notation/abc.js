@@ -15,6 +15,24 @@ export function abcPitch(step) {
   return letter + ','.repeat(4 - octave);
 }
 
+/** abc for one bar's note: a whole-note pitch, or a whole rest for null. */
+const abcNote = (step) => (step === null ? 'z1' : `${abcPitch(step)}1`);
+
+/**
+ * A voice with each rest replaced by the next real pitch (or the last one),
+ * so clefs and staff order can be worked out from pitches alone.
+ */
+function fillRests(steps) {
+  const filled = [...steps];
+  for (let k = filled.length - 2; k >= 0; k--) {
+    if (filled[k] === null) filled[k] = filled[k + 1];
+  }
+  for (let k = 1; k < filled.length; k++) {
+    if (filled[k] === null) filled[k] = filled[k - 1];
+  }
+  return filled;
+}
+
 /** Middle pitch of a voice, used to decide which staff goes on top. */
 function median(steps) {
   const sorted = [...steps].sort((a, b) => a - b);
@@ -38,7 +56,7 @@ function voiceLines(measures, voice, textKey, clefs) {
       const clefChange = k > start && clefs[k] !== clefs[k - 1] ? `[K:clef=${clefs[k]}] ` : '';
       const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
       const bar = measure.doubleBarAfter ? '||' : '|';
-      parts.push(`${clefChange}${text}${abcPitch(measure[voice])}1 ${bar}`);
+      parts.push(`${clefChange}${text}${abcNote(measure[voice])} ${bar}`);
     }
     lines.push(parts.join(' '));
   }
@@ -49,13 +67,15 @@ function voiceLines(measures, voice, textKey, clefs) {
 /**
  * A two-voice tune.
  * measures: [{ voiceI, voiceII, textI?, textII?, doubleBarAfter? }]
+ * A voice set to null rests for that bar. `names` labels the staves
+ * (default I and II, as in Taneyev).
  * textI is printed above voice I, textII above voice II.
  * The higher-sounding voice gets the top staff, so after an inverse shift
  * voice II is drawn above voice I.
  */
-export function twoVoiceTune(measures) {
-  const stepsI = measures.map((m) => m.voiceI);
-  const stepsII = measures.map((m) => m.voiceII);
+export function twoVoiceTune(measures, { names = ['I', 'II'] } = {}) {
+  const stepsI = fillRests(measures.map((m) => m.voiceI));
+  const stepsII = fillRests(measures.map((m) => m.voiceII));
   const clefsI = clefsForVoice(stepsI);
   const clefsII = clefsForVoice(stepsII);
   const staffOrder = median(stepsI) >= median(stepsII) ? '(I) (II)' : '(II) (I)';
@@ -65,8 +85,8 @@ export function twoVoiceTune(measures) {
     'L:1',
     'K:C',
     `%%score ${staffOrder}`,
-    `V:I clef=${clefsI[0]} name="I"`,
-    `V:II clef=${clefsII[0]} name="II"`,
+    `V:I clef=${clefsI[0]} name="${names[0]}"`,
+    `V:II clef=${clefsII[0]} name="${names[1]}"`,
     ...interleave(
       voiceLines(measures, 'voiceI', 'textI', clefsI), lineStartClefs(clefsI),
       voiceLines(measures, 'voiceII', 'textII', clefsII), lineStartClefs(clefsII),
