@@ -112,3 +112,12 @@ details.notation summary:hover{border-color:var(--accent)}
 .controls button{font:inherit;font-weight:600;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:3px 14px;background:var(--panel);cursor:pointer}
 .sound-picker{display:inline-flex;gap:6px;align-items:center;margin-top:10px;font-size:.85rem;color:var(--muted)}
 .sound-picker select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+/* The shift as a 3D motion (taneyev/shift-model.js), under each chart. */
+details.motion{border-top:0;padding-top:0}
+.model{display:grid;gap:10px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
+.model-bar{display:flex;flex-wrap:wrap;gap:6px}
+.model-bar button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
+.model-bar button:hover{border-color:var(--accent)}
+.model-bar button[aria-pressed="true"]{border-color:var(--accent);background:var(--fc)}
+.model canvas{display:block;width:100%;max-width:640px;aspect-ratio:4/3.2;background:var(--panel);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:grab}
+.model-note{margin:0;max-width:70ch;font-size:.9rem;color:var(--muted)}

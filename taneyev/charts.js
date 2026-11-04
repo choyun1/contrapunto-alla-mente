@@ -1,4 +1,5 @@
 import { renderChart, wireNotation, sign, slug } from './chart-card.js';
+import { wireModels } from './shift-model.js';
 import { addSoundPicker } from '../src/notation/playback.js';
 
 // Order: Jv = 0, then the octave family (−7, −14), the 12th and 10th, their
@@ -19,16 +20,19 @@ const CHARTS = [
 
 document.getElementById('links').innerHTML = CHARTS
   .map(([jv]) => `<a href="#${slug(jv)}">${sign(jv)}</a>`).join(' ');
-document.getElementById('charts').innerHTML = CHARTS.map((c) => renderChart(...c)).join('');
+document.getElementById('charts').innerHTML = CHARTS
+  .map(([jv, title, note]) => renderChart(jv, title, note, { motion: true })).join('');
 
 wireNotation(document.getElementById('charts'));
+wireModels(document.getElementById('charts'));
 
 const form = document.getElementById('custom');
 const showCustom = (jv) => {
   const box = document.getElementById('custom-chart');
   box.innerHTML = renderChart(jv, jv < 0 ? 'Inverse shift' : jv > 0 ? 'Direct shift' : 'Simple counterpoint',
-    'Generated on request.');
+    'Generated on request.', { motion: true });
   wireNotation(box);
+  wireModels(box);
   box.scrollIntoView({ behavior: 'smooth' });
 };
 form.addEventListener('submit', (e) => {
