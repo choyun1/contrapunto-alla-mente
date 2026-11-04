@@ -133,3 +133,36 @@ export function checkProposta(steps, entry, delay) {
   }
   return results;
 }
+
+/** Does interval n put the risposta on the wrong side of the proposta? */
+const crossed = (n, entry) => n !== 0 && entry !== 0 && Math.sign(n) !== Math.sign(entry);
+
+/** Folds a span into the window [low, low + 6], keeping its note name. */
+const fold = (span, low) => ((((span - low) % 7) + 7) % 7) + low;
+
+/**
+ * The proposta's allowed moves as one stacked chord, in steps from its
+ * current note (0). Spans that cross the voices are left out, and octaves are
+ * folded together, so the chord names which notes the proposta may reach one
+ * delay later.
+ *
+ * The chord is always the consonance chord (unison, 3rd, 5th, 6th: C E G A on
+ * C), moved. With the proposta on top it is transposed down by the interval
+ * of entrance; with the proposta below it is first turned upside down, then
+ * transposed up. So the two cases mirror each other around the proposta's
+ * note (n = Jv − span). Cho's chord chart; to check against Cho's paper notes.
+ *
+ * Spelled rising from just below the note when the proposta is the lower
+ * voice, falling from just above it when it is the upper voice, and around
+ * the note at the unison. Returns sorted steps, e.g. [−1, 0, 2, 4] (B C E G)
+ * for the risposta a 5th above.
+ */
+export function moveChord(entry) {
+  let low = -3;
+  if (entry > 0) low = -2;
+  if (entry < 0) low = -4;
+  const folded = consonantSpans(entry)
+    .filter((span) => !crossed(canonInterval(span, entry), entry))
+    .map((span) => fold(span, low));
+  return [...new Set(folded)].sort((a, b) => a - b);
+}

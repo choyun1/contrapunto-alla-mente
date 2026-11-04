@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { canonExample, examplesBothWays, EXAMPLE_ENTRIES, BARS } from '../src/taneyev/canon-examples.js';
 import { checkProposta, similarIntoPerfect } from '../src/taneyev/canon.js';
 import { isTritone, parsePitch } from '../src/common/diatonic.js';
-import { twoVoiceTune } from '../src/notation/abc.js';
+import { twoVoiceTune, chordTune } from '../src/notation/abc.js';
 import { intoVocalRange, HIGHEST, LOWEST } from '../src/notation/range.js';
 
 // Intervals are zero-indexed: octave 7, 12th 11.
@@ -82,4 +82,8 @@ test('every canon example fits F2–G5 once moved into vocal range', () => {
       assert.ok(Math.max(...pitches) <= HIGHEST && Math.min(...pitches) >= LOWEST, `out of range at ${example.entry}`);
     }
   }
+});
+
+test('chordTune stacks notes into one whole-note chord', () => {
+  assert.match(chordTune([27, 28, 30, 32]), /\[B,CEG\]1/);
 });

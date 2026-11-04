@@ -126,3 +126,14 @@ function interleave(linesI, startClefsI, linesII, startClefsII) {
     `[V:II clef=${startClefsII[k]}]`, linesII[k],
   ]);
 }
+
+/**
+ * A one-chord tune: the steps sounded together as a whole note, with an
+ * optional label above, in one clef (treble unless given). Used for the
+ * canon page's allowed-move chords.
+ */
+export function chordTune(steps, { label, clef = 'treble' } = {}) {
+  const text = label === undefined ? '' : `"^${label}"`;
+  const notes = steps.map(abcPitch).join('');
+  return ['X:1', 'M:none', 'L:1', 'K:C', `V:1 clef=${clef}`, `${text}[${notes}]1 |]`].join('\n');
+}
