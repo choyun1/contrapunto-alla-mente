@@ -18,7 +18,7 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 &emsp;2.2&ensp;[Working on it](#working-on-it)<br>
 3&ensp;The project<br>
 &emsp;3.1&ensp;[Roadmap](#roadmap)<br>
-&emsp;3.2&ensp;[Sources and credits](#sources-and-credits)</small>
+&emsp;3.2&ensp;[Sources, credits and license](#sources-credits-and-license)</small>
 
 </td></tr></table>
 
@@ -66,8 +66,8 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **Drills.** Timed recall of each index, then play-along practice with live feedback.
 
-## Sources and credits
+## Sources, credits and license
 
 The rules follow Taneyev, *Convertible Counterpoint in the Strict Style* (§§81–82, 90, 101, 128, 135), and Christopher Segall, ["Sergei Taneev's Vertical-Shifting Counterpoint: An Introduction"](https://mtosmt.org/issues/mto.14.20.3/mto.14.20.3.segall.php), *Music Theory Online* 20.3 (2014), with charts checked against the *Movable Counterpoint* video course. Each rule in the code cites its section. Notation and playback are by [abcjs](https://www.abcjs.net/) (MIT); the GitHub mark in the footer is from Primer Octicons (MIT).
 
-It was built by Adrian Cho with Claude (Anthropic) in 2026.
+It was built by Adrian Cho with Claude (Anthropic) in 2026. The code is under the MIT License ([LICENSE](LICENSE)). The quoted rules and charts are from the sources above, cited for study.
