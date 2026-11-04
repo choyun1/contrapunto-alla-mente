@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { abcPitch, twoVoiceTune } from '../src/notation/abc.js';
 import { ledgerLines, clefsForVoice } from '../src/notation/clefs.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
-import { intervalStrip, parallelChain, intoSingingRange } from '../src/taneyev/examples.js';
+import { intervalStrip, parallelChain } from '../src/taneyev/examples.js';
 
 test('diatonic steps name the right pitches', () => {
   assert.equal(pitchName(MIDDLE_C), 'C4');
@@ -77,15 +77,9 @@ test('every printed line restates its clef (abcjs drops inline clefs at line bre
   assert.deepEqual(markersI, ['[V:I clef=bass]', '[V:I clef=treble]']);
 });
 
-test('intoSingingRange lifts the Jv = −14 strip an octave, keeping every interval', () => {
-  const dyads = intervalStrip(-14).map((d) => d.derivative);
-  const lifted = intoSingingRange(dyads);
-  assert.equal(lifted[0].voiceII, MIDDLE_C + 7);
-  assert.equal(Math.min(...lifted.map((d) => d.voiceI)), MIDDLE_C - 7);
-  lifted.forEach((d, k) => assert.equal(d.voiceI - d.voiceII, dyads[k].voiceI - dyads[k].voiceII));
-});
-
-test('intoSingingRange leaves the Jv = −7 strip where it is', () => {
-  const dyads = intervalStrip(-7).map((d) => d.derivative);
-  assert.deepEqual(intoSingingRange(dyads), dyads);
+test('a half-bar rest does not count toward the eight bars on a line', () => {
+  const bars = (n) => Array.from({ length: n }, () => ({ voiceI: 30, voiceII: 28 }));
+  const abc = twoVoiceTune([...bars(4), { voiceI: null, voiceII: null, length: '1/2' }, ...bars(4)]);
+  assert.match(abc, /z1\/2/);
+  assert.equal(abc.split('\n').filter((line) => line.startsWith('[V:I ')).length, 1, 'one printed line');
 });

@@ -5,7 +5,8 @@
 
 import { twoVoiceTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
-import { intervalStrip, parallelChain, intoSingingRange } from '../src/taneyev/examples.js';
+import { intoVocalRange } from '../src/notation/range.js';
+import { intervalStrip, parallelChain } from '../src/taneyev/examples.js';
 import { firstSpeciesExample } from '../src/taneyev/first-species.js';
 
 const KIND_COLORS = {
@@ -23,6 +24,9 @@ function transitionLabel(dyad, first) {
   return `${dyad.m} → ${minus(dyad.n)}`;
 }
 
+/** Half a bar of silence between an original and its shifted version, so each is heard on its own. */
+const HALF_BAR_REST = { voiceI: null, voiceII: null, length: '1/2' };
+
 /**
  * Every original interval after the shift, labelled m→n. The original strip
  * is the same for every chart, so it is drawn only for Jv = 0.
@@ -32,12 +36,12 @@ function renderStrip(parent, jv) {
   const color = (measure) => KIND_COLORS[strip[measure].kind];
   if (jv === 0) {
     const original = strip.map((d, k) => ({ ...d.original, textI: k === 0 ? `m = ${d.m}` : d.m }));
-    show(block(parent, 'Every interval', 'Voice II holds middle C; the number above is the interval.'),
-      twoVoiceTune(original), color);
+    show(block(parent, 'Every interval', 'Voice II holds C; the number above is the interval.'),
+      twoVoiceTune(intoVocalRange(original)), color);
     return;
   }
   const labelled = strip.map((d, k) => ({ ...d.derivative, textI: transitionLabel(d, k === 0) }));
-  const derivative = intoSingingRange(labelled);
+  const derivative = intoVocalRange(labelled);
   show(block(parent, `Every interval after shifting voice I by ${minus(jv)}`,
     'Above each dyad: the original interval m → the derivative n. Colours match the chart.'),
   twoVoiceTune(derivative), color);
@@ -47,11 +51,10 @@ function renderStrip(parent, jv) {
 function renderChains(parent, jv) {
   for (const [m, label] of [[2, '3rds'], [5, '6ths'], [9, '10ths']]) {
     const chain = parallelChain(m, jv);
-    const dyads = [
-      ...chain.original.map((d, k) => ({ ...d, textI: k === 0 ? 'original' : undefined })),
-      ...intoSingingRange(chain.derivative).map((d, k) => ({ ...d, textI: k === 0 ? 'shifted' : undefined })),
-    ];
-    dyads[chain.original.length - 1].doubleBarAfter = true;
+    const original = intoVocalRange(chain.original).map((d, k) => ({ ...d, textI: k === 0 ? 'original' : undefined }));
+    const shifted = intoVocalRange(chain.derivative).map((d, k) => ({ ...d, textI: k === 0 ? 'shifted' : undefined }));
+    original[original.length - 1].doubleBarAfter = true;
+    const dyads = [...original, HALF_BAR_REST, ...shifted];
     const color = (measure) => (measure < chain.original.length || chain.survives
       ? 'var(--ink)' : 'var(--no)');
     show(block(parent, `Parallel ${label} → ${chain.verdict}`), twoVoiceTune(dyads), color);
@@ -70,14 +73,14 @@ function renderFirstSpecies(parent, jv) {
   const caption = 'Voice II is the cantus firmus. The numbers are the intervals: m in the original, n after the shift.';
   const original = labelIntervals(example.original, example.m, 'm');
   if (jv === 0) {
-    show(block(parent, 'First species, four bars', caption), twoVoiceTune(original));
+    show(block(parent, 'First species, four bars', caption), twoVoiceTune(intoVocalRange(original)));
     return;
   }
   const derivative = labelIntervals(example.derivative, example.n, 'n');
   original[original.length - 1].doubleBarAfter = true;
-  // Lift both halves together, so the cantus stays in one octave throughout.
+  // Move both halves together, so the cantus stays in one octave throughout.
   show(block(parent, 'First species, four bars: original ‖ shifted', caption),
-    twoVoiceTune(intoSingingRange([...original, ...derivative])));
+    twoVoiceTune(intoVocalRange([...original, HALF_BAR_REST, ...derivative])));
 }
 
 /** Fills a chart's notation panel. */

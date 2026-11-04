@@ -23,7 +23,9 @@ h1{font-size:2.1rem;line-height:1.15}
 .crumb{font-size:.85rem;margin:0 0 6px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.card h2{font-size:1.25rem;margin-bottom:4px}
+.card h2{font-size:1.35rem;margin-bottom:4px}
+a.card{text-decoration:none;color:inherit}
+a.card:hover{border-color:var(--accent)}
 .card p{margin:0;color:var(--muted)}
 .soon{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 nav.jump{display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--line)}
@@ -39,7 +41,8 @@ nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--lin
 .k-variable-dissonance{background:var(--vd);color:var(--vd-ink)} .k-fixed-dissonance{background:var(--fd);color:var(--fd-ink)}
 .sym{display:inline-block;min-width:2.2em;text-align:center;font-weight:600}
 .chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;scroll-margin-top:64px;display:grid;gap:8px}
-.chart h2{font-size:1.35rem}
+.chart>header{padding-bottom:10px;border-bottom:1px solid var(--line)}
+.chart h2{font-size:1.5rem}
 .jv{font-family:var(--body);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:6px;font-size:1.05rem}
 .formula{margin:2px 0 0;font-family:var(--body);font-variant-numeric:tabular-nums}
 .terms{margin:10px 0 0;display:grid;gap:4px;max-width:70ch}
@@ -67,12 +70,23 @@ tr.r td.nm{font-size:1.02rem;border-radius:4px}
 .foot .github{display:inline-flex;color:var(--muted)}
 .foot .github:hover{color:var(--ink)}
 @media (max-width:520px){h1{font-size:1.7rem}}
-details.notation{border-top:1px solid var(--line);padding-top:10px}
-details.notation summary{cursor:pointer;font-weight:600;color:var(--accent)}
-.examples{display:grid;gap:18px;margin-top:12px}
-.example-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
-.example h3{font-size:.95rem;margin:0}
-.example button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
+/* Hierarchy, on every page: a card (h2, serif) > a disclosure pill > example boxes (h3, sans). */
+details.notation{border-top:1px solid var(--line);padding-top:12px}
+details.notation summary{display:inline-flex;align-items:center;gap:8px;list-style:none;cursor:pointer;
+  font-size:.9rem;font-weight:600;color:var(--accent);background:var(--bg);border:1px solid var(--line);
+  border-radius:999px;padding:4px 14px 4px 10px}
+details.notation summary::-webkit-details-marker{display:none}
+details.notation summary::before{content:"";width:0;height:0;border-style:solid;border-width:5px 0 5px 7px;
+  border-color:transparent transparent transparent currentColor;transition:transform .15s}
+details.notation[open] summary::before{transform:rotate(90deg)}
+details.notation summary:hover{border-color:var(--accent)}
+.examples{display:grid;gap:14px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
+.example{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px 6px}
+.example-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding-bottom:6px;border-bottom:1px solid var(--line)}
+.example h3{font-family:var(--body);font-size:.95rem;font-weight:600;margin:0}
+.example button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
+.example button:hover{border-color:var(--accent)}
 .score{color:var(--ink);max-width:720px}
 /* the logo (assets/logo.svg) before the site name, sized to the text it sits in */
 .brand{display:inline-flex;align-items:center;gap:.35em}
