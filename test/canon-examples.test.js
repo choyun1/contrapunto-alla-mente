@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { canonExample, EXAMPLE_ENTRIES, BARS } from '../src/taneyev/canon-examples.js';
+import { canonExample, examplesBothWays, EXAMPLE_ENTRIES, BARS } from '../src/taneyev/canon-examples.js';
 import { checkProposta, similarIntoPerfect } from '../src/taneyev/canon.js';
 import { isTritone, parsePitch } from '../src/common/diatonic.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
@@ -52,4 +52,23 @@ test('a null voice prints a whole rest', () => {
   const abc = twoVoiceTune([{ voiceI: 28, voiceII: null }, { voiceI: 30, voiceII: 28 }], { names: ['P', 'R'] });
   assert.match(abc, /z1/);
   assert.match(abc, /name="P"/);
+});
+
+test('each interval has a canon both ways round, so each voice leads in turn', () => {
+  for (const entry of EXAMPLE_ENTRIES.filter((e) => e !== 0)) {
+    const [upper, lower] = examplesBothWays(entry);
+    assert.ok(upper.proposta[0] > upper.risposta[1], `proposta on top at ${entry}`);
+    assert.ok(lower.proposta[0] < lower.risposta[1], `proposta below at ${entry}`);
+  }
+  assert.equal(examplesBothWays(0).length, 1);
+});
+
+test('examples stay off high ledger lines: nothing above A5', () => {
+  const A5 = parsePitch('A5');
+  for (const entry of EXAMPLE_ENTRIES) {
+    for (const example of examplesBothWays(entry)) {
+      const top = Math.max(...example.proposta, ...example.risposta.filter((s) => s !== null));
+      assert.ok(top <= A5, `too high at ${example.entry}`);
+    }
+  }
 });
