@@ -7,6 +7,7 @@ import { intervalName } from '../src/taneyev/rules.js';
 import { examplesBothWays, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
+import { intoVocalRange } from '../src/notation/range.js';
 import { block, show } from '../src/notation/playback.js';
 
 /** Display name for an interval of entrance, e.g. "octave above". */
@@ -80,7 +81,7 @@ function renderExample(parent, example) {
     ? 'First species, risposta (R) one bar later at the unison'
     : `${leaderName(entry)}: risposta (R) one bar later at the ${entryName(entry)} (J<sub>v</sub> = ${sign(entry)})`;
   const wrap = block(parent, title, caption);
-  show(wrap, twoVoiceTune(measures, { names: ['P', 'R'] }));
+  show(wrap, twoVoiceTune(intoVocalRange(measures), { names: ['P', 'R'] }));
 }
 
 /** Draws the canon at one interval both ways round, so each voice leads in turn. */

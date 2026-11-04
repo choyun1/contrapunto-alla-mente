@@ -4,6 +4,7 @@ import { canonExample, examplesBothWays, EXAMPLE_ENTRIES, BARS } from '../src/ta
 import { checkProposta, similarIntoPerfect } from '../src/taneyev/canon.js';
 import { isTritone, parsePitch } from '../src/common/diatonic.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
+import { intoVocalRange, HIGHEST, LOWEST } from '../src/notation/range.js';
 
 // Intervals are zero-indexed: octave 7, 12th 11.
 
@@ -69,6 +70,16 @@ test('examples stay off high ledger lines: nothing above A5', () => {
     for (const example of examplesBothWays(entry)) {
       const top = Math.max(...example.proposta, ...example.risposta.filter((s) => s !== null));
       assert.ok(top <= A5, `too high at ${example.entry}`);
+    }
+  }
+});
+
+test('every canon example fits F2–G5 once moved into vocal range', () => {
+  for (const entry of EXAMPLE_ENTRIES) {
+    for (const example of examplesBothWays(entry)) {
+      const measures = example.proposta.map((step, bar) => ({ voiceI: step, voiceII: example.risposta[bar] }));
+      const pitches = intoVocalRange(measures).flatMap((m) => [m.voiceI, m.voiceII]).filter((s) => s !== null);
+      assert.ok(Math.max(...pitches) <= HIGHEST && Math.min(...pitches) >= LOWEST, `out of range at ${example.entry}`);
     }
   }
 });
