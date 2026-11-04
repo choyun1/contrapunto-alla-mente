@@ -4,7 +4,7 @@
 // turns it into notation and sound.
 
 import { twoVoiceTune } from '../src/notation/abc.js';
-import { block, show } from '../src/notation/playback.js';
+import { block, show, SOUND } from '../src/notation/playback.js';
 import { intoVocalRange } from '../src/notation/range.js';
 import { intervalStrip, parallelChain } from '../src/taneyev/examples.js';
 import { firstSpeciesExample } from '../src/taneyev/first-species.js';
@@ -24,8 +24,8 @@ function transitionLabel(dyad, first) {
   return `${dyad.m} → ${minus(dyad.n)}`;
 }
 
-/** Half a bar of silence between an original and its shifted version, so each is heard on its own. */
-const HALF_BAR_REST = { voiceI: null, voiceII: null, length: '1/2' };
+/** A whole bar (4 beats) of silence between an original and its shifted version, so each is heard on its own. */
+const BAR_REST = { voiceI: null, voiceII: null };
 
 /**
  * Every original interval after the shift, labelled m→n. The original strip
@@ -37,14 +37,14 @@ function renderStrip(parent, jv) {
   if (jv === 0) {
     const original = strip.map((d, k) => ({ ...d.original, textI: k === 0 ? `m = ${d.m}` : d.m }));
     show(block(parent, 'Every interval', 'Voice II holds C; the number above is the interval.'),
-      twoVoiceTune(intoVocalRange(original)), color);
+      twoVoiceTune(intoVocalRange(original)), color, SOUND.PIANO);
     return;
   }
   const labelled = strip.map((d, k) => ({ ...d.derivative, textI: transitionLabel(d, k === 0) }));
   const derivative = intoVocalRange(labelled);
   show(block(parent, `Every interval after shifting voice I by ${minus(jv)}`,
     'Above each dyad: the original interval m → the derivative n. Colours match the chart.'),
-  twoVoiceTune(derivative), color);
+  twoVoiceTune(derivative), color, SOUND.PIANO);
 }
 
 /** Parallel 3rds, 6ths and 10ths, before and after the shift. */
@@ -54,10 +54,10 @@ function renderChains(parent, jv) {
     const original = intoVocalRange(chain.original).map((d, k) => ({ ...d, textI: k === 0 ? 'original' : undefined }));
     const shifted = intoVocalRange(chain.derivative).map((d, k) => ({ ...d, textI: k === 0 ? 'shifted' : undefined }));
     original[original.length - 1].doubleBarAfter = true;
-    const dyads = [...original, HALF_BAR_REST, ...shifted];
+    const dyads = [...original, BAR_REST, ...shifted];
     const color = (measure) => (measure < chain.original.length || chain.survives
       ? 'var(--ink)' : 'var(--no)');
-    show(block(parent, `Parallel ${label} → ${chain.verdict}`), twoVoiceTune(dyads), color);
+    show(block(parent, `Parallel ${label} → ${chain.verdict}`), twoVoiceTune(dyads), color, SOUND.PIANO);
   }
 }
 
@@ -80,10 +80,14 @@ function renderFirstSpecies(parent, jv) {
   original[original.length - 1].doubleBarAfter = true;
   // Move both halves together, so the cantus stays in one octave throughout.
   show(block(parent, 'First species, four bars: original ‖ shifted', caption),
-    twoVoiceTune(intoVocalRange([...original, HALF_BAR_REST, ...derivative])));
+    twoVoiceTune(intoVocalRange([...original, BAR_REST, ...derivative])));
 }
 
-/** Fills a chart's notation panel. */
+/**
+ * Fills a chart's notation panel. The first-species phrase is music, so it
+ * plays on the flute; the interval strip and parallel chains are demos of
+ * single consonances, so they play on the piano.
+ */
 export function renderNotation(parent, jv) {
   renderFirstSpecies(parent, jv);
   renderStrip(parent, jv);

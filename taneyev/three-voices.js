@@ -5,7 +5,6 @@
 import { renderChart, wireNotation, sign } from './chart-card.js';
 import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances, middleEntry } from '../src/taneyev/three-voices.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
-import { addSoundPicker } from '../src/notation/playback.js';
 
 // Entry pitches offered for the lower voice: every natural from C2 to C5.
 const LOWEST_CHOICES = { from: MIDDLE_C - 14, to: MIDDLE_C + 7, default: MIDDLE_C - 4 }; // default F3
@@ -100,4 +99,3 @@ document.getElementById('outer').addEventListener('submit', (e) => {
 lowestSelect.addEventListener('change', update);
 update();
 
-addSoundPicker(document.querySelector('main > header'));

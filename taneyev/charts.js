@@ -1,7 +1,6 @@
 import { renderChart, wireNotation, sign, slug } from './chart-card.js';
 import { wireModels } from './shift-model.js';
 import { wireCayley } from './cayley.js';
-import { addSoundPicker } from '../src/notation/playback.js';
 
 // Order: Jv = 0, then the octave family (−7, −14), the 12th and 10th, their
 // octave-reduced forms (−4 = −11 + 7, −2 = −9 + 7), direct shifts, then the rare ones.
@@ -43,4 +42,3 @@ form.addEventListener('submit', (e) => {
   if (Number.isInteger(jv) && Math.abs(jv) <= 21) showCustom(jv);
 });
 
-addSoundPicker(document.querySelector('main > header'));
