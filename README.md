@@ -1,6 +1,7 @@
-<img src="assets/logo-staff.svg" width="180" alt="Contrapunto alla mente">
-
-# Contrapunto alla mente
+<h1><a href="https://choyun1.github.io/contrapunto-alla-mente/"><picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+  <img alt="Contrapunto alla mente" src="assets/banner-light.svg" height="64">
+</picture></a></h1>
 
 Contrapunto alla mente is a trainer for improvising counterpoint, the "counterpoint in the mind" that singers and organists once made up on the spot. It isn't a generator: it shows the rules so they can be learned and checked, with fast drills for recall and a workbench for slower, worked-out exercises. Every page draws its notation and plays it back in the browser, from one rules core that is tested against the published charts.
 
@@ -46,7 +47,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
 | `canon/` | The canon proposta page. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
-| `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), and the browser-tab icon (`favicon.svg`). |
+| `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), the README banner with the name beside it (`banner-light.svg`, `banner-dark.svg`), and the browser-tab icon (`favicon.svg`). |
 | `test/` | Tests for the rules core, including the charts from *Movable Counterpoint* video 2. |
 
 ## Working on it
@@ -65,6 +66,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 - **Canon workbench.** Write a canon over a hymn-tune cantus firmus and check every pairing as you go.
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **Drills.** Timed recall of each index, then play-along practice with live feedback.
+- **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license
 
