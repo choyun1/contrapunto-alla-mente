@@ -258,8 +258,8 @@ export function renderModel(box, jv) {
   });
   canvas.addEventListener('pointermove', (e) => {
     if (!drag) return;
-    state.yaw = drag.yaw - (e.clientX - drag.x) * 0.008;
-    state.pitch = Math.max(-1.5, Math.min(1.5, drag.pitch + (e.clientY - drag.y) * 0.008));
+    state.yaw = drag.yaw + (e.clientX - drag.x) * 0.008;
+    state.pitch = Math.max(-1.5, Math.min(1.5, drag.pitch - (e.clientY - drag.y) * 0.008));
     draw();
   });
   canvas.addEventListener('pointerup', () => { drag = null; });
