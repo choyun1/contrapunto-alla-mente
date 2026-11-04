@@ -66,3 +66,35 @@ export function consonanceSymmetries() {
   }
   return maps;
 }
+
+// ---------- The group itself: D7 as turns and flips ----------
+//
+// Each of the 14 symmetries is { kind: 'turn', step: a } (n → n + a) or
+// { kind: 'flip', step: k } (n → k − n), with steps mod 7. On the charts page
+// a turn is a shift with the voices in order and a flip is an inversion.
+
+/** The symmetry a shift acts as, modulo the octave: a turn for Jv ≥ 0, a flip at k = −Jv otherwise. */
+export function element(jv) {
+  if (jv >= 0) return { kind: 'turn', step: mod7(jv) };
+  return { kind: 'flip', step: mod7(-jv) };
+}
+
+/** Where a symmetry sends step n (0–6). */
+export function act(e, n) {
+  return e.kind === 'turn' ? mod7(n + e.step) : mod7(e.step - n);
+}
+
+/**
+ * The symmetry "b after a": the Cayley table of D7 in four rules.
+ * Two turns add; a turn and a flip make a flip; two flips make a turn.
+ */
+export function compose(b, a) {
+  if (b.kind === 'turn' && a.kind === 'turn') return { kind: 'turn', step: mod7(b.step + a.step) };
+  if (b.kind === 'turn') return { kind: 'flip', step: mod7(b.step + a.step) };
+  if (a.kind === 'turn') return { kind: 'flip', step: mod7(b.step - a.step) };
+  return { kind: 'turn', step: mod7(b.step - a.step) };
+}
+
+/** All 14 symmetries: the seven turns, then the seven flips. */
+export const ALL_ELEMENTS = [0, 1, 2, 3, 4, 5, 6].map((step) => ({ kind: 'turn', step }))
+  .concat([0, 1, 2, 3, 4, 5, 6].map((step) => ({ kind: 'flip', step })));
