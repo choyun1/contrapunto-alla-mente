@@ -26,8 +26,8 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 ## What it's for
 
 - **Taneyev consonance charts.** Pick a vertical shift (J<sub>v</sub>) and see what every interval of the original becomes, with Taneyev's suspension marks and which consonances stay free, which turn perfect and which become dissonant. Each chart shows n = m + J<sub>v</sub>, the interval strip on a staff and a Play button, and the charts are ordered by family: 0, the octave, the 12th and 10th, their reductions, the direct shifts and the rare ones.
-- **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 - **Canon proposta intervals.** In a two-voice canon every melodic interval the proposta makes across the delay becomes a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, and paste a proposta in pitch names to have every pairing checked.
+- **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 
 Coming next is a **canon workbench**, for writing a canon over a hymn-tune cantus firmus and checking each pairing as you go. See the [Roadmap](#roadmap).
 
