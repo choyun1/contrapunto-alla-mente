@@ -1,5 +1,6 @@
 import { renderChart, wireNotation, sign, slug } from './chart-card.js';
 import { wireModels } from './shift-model.js';
+import { wireCayley } from './cayley.js';
 import { addSoundPicker } from '../src/notation/playback.js';
 
 // Order: Jv = 0, then the octave family (−7, −14), the 12th and 10th, their
@@ -25,6 +26,7 @@ document.getElementById('charts').innerHTML = CHARTS
 
 wireNotation(document.getElementById('charts'));
 wireModels(document.getElementById('charts'));
+wireCayley(document.getElementById('cayley'), CHARTS.map(([jv]) => jv), (jv) => `#${slug(jv)}`);
 
 const form = document.getElementById('custom');
 const showCustom = (jv) => {

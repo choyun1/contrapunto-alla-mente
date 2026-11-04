@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   crosses, motion, landing, mirrorStep, rotationSteps, consonancesKept, consonanceSymmetries,
+  element, act, compose, ALL_ELEMENTS,
 } from '../src/taneyev/symmetry.js';
 import { baseMarks, simple } from '../src/taneyev/rules.js';
 
@@ -71,5 +72,29 @@ test('voice exchange swaps the marks: a flip turns each label upside down (§90)
     const down = baseMarks(-n);
     assert.deepEqual(down, { above: up.below, below: up.above }, `n = ${n}`);
     assert.equal(simple(-n), simple(n));
+  }
+});
+
+test('each chart is one symmetry: octave pairs (−11 and −4, −9 and −2, −7 and −14) share one', () => {
+  assert.deepEqual(element(-11), element(-4));
+  assert.deepEqual(element(-9), element(-2));
+  assert.deepEqual(element(-7), element(-14));
+  assert.deepEqual(element(3), { kind: 'turn', step: 3 });
+  assert.deepEqual(element(-12), { kind: 'flip', step: 5 });
+});
+
+test('compose matches doing one symmetry after the other, for all 14 × 14 pairs', () => {
+  for (const a of ALL_ELEMENTS) {
+    for (const b of ALL_ELEMENTS) {
+      for (let n = 0; n < 7; n += 1) assert.equal(act(compose(b, a), n), act(b, act(a, n)));
+    }
+  }
+});
+
+test('octave inversion then 10th inversion is a shift up a 3rd; every flip undoes itself', () => {
+  assert.deepEqual(compose(element(-9), element(-7)), { kind: 'turn', step: 2 });
+  for (const k of [0, 1, 2, 3, 4, 5, 6]) {
+    const flip = { kind: 'flip', step: k };
+    assert.deepEqual(compose(flip, flip), { kind: 'turn', step: 0 });
   }
 });
