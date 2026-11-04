@@ -27,3 +27,16 @@ export function parsePitch(name) {
   const letter = LETTERS.indexOf(match[1].toUpperCase());
   return Number(match[2]) * 7 + letter;
 }
+
+/**
+ * Do two steps form a tritone in C major? Only F and B do: F up to B is an
+ * augmented 4th (size 3), B up to F a diminished 5th (size 4), plus compounds.
+ */
+export function isTritone(a, b) {
+  const low = Math.min(a, b);
+  const high = Math.max(a, b);
+  const size = (high - low) % 7;
+  if (letterOf(low) === 'F' && letterOf(high) === 'B') return size === 3;
+  if (letterOf(low) === 'B' && letterOf(high) === 'F') return size === 4;
+  return false;
+}

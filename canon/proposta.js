@@ -4,10 +4,10 @@
 
 import { spanTable, checkProposta, VERDICT } from '../src/taneyev/canon.js';
 import { intervalName } from '../src/taneyev/rules.js';
+import { canonExample, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
-
-// Common intervals of entrance, risposta above first, then below.
-const ENTRIES = [0, 7, -7, 4, -4, 3, -3, 11, -11, 2, -2, 5, -5, 9, -9, 14, -14];
+import { twoVoiceTune } from '../src/notation/abc.js';
+import { block, show } from '../src/notation/playback.js';
 
 /** Display name for an interval of entrance, e.g. "octave above". */
 function entryName(entry) {
@@ -54,15 +54,39 @@ function renderTable(entry) {
   return `<header><h2><span class="jv">J<sub>v</sub> = ${sign(entry)}</span> Canon at the ${entryName(entry)}</h2>
     <p class="formula"><i>n</i> = ${fmt(entry)} − span</p>
     <p class="note">Consonant moves across the delay: ${allowed.join(', ')}.</p></header>
+    <div class="examples"></div>
     <div class="scroll"><table class="spans"><thead><tr>
       <th>Proposta moves</th><th>span</th><th><i>n</i></th><th>Between the voices</th><th>Verdict</th>
       <th>Risposta suspended</th><th>Proposta suspended</th></tr></thead>
     <tbody>${rows.join('')}</tbody></table></div>`;
 }
 
-/** Shows the table for one interval of entrance. */
+/** Draws the generated first-species canon for one interval of entrance. */
+function renderExample(parent, entry) {
+  const example = canonExample(entry);
+  if (!example) {
+    parent.innerHTML = '<p class="note">No four-bar first-species canon at this interval keeps every rule.</p>';
+    return;
+  }
+  const { proposta, risposta, intervals } = example;
+  const measures = proposta.map((step, bar) => ({
+    voiceI: step,
+    voiceII: risposta[bar],
+    textI: intervals[bar] === null ? undefined : `${bar === 1 ? 'n = ' : ''}${fmt(intervals[bar])}`,
+  }));
+  const moves = proposta.slice(1).map((step, k) => spanName(step - proposta[k]));
+  const sounding = intervals.filter((n) => n !== null).map(canonName);
+  const caption = `Proposta (P): ${moves.join(', ')}. Between the voices: ${sounding.join(', ')}. `
+    + 'The number over each bar is n, zero-indexed.';
+  const wrap = block(parent, `First species, risposta (R) one bar later at the ${entryName(entry)}`, caption);
+  show(wrap, twoVoiceTune(measures, { names: ['P', 'R'] }));
+}
+
+/** Shows the table and example for one interval of entrance. */
 function showTable(entry) {
-  document.getElementById('table').innerHTML = renderTable(entry);
+  const section = document.getElementById('table');
+  section.innerHTML = renderTable(entry);
+  renderExample(section.querySelector('.examples'), entry);
 }
 
 /** HTML report for a proposta, or an error message. */
@@ -76,6 +100,7 @@ function renderReport(text, entry, delay) {
     const problems = [];
     if (r.verdict === VERDICT.SUSPENSION) problems.push('dissonant: needs a suspension');
     if (r.consecutive) problems.push('consecutive perfects');
+    if (r.similar) problems.push('similar motion into a perfect consonance');
     const status = problems.length ? `<span class="no">${problems.join('; ')}</span>` : '<span class="yes">ok</span>';
     return `<tr><td class="c">${r.index + 1}</td><td>${pitchName(steps[r.index - delay])} → ${pitchName(steps[r.index])}</td>
       <td>${spanName(r.span)}</td><td>${canonName(r.n)}</td><td>${status}</td></tr>`;
@@ -92,7 +117,7 @@ function runCheck() {
   document.getElementById('report').innerHTML = renderReport(text, entry, delay);
 }
 
-document.getElementById('links').innerHTML = ENTRIES
+document.getElementById('links').innerHTML = EXAMPLE_ENTRIES
   .map((entry) => `<button type="button" data-entry="${entry}" title="${entryName(entry)}">${sign(entry)}</button>`)
   .join(' ');
 document.getElementById('links').addEventListener('click', (event) => {
@@ -109,5 +134,5 @@ document.getElementById('check').addEventListener('submit', (event) => {
   runCheck();
 });
 
-showTable(7);
+showTable(EXAMPLE_ENTRIES[0]);
 runCheck();
