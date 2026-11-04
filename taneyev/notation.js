@@ -1,10 +1,12 @@
 // Draws the generated examples for one consonance chart with abcjs (loaded as
 // the global ABCJS by charts.html). All the music comes from
-// src/taneyev/examples.js; this file only turns it into notation and sound.
+// src/taneyev/examples.js and src/taneyev/first-species.js; this file only
+// turns it into notation and sound.
 
 import { twoVoiceTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
 import { intervalStrip, parallelChain, intoSingingRange } from '../src/taneyev/examples.js';
+import { firstSpeciesExample } from '../src/taneyev/first-species.js';
 
 const KIND_COLORS = {
   'fixed-consonance': 'var(--fc-ink)',
@@ -56,8 +58,31 @@ function renderChains(parent, jv) {
   }
 }
 
+/** Labels a version's dyads with its intervals: "original: 7" first, then just the numbers. */
+function labelIntervals(dyads, intervals, name) {
+  return dyads.map((d, k) => ({ ...d, textI: k === 0 ? `${name}: ${minus(intervals[k])}` : minus(intervals[k]) }));
+}
+
+/** A four-bar first-species phrase, then the same phrase after the shift. */
+function renderFirstSpecies(parent, jv) {
+  const example = firstSpeciesExample(jv);
+  if (!example) return;
+  const caption = 'Voice II is the cantus firmus. The numbers are the intervals: m in the original, n after the shift.';
+  const original = labelIntervals(example.original, example.m, 'm');
+  if (jv === 0) {
+    show(block(parent, 'First species, four bars', caption), twoVoiceTune(original));
+    return;
+  }
+  const derivative = labelIntervals(example.derivative, example.n, 'n');
+  original[original.length - 1].doubleBarAfter = true;
+  // Lift both halves together, so the cantus stays in one octave throughout.
+  show(block(parent, 'First species, four bars: original ‖ shifted', caption),
+    twoVoiceTune(intoSingingRange([...original, ...derivative])));
+}
+
 /** Fills a chart's notation panel. */
 export function renderNotation(parent, jv) {
+  renderFirstSpecies(parent, jv);
   renderStrip(parent, jv);
   if (jv !== 0) renderChains(parent, jv);
 }

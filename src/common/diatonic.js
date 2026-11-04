@@ -28,15 +28,11 @@ export function parsePitch(name) {
   return Number(match[2]) * 7 + letter;
 }
 
-/**
- * Do two steps form a tritone in C major? Only F and B do: F up to B is an
- * augmented 4th (size 3), B up to F a diminished 5th (size 4), plus compounds.
- */
-export function isTritone(a, b) {
-  const low = Math.min(a, b);
-  const high = Math.max(a, b);
-  const size = (high - low) % 7;
-  if (letterOf(low) === 'F' && letterOf(high) === 'B') return size === 3;
-  if (letterOf(low) === 'B' && letterOf(high) === 'F') return size === 4;
-  return false;
-}
+/** Semitones above C of each letter in C major. */
+const SEMITONES = [0, 2, 4, 5, 7, 9, 11];
+
+/** Semitones from C0 to a step, e.g. 48 for middle C. */
+export const semitonesOf = (step) => octaveOf(step) * 12 + SEMITONES[((step % 7) + 7) % 7];
+
+/** Is the distance between two steps a tritone (augmented 4th or diminished 5th)? */
+export const isTritone = (a, b) => Math.abs(semitonesOf(a) - semitonesOf(b)) % 12 === 6;
