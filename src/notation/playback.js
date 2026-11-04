@@ -38,8 +38,11 @@ export function show(wrap, abc, colorMeasure) {
 /** Quarter notes per minute on playback: 213 plays a whole note every 1.125 s. */
 const PLAYBACK_QPM = 213;
 
-/** General MIDI program for playback, counted from 0: 19 is the church organ. */
-const ORGAN = 19;
+/**
+ * General MIDI program for playback, counted from 0: 52 is choir "aahs",
+ * a sung vowel sound, softer than the church organ (19) used before.
+ */
+const CHOIR_AAHS = 52;
 
 let current = null; // { synth, button, timer } for the tune that is playing
 let audioContext = null;
@@ -78,7 +81,7 @@ function play(tune, button) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program: ORGAN } })
+  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program: CHOIR_AAHS } })
     .then(() => synth.prime())
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
