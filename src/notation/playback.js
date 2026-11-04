@@ -35,8 +35,11 @@ export function show(wrap, abc, colorMeasure) {
   button.addEventListener('click', () => toggle(tune, button));
 }
 
-/** Quarter notes per minute on playback: 320 plays a whole note every 0.75 s. */
-const PLAYBACK_QPM = 320;
+/** Quarter notes per minute on playback: 213 plays a whole note every 1.125 s. */
+const PLAYBACK_QPM = 213;
+
+/** General MIDI program for playback, counted from 0: 19 is the church organ. */
+const ORGAN = 19;
 
 let current = null; // { synth, button, timer } for the tune that is playing
 let audioContext = null;
@@ -74,8 +77,8 @@ function play(tune, button) {
   current = playing;
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
-  // qpm 320 = one whole note every 0.75 s, set here so no tempo mark is printed.
-  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM } })
+  // Tempo and instrument are set here, so no tempo or MIDI line is printed.
+  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program: ORGAN } })
     .then(() => synth.prime())
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading

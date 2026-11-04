@@ -45,6 +45,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
 | `src/taneyev/first-species.js` | Finds a four-bar first-species phrase for a shift that is correct both before and after it. |
+| `src/notation/range.js` | Moves a generated example by whole octaves into singing range (F2 to G5), keeping every interval. |
 | `src/notation/`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
 | `canon/` | The canon proposta page. |
