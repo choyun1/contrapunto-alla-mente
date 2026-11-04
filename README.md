@@ -65,6 +65,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 - **Canon workbench.** Write a canon over a hymn-tune cantus firmus and check every pairing as you go.
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **Drills.** Timed recall of each index, then play-along practice with live feedback.
+- **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license
 
