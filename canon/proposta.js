@@ -8,7 +8,7 @@ import { examplesBothWays, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples
 import { parsePitch, pitchName, letterOf, MIDDLE_C } from '../src/common/diatonic.js';
 import { twoVoiceTune, chordTune } from '../src/notation/abc.js';
 import { intoVocalRange } from '../src/notation/range.js';
-import { block, show, drawSmall, addSoundPicker } from '../src/notation/playback.js';
+import { block, show, drawSmall } from '../src/notation/playback.js';
 
 /** Display name for an interval of entrance, e.g. "octave above". */
 function entryName(entry) {
@@ -174,4 +174,3 @@ document.getElementById('check').addEventListener('submit', (event) => {
 showTable(EXAMPLE_ENTRIES[0]);
 runCheck();
 
-addSoundPicker(document.querySelector('main > header'));

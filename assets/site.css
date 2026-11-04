@@ -110,8 +110,6 @@ details.notation summary:hover{border-color:var(--accent)}
 .controls label{display:grid;gap:3px;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .controls input,.controls select{font:inherit;font-size:1rem;width:7em;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .controls button{font:inherit;font-weight:600;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:3px 14px;background:var(--panel);cursor:pointer}
-.sound-picker{display:inline-flex;gap:6px;align-items:center;margin-top:10px;font-size:.85rem;color:var(--muted)}
-.sound-picker select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px 6px}
 /* The shift as a 3D motion (taneyev/shift-model.js), under each chart. */
 details.motion{border-top:0;padding-top:0}
 .model{display:grid;gap:10px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
