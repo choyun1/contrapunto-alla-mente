@@ -23,6 +23,25 @@ export const CANTI = [
   [C4, C4 + 4, C4 + 1, C4], // C G D C
 ];
 
+/** Melodic moves a cantus may make, in steps: a 2nd, 3rd, 4th or 5th (Fux). */
+const CANTUS_LEAPS = [1, 2, 3, 4];
+
+/**
+ * Every four-note cantus from `start`: any singable second note, then a step
+ * to the note above or below `start`, then `start` (Fux ends a cantus by step).
+ * A wider choice than CANTI, for searches that find nothing over those.
+ */
+export function fourNoteCanti(start) {
+  const singable = (a, b) => CANTUS_LEAPS.includes(Math.abs(a - b)) && !isTritone(a, b);
+  const canti = [];
+  for (const penultimate of [start + 1, start - 1]) {
+    for (let second = start - 4; second <= start + 4; second += 1) {
+      if (singable(start, second) && singable(second, penultimate)) canti.push([start, second, penultimate, start]);
+    }
+  }
+  return canti;
+}
+
 /** Highest interval voice I may form above the cantus: a 17th (16). */
 const WIDEST = 16;
 
