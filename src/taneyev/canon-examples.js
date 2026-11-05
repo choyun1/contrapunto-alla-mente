@@ -21,7 +21,7 @@ export const BARS = 4;
 /** Distance of entrance in bars. */
 const DELAY = 1;
 
-/** Melodic moves the proposta may make, steps first so ties favour them. */
+/** Melodic moves the proposta may make, steps first so ties favor them. */
 const MOVES = [1, -1, 2, -2, 3, -3, 4, -4];
 
 /**
