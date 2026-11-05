@@ -26,7 +26,15 @@
 <form id="start-pick" class="controls" aria-label="Pick the starting note">
 <label><span>Lower voice starts on</span> <select id="lowest"></select></label>
 </form>
-<section class="splits" aria-label="Ways to split the total shift"><div class="scroll" id="splits"></div>
+<section class="splits" aria-label="Ways to split the total shift">
+<div class="split-filter" role="group" aria-label="Show only splits whose example is">
+<span>Show</span>
+<button type="button" data-filter="all" aria-pressed="true">All</button>
+<button type="button" data-filter="first" aria-pressed="false">First species</button>
+<button type="button" data-filter="mixed" aria-pressed="false">Mixed species</button>
+<button type="button" data-filter="none" aria-pressed="false">None</button>
+</div>
+<div class="scroll" id="splits" data-filter="all"></div>
 <ul class="note key">
 <li><b>✓</b> That pair’s shift is an easy one: 0 (the pair doesn’t move), −7 (octave), −9 (10th) or −11 (12th).</li>
 <li><span class="sw k-fixed-consonance">green row</span> Both inner pairs are easy. With one ✓, the other pair is the hard one, and the hardest pair rules the texture.</li>

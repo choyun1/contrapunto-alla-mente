@@ -32,6 +32,12 @@ function lookup(split) {
   return found.get(key);
 }
 
+/** The filter name for a search result: 'first', 'mixed' or 'none' (see the buttons in three-voices.html). */
+function kindOf(result) {
+  if (!result) return 'none';
+  return result.kind === KIND.FIRST ? 'first' : 'mixed';
+}
+
 /** What the Example column says for a search result. */
 function exampleCell(result) {
   if (!result) return 'none';
@@ -83,11 +89,33 @@ function fillExampleColumn(splits, table) {
   let k = 0;
   const next = () => {
     if (k >= splits.length || !table.isConnected) return;
-    table.querySelector(`tr[data-index="${k}"] .example-kind`).innerHTML = exampleCell(lookup(splits[k]));
+    const row = table.querySelector(`tr[data-index="${k}"]`);
+    const result = lookup(splits[k]);
+    row.querySelector('.example-kind').innerHTML = exampleCell(result);
+    row.dataset.kind = kindOf(result);
     k += 1;
+    countFilters(table);
     setTimeout(next, 0);
   };
   setTimeout(next, 0);
+}
+
+/** Labels each filter button with how many rows it shows, e.g. "Mixed species (2)". */
+function countFilters(table) {
+  document.querySelectorAll('.split-filter button').forEach((button) => {
+    const name = button.textContent.replace(/ \(\d+\)$/, '');
+    const { filter } = button.dataset;
+    const rows = filter === 'all' ? table.querySelectorAll('tbody tr') : table.querySelectorAll(`tbody tr[data-kind="${filter}"]`);
+    button.textContent = `${name} (${rows.length})`;
+  });
+}
+
+/** Shows only the rows of one kind, or all of them. */
+function setFilter(filter) {
+  splitsBox.dataset.filter = filter;
+  document.querySelectorAll('.split-filter button').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.filter === filter));
+  });
 }
 
 let total = START;
@@ -111,7 +139,9 @@ function update() {
   });
   const firstEasy = Math.max(0, splits.findIndex(isEasySplit));
   showSplit(splits[firstEasy], firstEasy);
-  fillExampleColumn(splits, splitsBox.querySelector('table'));
+  const table = splitsBox.querySelector('table');
+  countFilters(table);
+  fillExampleColumn(splits, table);
 }
 
 for (let step = LOWEST_CHOICES.from; step <= LOWEST_CHOICES.to; step += 1) {
@@ -128,6 +158,9 @@ const picker = mountJvPicker(document.getElementById('total-pick'), {
   },
 });
 picker.set(START);
+document.querySelectorAll('.split-filter button').forEach((button) => {
+  button.addEventListener('click', () => setFilter(button.dataset.filter));
+});
 document.getElementById('start-pick').addEventListener('submit', (e) => e.preventDefault());
 lowestSelect.addEventListener('change', update);
 update();
