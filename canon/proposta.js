@@ -9,18 +9,7 @@ import { parsePitch, pitchName, letterOf, MIDDLE_C } from '../src/common/diatoni
 import { twoVoiceTune, chordTune } from '../src/notation/abc.js';
 import { intoVocalRange } from '../src/notation/range.js';
 import { block, show, drawSmall } from '../src/notation/playback.js';
-
-/** Display name for an interval of entrance, e.g. "octave above". */
-function entryName(entry) {
-  if (entry === 0) return 'unison';
-  return `${intervalName(Math.abs(entry))} ${entry > 0 ? 'above' : 'below'}`;
-}
-
-const fmt = (n) => (n < 0 ? `−${-n}` : String(n));
-const sign = (n) => (n > 0 ? `+${n}` : fmt(n));
-
-/** An interval name with "a" or "an", e.g. "an octave", "a 3rd". */
-const withArticle = (name) => `${/^(octave|8|11)/.test(name) ? 'an' : 'a'} ${name}`;
+import { fmt, sign, withArticle, entryName } from './names.js';
 
 /** Plain words for a span, e.g. "up a 3rd", "repeat". */
 function spanName(span) {
