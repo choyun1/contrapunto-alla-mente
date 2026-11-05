@@ -1,13 +1,13 @@
 // Draws and plays the three-voice example for one split of the outer shift,
 // with abcjs (loaded as the global ABCJS by three-voices.html). All the music
-// comes from src/taneyev/three-voice-examples.js (strict first species) or,
-// when that finds nothing, src/taneyev/three-voice-species.js (suspensions and
-// passing tones); this file only turns it into notation and sound.
+// comes from src/taneyev/three-voice-pick.js: strict first species, or mixed
+// species with suspensions and passing tones when that finds nothing. This
+// file only turns it into notation and sound.
 
 import { voicesTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
-import { threeVoiceExample } from '../src/taneyev/three-voice-examples.js';
-import { speciesExample, RHYTHM } from '../src/taneyev/three-voice-species.js';
+import { RHYTHM } from '../src/taneyev/three-voice-species.js';
+import { KIND } from '../src/taneyev/three-voice-pick.js';
 import { pairShifts } from '../src/taneyev/three-voices.js';
 
 /** The three staves, top to bottom as in the original. They keep this order after the shift, so crossings show. */
@@ -93,18 +93,12 @@ function showSpecies(parent, example, split) {
 const NO_EXAMPLE = '<p class="note">No four-bar example exists for this split on this starting note, even with suspensions and passing tones. Note against note, every interval in both versions must be a fixed consonance, and the three pairs share too few of them. A suspension lets a variable interval stand on a downbeat (the — marks on the charts) and a passing tone on an upbeat, but the voices still need a consonant chord, in both versions, wherever a suspension resolves, and this split has almost none.</p>';
 
 /**
- * Fills a box with the example for a split, the lower voice starting on
- * `lowerStep`: strict first species if there is one, otherwise mixed species,
- * otherwise a note.
+ * Fills a box with the example for a split: `found` is what exampleForSplit
+ * returned (src/taneyev/three-voice-pick.js), or null for a note that none exists.
  */
-export function renderThreeVoiceExample(parent, split, lowerStep) {
+export function renderThreeVoiceExample(parent, split, found) {
   parent.replaceChildren();
-  const first = threeVoiceExample(split, { start: lowerStep });
-  if (first) {
-    showFirstSpecies(parent, first, split);
-    return;
-  }
-  const mixed = speciesExample(split, { start: lowerStep });
-  if (mixed) showSpecies(parent, mixed, split);
-  else parent.innerHTML = NO_EXAMPLE;
+  if (!found) parent.innerHTML = NO_EXAMPLE;
+  else if (found.kind === KIND.FIRST) showFirstSpecies(parent, found.example, split);
+  else showSpecies(parent, found.example, split);
 }
