@@ -143,20 +143,37 @@ function fitsImaginary(note, imaginary, allowFourth) {
 }
 
 /**
+ * Is `note` on the risposta's side of the imaginary cantus? The risposta forms
+ * against the cantus what the proposta forms against the imaginary cantus, so
+ * this keeps the risposta on its side of the cantus a delay later. Passes when
+ * no side is given or the cantus has run out.
+ */
+function placedForRisposta(note, imaginary, rispostaSide) {
+  if (imaginary === null || rispostaSide === undefined) return true;
+  const sign = rispostaSide === SIDE.ABOVE ? 1 : -1;
+  return sign * (note - imaginary) > 0;
+}
+
+/**
  * Proposta notes for one bar (step 3 of the method): on the proposta's side of
  * the cantus, at most `widest` steps away (default a 10th, 9), consonant with
- * the cantus and with the imaginary cantus. Returns steps, nearest first.
- * By default a 4th against the imaginary cantus is left out, since it needs a
- * bass under it in the risposta's bar; pass allowFourth to keep it.
+ * the cantus and with the imaginary cantus. With a rispostaSide (from
+ * canon-voices.js) the proposta must also sit where its risposta will land on
+ * that side of the cantus. Returns steps,
+ * nearest first. By default a 4th against the imaginary cantus is left out,
+ * since it needs a bass under it in the risposta's bar; pass allowFourth to
+ * keep it.
  */
-export function propostaChoices({ cantus, entry, delay, side }, bar, { widest = 9, allowFourth = false } = {}) {
+export function propostaChoices(setup, bar, { widest = 9, allowFourth = false } = {}) {
+  const { cantus, entry, delay, side, rispostaSide } = setup;
   const imaginary = imaginaryCantus(cantus, entry, delay)[bar];
   const direction = side === SIDE.ABOVE ? 1 : -1;
   const choices = [];
   for (let distance = 1; distance <= widest; distance += 1) {
     const note = cantus[bar] + direction * distance;
     if (!fitsAgainst(note, cantus[bar])) continue;
-    if (fitsImaginary(note, imaginary, allowFourth)) choices.push(note);
+    if (!fitsImaginary(note, imaginary, allowFourth)) continue;
+    if (placedForRisposta(note, imaginary, rispostaSide)) choices.push(note);
   }
   return choices;
 }

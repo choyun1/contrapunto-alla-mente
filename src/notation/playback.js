@@ -45,6 +45,47 @@ export function show(wrap, abc, colorMeasure, sound = SOUND.FLUTE, tempo = TEMPO
 }
 
 /**
+ * Renders an editable score into a block, where notes can be clicked and
+ * dragged up or down by step (abcjs dragging; arrow keys work on a focused
+ * note). `onClick(measure, voice, step)` gets the bar and voice clicked,
+ * counted from 0, and how many steps the note was dragged (positive: up).
+ * The play button plays `audioAbc` instead of what is drawn, so a voice can
+ * be shown without being heard.
+ */
+export function showEditable(wrap, abc, audioAbc, onClick) {
+  const score = wrap.querySelector('.score');
+  ABCJS.renderAbc(score, abc, {
+    ...RENDER_OPTIONS,
+    dragging: true,
+    selectTypes: ['note'],
+    clickListener: (abcelem, tuneNumber, classes, analysis, drag) => {
+      const measure = Number(/abcjs-mm(\d+)/.exec(classes)?.[1]);
+      onClick(measure, analysis.voice, 0 - (drag?.step ?? 0)); // abcjs counts steps downward
+    },
+  });
+  const tune = audioTune(audioAbc);
+  const button = wrap.querySelector('button');
+  button.addEventListener('click', () => toggle(tune, button, SOUND.FLUTE, TEMPO.EXAMPLE));
+}
+
+let audioBox = null; // the off-page box that playback-only tunes are drawn into
+
+/**
+ * A tune for playback only, drawn into a box off the page: abcjs needs a
+ * drawn tune to play, but this one is never seen. Each call reuses the box.
+ */
+function audioTune(abc) {
+  if (!audioBox) {
+    audioBox = document.createElement('div');
+    audioBox.style.cssText = 'position:absolute;left:-10000px;top:0;width:800px';
+    audioBox.setAttribute('aria-hidden', 'true');
+    document.body.append(audioBox);
+  }
+  const [tune] = ABCJS.renderAbc(audioBox, abc, RENDER_OPTIONS);
+  return tune;
+}
+
+/**
  * Playback tempos, in quarter notes per minute. Music examples play a whole
  * note every 1.125 s (213); the interval demonstrations over a held note play
  * one every 0.56 s (426), since each dyad is heard on its own.
