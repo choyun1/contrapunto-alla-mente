@@ -9,7 +9,7 @@
 // src/taneyev/symmetry.js; this file only draws it.
 
 import { intervalName } from '../src/taneyev/rules.js';
-import { element, compose, consonancesKept, ALL_ELEMENTS, word } from '../src/taneyev/symmetry.js';
+import { element, compose, consonancesKept, ALL_ELEMENTS, word, tiName } from '../src/taneyev/symmetry.js';
 import { TAU, onCircle, camera } from './shift-geometry.js';
 
 const VIEW = { yaw: 0.35, pitch: 0.42, distance: 9, focal: 1.6 };
@@ -24,8 +24,8 @@ const jvOf = (e) => (e.kind === 'turn' ? e.step : -(7 + e.step));
 
 /** The dot's name in the charts' terms. */
 function nameOf(e) {
-  if (e.kind === 'turn') return e.step === 0 ? 'no shift (Jv = 0, e)' : `a shift up a ${intervalName(e.step)} (${word(e)})`;
-  return `inversion at the ${intervalName(7 + e.step)} (${word(e)})`;
+  if (e.kind === 'turn') return e.step === 0 ? 'no shift (Jv = 0, T₀ = e)' : `a shift up a ${intervalName(e.step)} (${tiName(e)} = ${word(e)})`;
+  return `inversion at the ${intervalName(7 + e.step)} (${tiName(e)} = ${word(e)})`;
 }
 
 /** The short label drawn beside a dot. */
