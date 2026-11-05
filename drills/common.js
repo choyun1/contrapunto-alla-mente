@@ -33,6 +33,7 @@ export const canonOptions = (entries = CANONS) => entries.map((entry) => ({ valu
 /** Tempo choices: 0 waits for each note; the rest are beats per minute. */
 export const TEMPOS = [
   { value: 0, text: 'Wait for me' },
+  { value: 30, text: '30 a minute' },
   { value: 40, text: '40 a minute' },
   { value: 60, text: '60 a minute' },
   { value: 80, text: '80 a minute' },
