@@ -5,18 +5,39 @@
 import { renderChart, wireNotation, sign } from './chart-card.js';
 import { renderThreeVoiceExample } from './three-voice-notation.js';
 import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances } from '../src/taneyev/three-voices.js';
+import { exampleForSplit, KIND } from '../src/taneyev/three-voice-pick.js';
+import { shiftTitle } from '../src/taneyev/shifts.js';
+import { mountJvPicker } from '../src/ui/jv-picker.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
 
 // Entry pitches offered for the lower voice: every natural from C2 to C5.
 const LOWEST_CHOICES = { from: MIDDLE_C - 14, to: MIDDLE_C + 7, default: MIDDLE_C - 4 }; // default F3
 
-const totalInput = document.getElementById('total');
+const START = -11; // the total shift shown first: inversion at the 12th
 const lowestSelect = document.getElementById('lowest');
 const splitsBox = document.getElementById('splits');
 const chartsBox = document.getElementById('pair-charts');
 
 /** Returns a shift with a marker when it is easy, e.g. "−7 ✓". */
 const shiftCell = (jv) => (isEasyShift(jv) ? `${sign(jv)} ✓` : sign(jv));
+
+/** Examples already found, keyed by split and starting note: the search can take a moment. */
+const found = new Map();
+
+/** The example for a split on the chosen starting note (see three-voice-pick.js), searched once. */
+function lookup(split) {
+  const start = Number(lowestSelect.value);
+  const key = `${split.upper} ${split.lower} ${start}`;
+  if (!found.has(key)) found.set(key, exampleForSplit(split, { start }));
+  return found.get(key);
+}
+
+/** What the Example column says for a search result. */
+function exampleCell(result) {
+  if (!result) return 'none';
+  if (result.kind === KIND.FIRST) return 'first species';
+  return '<span class="mixed-tag">mixed species</span>';
+}
 
 /** Returns one table row for a split. */
 function splitRow(split, index) {
@@ -25,7 +46,8 @@ function splitRow(split, index) {
     <td>${shiftCell(upperMiddle)}</td>
     <td>${shiftCell(middleLower)}</td>
     <td>${fixedConsonances(upperMiddle).join(', ') || 'none'}</td>
-    <td>${fixedConsonances(middleLower).join(', ') || 'none'}</td></tr>`;
+    <td>${fixedConsonances(middleLower).join(', ') || 'none'}</td>
+    <td class="example-kind">…</td></tr>`;
 }
 
 /** Returns the whole table of splits. */
@@ -35,7 +57,8 @@ function splitsTable(splits) {
     <th scope="col">Upper–middle</th>
     <th scope="col">Middle–lower</th>
     <th scope="col">Fixed cons. upper–middle</th>
-    <th scope="col">Fixed cons. middle–lower</th></tr></thead><tbody>${rows}</tbody></table>`;
+    <th scope="col">Fixed cons. middle–lower</th>
+    <th scope="col">Example</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 /** Shows the three pair charts for one split and marks its row. */
@@ -47,15 +70,30 @@ function showSplit(split, index) {
     renderChart(upperLower, 'Upper and lower voices', 'The outer pair, at the total shift.', { id: 'pair-upper-lower' }),
   ].join('');
   wireNotation(chartsBox);
-  renderThreeVoiceExample(document.getElementById('demo'), split, Number(lowestSelect.value));
+  renderThreeVoiceExample(document.getElementById('demo'), split, lookup(split));
   splitsBox.querySelectorAll('tr.picked').forEach((tr) => tr.classList.remove('picked'));
   splitsBox.querySelector(`tr[data-index="${index}"]`).classList.add('picked');
 }
 
-/** Rebuilds the table for the current inputs and shows the first easy split's charts. */
+/**
+ * Fills the Example column one row at a time, yielding between rows so the
+ * page stays responsive while the searches run. A newer table stops an older fill.
+ */
+function fillExampleColumn(splits, table) {
+  let k = 0;
+  const next = () => {
+    if (k >= splits.length || !table.isConnected) return;
+    table.querySelector(`tr[data-index="${k}"] .example-kind`).innerHTML = exampleCell(lookup(splits[k]));
+    k += 1;
+    setTimeout(next, 0);
+  };
+  setTimeout(next, 0);
+}
+
+let total = START;
+
+/** Rebuilds the table for the current total and starting note and shows the first easy split's charts. */
 function update() {
-  const total = parseInt(totalInput.value, 10);
-  if (!Number.isInteger(total) || Math.abs(total) > 21) return;
   const splits = splitShift(total);
   splitsBox.innerHTML = splitsTable(splits);
   splitsBox.querySelectorAll('tbody tr').forEach((tr) => {
@@ -73,16 +111,24 @@ function update() {
   });
   const firstEasy = Math.max(0, splits.findIndex(isEasySplit));
   showSplit(splits[firstEasy], firstEasy);
+  fillExampleColumn(splits, splitsBox.querySelector('table'));
 }
 
 for (let step = LOWEST_CHOICES.from; step <= LOWEST_CHOICES.to; step += 1) {
   const selected = step === LOWEST_CHOICES.default ? ' selected' : '';
   lowestSelect.insertAdjacentHTML('beforeend', `<option value="${step}"${selected}>${pitchName(step)}</option>`);
 }
-document.getElementById('outer').addEventListener('submit', (e) => {
-  e.preventDefault();
-  update();
+const picker = mountJvPicker(document.getElementById('total-pick'), {
+  label: 'Total J<sub>v</sub>',
+  title: shiftTitle,
+  onPick: (jv) => {
+    total = jv;
+    picker.set(jv);
+    update();
+  },
 });
+picker.set(START);
+document.getElementById('start-pick').addEventListener('submit', (e) => e.preventDefault());
 lowestSelect.addEventListener('change', update);
 update();
 

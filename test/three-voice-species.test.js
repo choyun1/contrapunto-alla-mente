@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { speciesExample, RHYTHM } from '../src/taneyev/three-voice-species.js';
 import { threeVoiceExample } from '../src/taneyev/three-voice-examples.js';
+import { exampleForSplit, KIND } from '../src/taneyev/three-voice-pick.js';
 import { pairShifts, isChordConsonance } from '../src/taneyev/three-voices.js';
 import { maySuspend, isPassingTone } from '../src/taneyev/dissonance.js';
 
@@ -95,4 +96,10 @@ test('−1 + −2 from C4: a syncopated voice with a suspension that is a 6th in
   assert.equal(tied - example.original[1].lower, 5); // a 6th (zero-indexed 5)
   const [tiedShifted] = example.shifted[1].middle;
   assert.equal(tiedShifted - example.shifted[1].lower, 3); // a 4th (3)
+});
+
+test('exampleForSplit tries strict first species, then mixed species', () => {
+  assert.equal(exampleForSplit({ upper: -7, lower: -4 }, { start: C4 }).kind, KIND.FIRST);
+  assert.equal(exampleForSplit({ upper: -1, lower: -2 }, { start: C4 }).kind, KIND.MIXED);
+  assert.equal(exampleForSplit({ upper: -1, lower: 0 }, { start: C4 }), null);
 });
