@@ -8,6 +8,7 @@ import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances } fr
 import { exampleForSplit, KIND } from '../src/taneyev/three-voice-pick.js';
 import { shiftTitle } from '../src/taneyev/shifts.js';
 import { mountJvPicker } from '../src/ui/jv-picker.js';
+import { mountSurvey } from './split-survey.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
 
 // Entry pitches offered for the lower voice: every natural from C2 to C5.
@@ -148,6 +149,23 @@ for (let step = LOWEST_CHOICES.from; step <= LOWEST_CHOICES.to; step += 1) {
   const selected = step === LOWEST_CHOICES.default ? ' selected' : '';
   lowestSelect.insertAdjacentHTML('beforeend', `<option value="${step}"${selected}>${pitchName(step)}</option>`);
 }
+/** Shows one split of one total, from the list at the bottom, and scrolls to its example. */
+function goTo(jv, split) {
+  total = jv;
+  picker.set(jv);
+  setFilter('all');
+  update();
+  const splits = splitShift(jv);
+  const index = splits.findIndex((s) => s.upper === split.upper && s.lower === split.lower);
+  showSplit(splits[index], index);
+  document.getElementById('demo').parentElement.scrollIntoView({ behavior: 'smooth' });
+}
+
+const survey = mountSurvey(document.getElementById('survey'), { onPick: goTo });
+
+/** Starts the list at the bottom over for the chosen starting note. */
+const restartSurvey = () => survey.restart(Number(lowestSelect.value), pitchName(Number(lowestSelect.value)));
+
 const picker = mountJvPicker(document.getElementById('total-pick'), {
   label: 'Total J<sub>v</sub>',
   title: shiftTitle,
@@ -162,6 +180,10 @@ document.querySelectorAll('.split-filter button').forEach((button) => {
   button.addEventListener('click', () => setFilter(button.dataset.filter));
 });
 document.getElementById('start-pick').addEventListener('submit', (e) => e.preventDefault());
-lowestSelect.addEventListener('change', update);
+lowestSelect.addEventListener('change', () => {
+  update();
+  restartSurvey();
+});
 update();
+restartSurvey();
 
