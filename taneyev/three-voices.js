@@ -1,10 +1,10 @@
-// The three-voice page: split an outer shift for the middle voice, then show
-// the three pair charts for a chosen split. All the theory comes from
+// The three-voice page: split the total shift (upper against lower) for the
+// middle voice, then show the example and three pair charts for a chosen split. All the theory comes from
 // src/taneyev/three-voices.js and rules.js; this file only builds the page.
 
 import { renderChart, wireNotation, sign } from './chart-card.js';
 import { renderThreeVoiceExample } from './three-voice-notation.js';
-import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances, middleEntry } from '../src/taneyev/three-voices.js';
+import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances } from '../src/taneyev/three-voices.js';
 import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
 
 // Entry pitches offered for the lower voice: every natural from C2 to C5.
@@ -18,41 +18,24 @@ const chartsBox = document.getElementById('pair-charts');
 /** Returns a shift with a marker when it is easy, e.g. "−7 ✓". */
 const shiftCell = (jv) => (isEasyShift(jv) ? `${sign(jv)} ✓` : sign(jv));
 
-/** Returns the canon cell: the middle voice's entry pitch, or a dash for direct shifts. */
-function canonCell(total, lowerStep, split) {
-  if (total >= 0) return '–';
-  return pitchName(middleEntry(lowerStep, split));
-}
-
 /** Returns one table row for a split. */
-function splitRow(total, lowerStep, split, index) {
-  const { upperMiddle, middleLower, upperLower } = pairShifts(split);
+function splitRow(split, index) {
+  const { upperMiddle, middleLower } = pairShifts(split);
   return `<tr class="${isEasySplit(split) ? 'easy' : ''}" data-index="${index}" tabindex="0" title="Show this split">
     <td>${shiftCell(upperMiddle)}</td>
     <td>${shiftCell(middleLower)}</td>
-    <td>${sign(upperMiddle)} + ${sign(middleLower)} = ${sign(upperLower)}</td>
-    <td>${canonCell(total, lowerStep, split)}</td>
     <td>${fixedConsonances(upperMiddle).join(', ') || 'none'}</td>
     <td>${fixedConsonances(middleLower).join(', ') || 'none'}</td></tr>`;
 }
 
 /** Returns the whole table of splits. */
-function splitsTable(total, lowerStep, splits) {
-  const rows = splits.map((s, k) => splitRow(total, lowerStep, s, k)).join('');
+function splitsTable(splits) {
+  const rows = splits.map((s, k) => splitRow(s, k)).join('');
   return `<table><thead><tr>
     <th scope="col">Upper–middle</th>
     <th scope="col">Middle–lower</th>
-    <th scope="col">Sum</th>
-    <th scope="col">Middle enters (canon)</th>
     <th scope="col">Fixed cons. upper–middle</th>
     <th scope="col">Fixed cons. middle–lower</th></tr></thead><tbody>${rows}</tbody></table>`;
-}
-
-/** Returns the note under the table explaining the canon column. */
-function canonNote(total, lowerStep) {
-  if (total >= 0) return 'The canon column applies to inverse (negative) outer shifts only.';
-  const upper = pitchName(lowerStep + Math.abs(total));
-  return `Canon column: if all three voices enter with the same tune, the lower voice on ${pitchName(lowerStep)} and the upper on ${upper}, each pair’s shift is its entry interval, inverted. Fixed consonances are the intervals 0–9 that stay consonant under that pair’s shift.`;
 }
 
 /** Shows the three pair charts for one split and marks its row. */
@@ -64,7 +47,7 @@ function showSplit(split, index) {
     renderChart(upperLower, 'Upper and lower voices', 'The outer pair, at the total shift.', { id: 'pair-upper-lower' }),
   ].join('');
   wireNotation(chartsBox);
-  renderThreeVoiceExample(document.getElementById('demo'), split);
+  renderThreeVoiceExample(document.getElementById('demo'), split, Number(lowestSelect.value));
   splitsBox.querySelectorAll('tr.picked').forEach((tr) => tr.classList.remove('picked'));
   splitsBox.querySelector(`tr[data-index="${index}"]`).classList.add('picked');
 }
@@ -73,10 +56,8 @@ function showSplit(split, index) {
 function update() {
   const total = parseInt(totalInput.value, 10);
   if (!Number.isInteger(total) || Math.abs(total) > 21) return;
-  const lowerStep = Number(lowestSelect.value);
   const splits = splitShift(total);
-  splitsBox.innerHTML = splitsTable(total, lowerStep, splits);
-  document.getElementById('canon-note').textContent = canonNote(total, lowerStep);
+  splitsBox.innerHTML = splitsTable(splits);
   splitsBox.querySelectorAll('tbody tr').forEach((tr) => {
     const index = Number(tr.dataset.index);
     const pick = () => {
