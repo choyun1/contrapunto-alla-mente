@@ -4,7 +4,7 @@
 // turns it into notation and sound.
 
 import { twoVoiceTune } from '../src/notation/abc.js';
-import { block, show, SOUND } from '../src/notation/playback.js';
+import { block, show, SOUND, TEMPO } from '../src/notation/playback.js';
 import { intoVocalRange } from '../src/notation/range.js';
 import { intervalStrip, parallelChain } from '../src/taneyev/examples.js';
 import { firstSpeciesExample } from '../src/taneyev/first-species.js';
@@ -37,14 +37,14 @@ function renderStrip(parent, jv) {
   if (jv === 0) {
     const original = strip.map((d, k) => ({ ...d.original, textI: k === 0 ? `m = ${d.m}` : d.m }));
     show(block(parent, 'Every interval', 'Voice II holds C; the number above is the interval.'),
-      twoVoiceTune(intoVocalRange(original)), color, SOUND.PIANO);
+      twoVoiceTune(intoVocalRange(original)), color, SOUND.PIANO, TEMPO.DEMO);
     return;
   }
   const labelled = strip.map((d, k) => ({ ...d.derivative, textI: transitionLabel(d, k === 0) }));
   const derivative = intoVocalRange(labelled);
   show(block(parent, `Every interval after shifting voice I by ${minus(jv)}`,
     'Above each dyad: the original interval m → the derivative n. Colours match the chart.'),
-  twoVoiceTune(derivative), color, SOUND.PIANO);
+  twoVoiceTune(derivative), color, SOUND.PIANO, TEMPO.DEMO);
 }
 
 /** Parallel 3rds, 6ths and 10ths, before and after the shift. */

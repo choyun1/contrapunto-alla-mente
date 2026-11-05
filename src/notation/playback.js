@@ -29,9 +29,10 @@ export function drawSmall(element, abc, width) {
 
 /**
  * Renders abc into a block and wires its play button. `sound` is a General
- * MIDI program from SOUND; music examples keep the flute default.
+ * MIDI program from SOUND; music examples keep the flute default. `tempo` is
+ * one of TEMPO; music examples keep the slower default.
  */
-export function show(wrap, abc, colorMeasure, sound = SOUND.FLUTE) {
+export function show(wrap, abc, colorMeasure, sound = SOUND.FLUTE, tempo = TEMPO.EXAMPLE) {
   const [tune] = ABCJS.renderAbc(wrap.querySelector('.score'), abc, RENDER_OPTIONS);
   if (colorMeasure) {
     wrap.querySelectorAll('.abcjs-note').forEach((note) => {
@@ -40,11 +41,18 @@ export function show(wrap, abc, colorMeasure, sound = SOUND.FLUTE) {
     });
   }
   const button = wrap.querySelector('button');
-  button.addEventListener('click', () => toggle(tune, button, sound));
+  button.addEventListener('click', () => toggle(tune, button, sound, tempo));
 }
 
-/** Quarter notes per minute on playback: 213 plays a whole note every 1.125 s. */
-const PLAYBACK_QPM = 213;
+/**
+ * Playback tempos, in quarter notes per minute. Music examples play a whole
+ * note every 1.125 s (213); the interval demonstrations over a held note play
+ * one every 0.56 s (426), since each dyad is heard on its own.
+ */
+export const TEMPO = {
+  EXAMPLE: 213,
+  DEMO: 426,
+};
 
 /**
  * General MIDI programs for playback, counted from 0. Music examples use the
@@ -73,10 +81,10 @@ function stop() {
 }
 
 /** Play button handler: stops this tune if it is playing, otherwise plays it. */
-function toggle(tune, button, sound) {
+function toggle(tune, button, sound, tempo) {
   const wasThisOne = current?.button === button;
   stop();
-  if (!wasThisOne) play(tune, button, sound);
+  if (!wasThisOne) play(tune, button, sound, tempo);
 }
 
 /**
@@ -84,7 +92,7 @@ function toggle(tune, button, sound) {
  * The audio context is created and resumed inside the click itself, before any
  * await, because Safari only allows sound to start from a user gesture.
  */
-function play(tune, button, program) {
+function play(tune, button, program, qpm) {
   if (!ABCJS.synth.supportsAudio()) return;
   audioContext ??= new AudioContext();
   audioContext.resume();
@@ -94,7 +102,7 @@ function play(tune, button, program) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  synth.init({ visualObj: tune, audioContext, options: { qpm: PLAYBACK_QPM, program } })
+  synth.init({ visualObj: tune, audioContext, options: { qpm, program } })
     .then(() => synth.prime())
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
