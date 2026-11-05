@@ -20,14 +20,35 @@ export function audio() {
 const frequencyOf = (step) => 440 * 2 ** ((midiOfStep(step) - 69) / 12);
 
 /**
+ * Strengths of the first few harmonics of the site's voice, like a flute
+ * stop. A plain sine was too faint on laptop speakers under your own notes
+ * and the metronome; the upper harmonics make it carry.
+ */
+const FLUTE_HARMONICS = [0, 1, 0.45, 0.25, 0.12, 0.06];
+
+let fluteWave = null;
+
+/** The flute-like waveform, made once per audio context. */
+function flute(ctx) {
+  fluteWave ??= new PeriodicWave(ctx, { real: new Float32Array(FLUTE_HARMONICS.length), imag: new Float32Array(FLUTE_HARMONICS) });
+  return fluteWave;
+}
+
+/**
  * Two sounds, so the two voices of a canon are easy to tell apart:
  *   PLAYER, what you play: a soft piano-like tone that fades;
  *   SITE, what the site plays: a flute-like tone that holds.
  */
 export const VOICE = {
-  PLAYER: { wave: 'triangle', attack: 0.005, level: 0.25, fade: true },
-  SITE: { wave: 'sine', attack: 0.04, level: 0.22, fade: false },
+  PLAYER: { wave: 'triangle', attack: 0.005, level: 0.2, fade: true },
+  SITE: { wave: 'flute', attack: 0.04, level: 0.3, fade: false },
 };
+
+/** An oscillator for one voice at one frequency. */
+function oscillatorFor(ctx, voice, frequency) {
+  if (voice.wave === 'flute') return new OscillatorNode(ctx, { periodicWave: flute(ctx), frequency });
+  return new OscillatorNode(ctx, { type: voice.wave, frequency });
+}
 
 /**
  * Plays one step. `seconds` is how long it lasts; `at` is when to start, in
@@ -37,7 +58,7 @@ export function tone(step, { seconds = 1, at = 0, voice = VOICE.PLAYER } = {}) {
   const ctx = audio();
   const start = Math.max(at, ctx.currentTime);
   const end = start + seconds;
-  const oscillator = new OscillatorNode(ctx, { type: voice.wave, frequency: frequencyOf(step) });
+  const oscillator = oscillatorFor(ctx, voice, frequencyOf(step));
   const gain = new GainNode(ctx, { gain: 0 });
   gain.gain.setValueAtTime(0, start);
   gain.gain.linearRampToValueAtTime(voice.level, start + voice.attack);
