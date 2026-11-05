@@ -1,7 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { splitShift, pairShifts, isEasySplit, fixedConsonances, middleEntry } from '../src/taneyev/three-voices.js';
-import { pitchName } from '../src/common/diatonic.js';
+import { splitShift, pairShifts, isEasySplit, fixedConsonances } from '../src/taneyev/three-voices.js';
 
 test('every split of −11 adds back up to −11', () => {
   const splits = splitShift(-11);
@@ -29,11 +28,4 @@ test('easy splits need both inner pairs at 0, −7, −9 or −11', () => {
 
 test('fixed consonances follow the rules core (−7: 3rds, 6ths, 10ths and the octave)', () => {
   assert.deepEqual(fixedConsonances(-7), [0, 2, 5, 7, 9]);
-});
-
-test('in a canon on F3 and C5, octave + 5th puts the middle voice on F4', () => {
-  const F3 = 3 * 7 + 3;
-  assert.equal(pitchName(F3 + 11), 'C5');
-  assert.equal(pitchName(middleEntry(F3, { upper: -4, lower: -7 })), 'F4');
-  assert.equal(pitchName(middleEntry(F3, { upper: -2, lower: -9 })), 'A4');
 });

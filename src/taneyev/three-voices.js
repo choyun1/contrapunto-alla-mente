@@ -54,14 +54,6 @@ export function fixedConsonances(jv) {
 }
 
 /**
- * In a canon all voices enter with the same tune, so each pair's shift is the
- * distance between their entries (inverted: Jv = −interval). Given the lower
- * voice's entry as a diatonic step (see common/diatonic.js), returns the
- * middle voice's entry step for a split.
- */
-export const middleEntry = (lowerStep, { lower }) => lowerStep + Math.abs(lower);
-
-/**
  * Is interval i consonant between two voices of a three-voice chord? As in two
  * voices, except that a perfect 4th (3, or a compound of it) is consonant
  * between two voices that both sit above the lowest-sounding voice, provided

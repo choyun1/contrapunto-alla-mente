@@ -43,16 +43,20 @@ function median(steps) {
 /** Measures per printed line. We break lines ourselves (see voiceLines). */
 export const MEASURES_PER_LINE = 8;
 
+/** Is a measure silent in every voice (no pitch anywhere)? */
+const isRestBar = (measure) => !Object.values(measure).some((value) => typeof value === 'number');
+
 /**
  * Index of the first measure on each printed line. A line holds
- * MEASURES_PER_LINE whole-note measures; shorter ones (a half-bar rest)
- * ride along without counting, so they never push a bar onto a new line.
+ * MEASURES_PER_LINE whole-note measures of music; rests between an original
+ * and its shifted version, and shorter measures, ride along without counting,
+ * so a 4 + rest + 4 example stays on one line.
  */
 function lineStarts(measures) {
   const starts = [0];
   let whole = 0;
   measures.forEach((measure, k) => {
-    const isWhole = measure.length === undefined || measure.length === '1';
+    const isWhole = (measure.length === undefined || measure.length === '1') && !isRestBar(measure);
     if (isWhole && whole === MEASURES_PER_LINE) {
       starts.push(k);
       whole = 0;

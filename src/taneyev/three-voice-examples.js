@@ -13,7 +13,7 @@
 // two-voice rules, except that a 4th is allowed between the two voices above
 // the lowest-sounding one (see isChordConsonance in three-voices.js).
 
-import { isTritone } from '../common/diatonic.js';
+import { isTritone, MIDDLE_C } from '../common/diatonic.js';
 import { isPerfect } from './rules.js';
 import { motion, moveSurvivesShift } from './motion.js';
 import { CANTI } from './first-species.js';
@@ -153,12 +153,15 @@ function legalExamples(cantus, split) {
 
 /**
  * The smoothest four-bar example for a split, or null if no cantus allows one
- * (the pairs share too few fixed consonances). Returns { cantus, original,
- * shifted }, where original and shifted are lists of { upper, middle, lower }.
+ * (the pairs share too few fixed consonances). The cantus starts on `start`
+ * (a diatonic step; middle C by default), moved within C major, so the
+ * tritone checks follow it. Returns { cantus, original, shifted }, where
+ * original and shifted are lists of { upper, middle, lower }.
  */
-export function threeVoiceExample(split) {
+export function threeVoiceExample(split, { start = MIDDLE_C } = {}) {
   let best = null;
-  for (const cantus of CANTI) {
+  const canti = CANTI.map((notes) => notes.map((step) => step - MIDDLE_C + start));
+  for (const cantus of canti) {
     for (const chords of legalExamples(cantus, split)) {
       const cost = exampleCost(chords, split);
       if (!best || cost < best.cost) best = { cost, cantus, chords };

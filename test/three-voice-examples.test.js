@@ -75,3 +75,11 @@ test('voicesTune keeps the given staff order unless asked to sort', () => {
   assert.match(voicesTune(measures, voices), /%%score \(B\) \(A\)/);
   assert.match(voicesTune(measures, voices, { sortByPitch: false }), /%%score \(A\) \(B\)/);
 });
+
+test('the cantus starts on the chosen note: F3 for −4 + −7', () => {
+  const F3 = 3 * 7 + 3;
+  const example = threeVoiceExample({ upper: -4, lower: -7 }, { start: F3 });
+  assert.ok(example);
+  assert.equal(example.original[0].lower, F3);
+  assert.equal(example.shifted[0].lower, F3);
+});
