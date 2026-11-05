@@ -10,7 +10,7 @@
 // bottom with bottom, and the stricter is the chart's rule (§128).
 
 import { combine, baseMarks, intervalName, isConsonant } from '../src/taneyev/rules.js';
-import { motion, landing, mirrorStep, rotationSteps, consonancesKept } from '../src/taneyev/symmetry.js';
+import { motion, landing, mirrorStep, rotationSteps, consonancesKept, pieces, word, cycles } from '../src/taneyev/symmetry.js';
 import { TAU, STEP, onCircle, rotY, turnAboutLevelAxis, ease, camera, screenDirection } from './shift-geometry.js';
 
 const UP = [0, 1, 0];
@@ -183,6 +183,17 @@ function drawHelix(ctx, pal, project, jv, phase, t) {
   for (const { m, pose } of poses) label(ctx, pal, project, m, jv, pose);
 }
 
+/** Writes the shift's name in the group in the top-left corner: its word in r and s, and its cycles. */
+function groupName(ctx, pal, jv) {
+  const parts = pieces(jv);
+  const span = (ms) => (ms.length === 7 ? '' : `${ms[0]}–${ms[ms.length - 1]}: `);
+  ctx.font = `600 12px ${pal.body}`;
+  ctx.fillStyle = pal.muted;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  parts.forEach(({ e, ms }, i) => ctx.fillText(`${span(ms)}${word(e)} = ${cycles(e)}`, 10, 10 + i * 17));
+}
+
 /** One sentence on the motion for this shift, in the chart's terms. */
 export function describe(jv) {
   if (jv === 0) return 'Jv = 0 moves nothing: these are the reference marks every other chart compares against.';
@@ -222,6 +233,7 @@ export function renderModel(box, jv, { model = 'coin', bare = false } = {}) {
     ctx.clearRect(0, 0, width, height);
     if (state.model === 'coin') drawCoin(ctx, pal, project, state.jv, ease(state.t));
     else drawHelix(ctx, pal, project, state.jv, state.phase, ease(state.t));
+    groupName(ctx, pal, state.jv);
   };
 
   const play = () => {
