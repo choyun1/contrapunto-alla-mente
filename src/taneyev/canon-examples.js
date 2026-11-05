@@ -8,7 +8,7 @@
 // BARS notes is tried, the ones that break a rule are thrown out, and the
 // smoothest of the rest is kept. All the rules come from canon.js.
 
-import { checkProposta, VERDICT } from './canon.js';
+import { checkProposta, keepsSide, VERDICT } from './canon.js';
 import { isPerfect, isConsonant } from './rules.js';
 import { isTritone, parsePitch } from '../common/diatonic.js';
 
@@ -59,20 +59,17 @@ function rispostaOf(proposta, entry) {
   return proposta.map((_, bar) => (bar < DELAY ? null : proposta[bar - DELAY] + entry));
 }
 
-/** Does the risposta stay on its own side of the proposta? (At the unison it can't.) */
-function keepsSide(n, entry) {
-  if (entry === 0) return true;
-  return n !== 0 && Math.sign(n) === Math.sign(entry);
-}
-
-/** Is a proposta usable as a first-species canon at this interval of entrance? */
-function isValid(proposta, entry) {
+/**
+ * Is a proposta usable as a first-species canon at this interval of entrance
+ * and delay (in notes)? No dissonance, no consecutive perfects or similar
+ * motion into one, no crossing, and no tritone in a voice or between them.
+ */
+export function isValidCanon(proposta, entry, delay = DELAY) {
   const melodicTritone = proposta.slice(1).some((step, k) => isTritone(step, proposta[k]));
   if (melodicTritone) return false;
-  const risposta = rispostaOf(proposta, entry);
-  return checkProposta(proposta, entry, DELAY).every((r) => r.verdict !== VERDICT.SUSPENSION
+  return checkProposta(proposta, entry, delay).every((r) => r.verdict !== VERDICT.SUSPENSION
     && !r.consecutive && !r.similar && keepsSide(r.n, entry)
-    && !isTritone(proposta[r.index], risposta[r.index]));
+    && !isTritone(proposta[r.index], proposta[r.index - delay] + entry));
 }
 
 /** Cost of one melodic move: steps are cheap, larger leaps cost more. */
@@ -116,7 +113,7 @@ function smoothest(entry, moves) {
   let best = null;
   let bestScore = Infinity;
   for (const proposta of allPropostas(startNote(entry), moves)) {
-    if (!isValid(proposta, entry)) continue;
+    if (!isValidCanon(proposta, entry)) continue;
     const score = roughness(proposta, entry);
     if (score < bestScore) {
       best = proposta;

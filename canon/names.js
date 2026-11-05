@@ -18,3 +18,9 @@ export function entryName(entry) {
   if (entry === 0) return 'unison';
   return `${intervalName(Math.abs(entry))} ${entry > 0 ? 'above' : 'below'}`;
 }
+
+/** Which hand plays the proposta's next note, in words (see canon-hands.js). */
+export function handName(entry) {
+  if (entry === 0) return 'both hands, thumbs together';
+  return entry > 0 ? 'left hand, going down' : 'right hand, going up';
+}

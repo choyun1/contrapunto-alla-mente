@@ -30,6 +30,8 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 - **Canon over a cantus firmus.** Taneyev's imaginary-cantus method, and the workbench for it. Choose where the cantus, proposta and risposta sit, the interval of entrance and the delay; see the imaginary cantus, the J<sub>v</sub> each bar must be written in and the notes that fit; then write the cantus and proposta on the staff, MuseScore style (click a line or space, or type A–G, with the arrow keys to move by step or octave), or type pitch names and have every bar checked against the cantus, the imaginary cantus and the risposta. The imaginary cantus is drawn in gray but not played.
 - **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 
+- **Drills.** Practice at the keyboard with live feedback. **Move chords**: the site names a canon and the risposta's note, and you play every note the proposta may move to, timed, with the ones you miss coming back more often. **Lead the canon**: you improvise the proposta and the site plays it back as the risposta, marking each note as it sounds. **Follow the leader**: the site plays a fresh first-species proposta and you play (or sing) the risposta. Play on the on-screen keys, the computer keyboard (one octave per row of letters) or a MIDI keyboard, either waiting for each note or on a beat.
+
 See the [Roadmap](#roadmap) for what comes next.
 
 ## Conventions
@@ -48,6 +50,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/canon.js` | The canon rules: which proposta intervals stay consonant at an interval of entrance, and the proposta checker. |
 | `src/taneyev/imaginary-cantus.js` | Canon over a cantus firmus: the imaginary cantus, its guide intervals (the J<sub>v</sub> of each bar) and the proposta notes each bar allows. |
 | `src/taneyev/canon-hands.js` | The canon moves as a hand shape and a stacked chord: why there are always four note names (five at the unison), and which canons share them. |
+| `src/taneyev/canon-walk.js` | Random first-species canons at any interval and delay, for the Follow the leader drill. |
 | `src/taneyev/canon-voices.js` | Where the cantus, proposta and risposta sit (the six orders), and the setup that follows from an order, interval size and delay. |
 | `src/taneyev/canon-check.js` | Checks a canon over a cantus bar by bar and says what is wrong in words. |
 | `src/taneyev/canon-over-cantus.js` | Finds a whole-note canon framework over a cantus by the imaginary-cantus method, and lists the setups that have one. |
@@ -55,10 +58,12 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
 | `src/taneyev/first-species.js` | Finds a four-bar first-species phrase for a shift that is correct both before and after it. |
 | `src/notation/note-entry.js`, `src/notation/staff-click.js` | MuseScore-style note entry: which key does what, the nearest octave for a typed letter, and where on a drawn staff a click landed. |
+| `src/input/`, `src/audio/tone.js`, `src/drills/` | The drills' plumbing: notes from computer keys, clicks and MIDI (`key-map.js`, `listen.js`), short Web Audio tones, a run beat by beat (`run.js`) and a deck that favors what you miss (`deck.js`). No theory. |
 | `src/notation/range.js` | Moves a generated example by whole octaves into singing range (F2 to G5), keeping every interval. |
 | `src/notation/`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
-| `canon/` | The canon pages: `proposta.html` (proposta tables and checker), `handshapes.html` (the moves as hand shapes and chords; `keyboard.js` draws the keyboard) and `over-cantus.html` (canon over a cantus firmus: `over-cantus.js` runs it, `over-cantus-score.js` draws the editable score, `over-cantus-entry.js` handles the entry cursor, `over-cantus-table.js` the guide table). `names.js` holds display names both use. |
+| `canon/` | The canon pages: `proposta.html` (proposta tables and checker), `handshapes.html` (the moves as hand shapes and chords, on the keyboard from `src/ui/keyboard.js`) and `over-cantus.html` (canon over a cantus firmus: `over-cantus.js` runs it, `over-cantus-score.js` draws the editable score, `over-cantus-entry.js` handles the entry cursor, `over-cantus-table.js` the guide table). `names.js` holds display names both use. |
+| `drills/` | The drill pages: `move-chords`, `lead` and `follow`, each an `.html` and a `.js`, with `common.js` for what they share. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
 | `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), the README banner with the name beside it (`banner-light.svg`, `banner-dark.svg`), and the browser-tab icon (`favicon.svg`). |
 | `test/` | Tests for the rules core, including the charts from *Movable Counterpoint* video 2. |
@@ -77,7 +82,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 ## Roadmap
 
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
-- **Drills.** Timed recall of each index, then play-along practice with live feedback.
+- **More drills.** Counterpoint over a hymn tune (and hearing it shifted by J<sub>v</sub>), then a live canon over a hymn tune with imaginary-cantus hints, starting from standard Lutheran chorale tunes. Singing input through the microphone later.
 - **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license

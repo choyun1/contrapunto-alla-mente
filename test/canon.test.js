@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   canonInterval, canonMarks, spanVerdict, consonantSpans, consecutivePerfects, checkProposta, moveChord,
+  keepsSide, crossesVoices,
 } from '../src/taneyev/canon.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
 
@@ -100,4 +101,13 @@ test('soprano move chord = consonance chord (0 2 4 5) transposed down by the ent
     const expected = [0, 2, 4, 5].map((c) => noteClass(c - entry)).sort();
     assert.deepEqual(moveChord(-entry).map(noteClass).sort(), expected, `entry ${entry}`);
   }
+});
+
+test('sides: the risposta a 5th above may not cross below, and only keepsSide rules out meeting on a unison', () => {
+  assert.ok(keepsSide(2, 4)); // a 3rd above
+  assert.ok(!keepsSide(-2, 4)); // crossed to a 3rd below
+  assert.ok(!keepsSide(0, 4)); // met on a unison
+  assert.ok(!crossesVoices(0, 4));
+  assert.ok(crossesVoices(-2, 4));
+  assert.ok(keepsSide(-2, 0)); // at the unison canon either voice may be on top
 });

@@ -134,8 +134,17 @@ export function checkProposta(steps, entry, delay) {
   return results;
 }
 
-/** Does interval n put the risposta on the wrong side of the proposta? */
-const crossed = (n, entry) => n !== 0 && entry !== 0 && Math.sign(n) !== Math.sign(entry);
+/**
+ * Does the risposta stay on its own side of the proposta, without meeting it
+ * on a unison? At the unison canon either voice may be on top.
+ */
+export function keepsSide(n, entry) {
+  if (entry === 0) return true;
+  return n !== 0 && Math.sign(n) === Math.sign(entry);
+}
+
+/** Does interval n put the risposta on the wrong side of the proposta? (A unison is not a crossing.) */
+export const crossesVoices = (n, entry) => n !== 0 && entry !== 0 && Math.sign(n) !== Math.sign(entry);
 
 /** Folds a span into the window [low, low + 6], keeping its note name. */
 const fold = (span, low) => ((((span - low) % 7) + 7) % 7) + low;
@@ -162,7 +171,7 @@ export function moveChord(entry) {
   if (entry > 0) low = -2;
   if (entry < 0) low = -4;
   const folded = consonantSpans(entry)
-    .filter((span) => !crossed(canonInterval(span, entry), entry))
+    .filter((span) => !crossesVoices(canonInterval(span, entry), entry))
     .map((span) => fold(span, low));
   return [...new Set(folded)].sort((a, b) => a - b);
 }
