@@ -28,7 +28,7 @@ function transitionLabel(dyad, first) {
 const BAR_REST = { voiceI: null, voiceII: null };
 
 /**
- * Every original interval after the shift, labelled m→n. The original strip
+ * Every original interval after the shift, labeled m→n. The original strip
  * is the same for every chart, so it is drawn only for Jv = 0.
  */
 function renderStrip(parent, jv) {
@@ -40,10 +40,10 @@ function renderStrip(parent, jv) {
       twoVoiceTune(intoVocalRange(original)), color, SOUND.PIANO, TEMPO.DEMO);
     return;
   }
-  const labelled = strip.map((d, k) => ({ ...d.derivative, textI: transitionLabel(d, k === 0) }));
-  const derivative = intoVocalRange(labelled);
+  const labeled = strip.map((d, k) => ({ ...d.derivative, textI: transitionLabel(d, k === 0) }));
+  const derivative = intoVocalRange(labeled);
   show(block(parent, `Every interval after shifting voice I by ${minus(jv)}`,
-    'Above each dyad: the original interval m → the derivative n. Colours match the chart.'),
+    'Above each dyad: the original interval m → the derivative n. Colors match the chart.'),
   twoVoiceTune(derivative), color, SOUND.PIANO, TEMPO.DEMO);
 }
 

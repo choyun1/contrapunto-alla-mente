@@ -1,8 +1,8 @@
 // The shift as a 3D motion, under each chart: a seven-sided coin (one octave)
 // and the interval helix (every register). Drag to turn the model.
 //
-// Each numbered label is an original interval m, coloured by its kind in this
-// chart (the same colours as the chart's bottom row). It carries its own
+// Each numbered label is an original interval m, colored by its kind in this
+// chart (the same colors as the chart's bottom row). It carries its own
 // suspension marks above and below. It moves by the motion symmetry.js gives
 // it: a turn when the voices stay in order, a half-turn (flip) when they
 // cross, so a flip puts the upper voice's mark underneath (§90). Where it
@@ -31,7 +31,7 @@ const KIND_TOKENS = {
 };
 const models = new Set();
 
-/** Reads the site's colour and font tokens, so the canvas follows the theme. */
+/** Reads the site's color and font tokens, so the canvas follows the theme. */
 function palette() {
   const css = getComputedStyle(document.documentElement);
   const v = (name) => css.getPropertyValue(name).trim();
@@ -61,22 +61,22 @@ function helixPose(m, jv, phase, t) {
   return { p: turnAboutLevelAxis(end, 0, Math.PI * t), up: turnAboutLevelAxis(UP, 0, Math.PI * t) };
 }
 
-/** Writes one line of text centred at (x, y). */
-function text(ctx, words, x, y, { size = 12, weight = 400, colour, font }) {
+/** Writes one line of text centered at (x, y). */
+function text(ctx, words, x, y, { size = 12, weight = 400, color, font }) {
   ctx.font = `${weight} ${size}px ${font}`;
-  ctx.fillStyle = colour;
+  ctx.fillStyle = color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText(words, x, y);
 }
 
 /** Writes a pair of marks above and below a screen point, along the screen direction `dir` of "up". */
-function marks(ctx, pal, pair, s, dir, gap, colour) {
-  text(ctx, pair.above, s[0] + dir[0] * gap, s[1] + dir[1] * gap, { size: 12, weight: 700, colour, font: pal.body });
-  text(ctx, pair.below, s[0] - dir[0] * gap, s[1] - dir[1] * gap, { size: 12, weight: 700, colour, font: pal.body });
+function marks(ctx, pal, pair, s, dir, gap, color) {
+  text(ctx, pair.above, s[0] + dir[0] * gap, s[1] + dir[1] * gap, { size: 12, weight: 700, color, font: pal.body });
+  text(ctx, pair.below, s[0] - dir[0] * gap, s[1] - dir[1] * gap, { size: 12, weight: 700, color, font: pal.body });
 }
 
-/** Draws one moving label: a disc in its kind's colour, its number, and its own marks. */
+/** Draws one moving label: a disc in its kind's color, its number, and its own marks. */
 function label(ctx, pal, project, m, jv, pose) {
   const s = project(pose.p);
   const [bg, ink] = pal.kinds[combine(m, [jv]).kind];
@@ -87,7 +87,7 @@ function label(ctx, pal, project, m, jv, pose) {
   ctx.lineWidth = 1.5;
   ctx.fill();
   ctx.stroke();
-  text(ctx, String(m), s[0], s[1] + 0.5, { size: 13, weight: 700, colour: ink, font: pal.body });
+  text(ctx, String(m), s[0], s[1] + 0.5, { size: 13, weight: 700, color: ink, font: pal.body });
   marks(ctx, pal, baseMarks(m), s, screenDirection(project, pose.p, pose.up), 22, pal.ink);
 }
 
@@ -105,7 +105,7 @@ function slot(ctx, pal, project, n) {
   ctx.stroke();
   marks(ctx, pal, baseMarks(n), [s[0] + 18, s[1]], screenDirection(project, p, UP), 10, pal.muted);
   const out = project(onCircle(n, 1.9));
-  text(ctx, intervalName(n), out[0], out[1], { size: 12, weight: lit ? 600 : 400, colour: lit ? pal.ink : pal.muted, font: pal.body });
+  text(ctx, intervalName(n), out[0], out[1], { size: 12, weight: lit ? 600 : 400, color: lit ? pal.ink : pal.muted, font: pal.body });
 }
 
 /** Draws the mirror's axis as a dashed level line at angle phi, height h. */
@@ -174,7 +174,7 @@ function drawHelix(ctx, pal, project, jv, phase, t) {
     ctx.fill();
     const name = n < 0 ? `${intervalName(-n)} ↓` : intervalName(n);
     const out = project(onCircle(n, 1.38, n * PITCH));
-    text(ctx, name, out[0], out[1], { size: 10.5, colour: pal.muted, font: pal.body });
+    text(ctx, name, out[0], out[1], { size: 10.5, color: pal.muted, font: pal.body });
   }
   if (phase === 1) axis(ctx, pal, project, 0, 0, 1.7);
   const ms = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];

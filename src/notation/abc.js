@@ -1,6 +1,6 @@
 // Builds abc notation (https://abcnotation.com) for two- and three-voice examples.
 //
-// Each voice gets its own staff, labelled I (upper voice of the original) and
+// Each voice gets its own staff, labeled I (upper voice of the original) and
 // II (lower voice), as in Taneyev. Pitches are diatonic steps from
 // src/common/diatonic.js; every measure holds one dyad, a whole note unless the
 // measure gives another `length` (e.g. '1/2' for a half-bar rest).
