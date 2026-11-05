@@ -34,7 +34,7 @@ const shortName = (e) => {
   return `inv ${intervalName(7 + e.step)}`;
 };
 
-/** Reads the site's colour and font tokens. */
+/** Reads the site's color and font tokens. */
 function palette() {
   const css = getComputedStyle(document.documentElement);
   const v = (name) => css.getPropertyValue(name).trim();
