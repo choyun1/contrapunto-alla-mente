@@ -45,7 +45,8 @@
 <div class="actions"><button type="button" id="cf-fill">Fill in a framework</button> <button type="button" id="cf-clear">Clear the proposta</button></div>
 </section>
 <section class="chart" aria-label="Your canon">
-<div class="examples" id="cf-score"></div>
+<div class="examples" id="cf-score" tabindex="0" aria-label="Score: click a staff or type note names A to G"></div>
+<p class="note" id="cf-cursor" aria-live="polite"></p>
 <div id="cf-none" hidden><p class="note">No whole-note framework keeps every rule with this setup: some bar needs a suspension or a decorated line, as in the video. Write your own here, or work backwards and find a setup that fits.</p>
 <div class="actions"><button type="button" id="cf-find">Find setups that fit this cantus</button></div></div>
 <div id="cf-setups"></div>
@@ -65,7 +66,8 @@
 <style>.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}
 .steps{margin:10px 0 0;padding-left:1.4em;display:grid;gap:4px;max-width:70ch}
 .setups{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.cf-score .abcjs-v3{color:var(--muted);opacity:.7}
+.cf-score .abcjs-v3{color:var(--muted);opacity:.7}.cf-score{cursor:crosshair}
+#cf-score:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .problems{margin:6px 0 0;padding-left:1.4em}.actions{display:flex;flex-wrap:wrap;gap:6px}
 .actions button,.setups button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}</style>
 <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>

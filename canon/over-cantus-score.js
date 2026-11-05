@@ -1,6 +1,7 @@
 // The canon over a cantus firmus page: the editable score. One staff per voice
 // in the chosen order, plus the imaginary cantus (I.C.F.) in gray at the
-// bottom, which is drawn but not played. Bars with a problem are drawn red.
+// bottom, which is drawn but not played. Bars with a problem are drawn red,
+// and the note under the entry cursor in the accent color.
 // Display only: the risposta and imaginary cantus come from
 // src/taneyev/canon-check.js and src/taneyev/imaginary-cantus.js.
 // Intervals are zero-indexed (octave 7, 12th 11).
@@ -8,7 +9,8 @@
 import { chordAt } from '../src/taneyev/canon-check.js';
 import { imaginaryCantus, guideTable } from '../src/taneyev/imaginary-cantus.js';
 import { LABEL } from '../src/taneyev/canon-voices.js';
-import { voicesTune } from '../src/notation/abc.js';
+import { voicesTune, clefsOf } from '../src/notation/abc.js';
+import { CLEFS } from '../src/notation/clefs.js';
 import { block, showEditable } from '../src/notation/playback.js';
 import { fmt } from './names.js';
 
@@ -58,20 +60,40 @@ function problemsHtml(proposta, problems) {
   return '<p class="yes">Every bar keeps the rules.</p>';
 }
 
+/** Draws the note or rest under the cursor in the accent color. */
+function markCursor(wrap, cursor, voices) {
+  const voice = voices.findIndex((v) => v.key === cursor.voice);
+  wrap.querySelectorAll(`.abcjs-v${voice}.abcjs-mm${cursor.bar}`).forEach((element) => {
+    if (/abcjs-(note|rest)(?: |$)/.test(element.getAttribute('class'))) element.style.color = 'var(--accent)';
+  });
+}
+
 /**
- * Draws the editable score into `parent`. `onClick(bar, voiceKey, step)` gets
- * the bar and voice (e.g. 'proposta') that was clicked, and how many steps it
- * was dragged up.
+ * The pitch a click asks for: the bottom line of the bar's clef, plus the
+ * steps above it the click landed (staff-click.js).
  */
-export function renderScore(parent, { proposta, setup, problems, title, caption }, onClick) {
+function pitchAt(spot, measures, key) {
+  const clef = clefsOf(measures, key)[spot.bar];
+  return CLEFS[clef].bottom + spot.stepsAboveBottom;
+}
+
+/**
+ * Draws the editable score into `parent`. A click on a staff calls
+ * `onPlace(bar, voiceKey, pitch)`, e.g. (3, 'proposta', 30) for E4 in bar 4.
+ */
+export function renderScore(parent, { proposta, setup, problems, cursor, title, caption }, onPlace) {
   parent.replaceChildren();
   const voices = drawnVoices(setup.order);
   const measures = measuresFor(proposta, setup);
   const wrap = block(parent, title, caption);
   const drawn = voicesTune(measures, voices, { sortByPitch: false });
   const heard = voicesTune(measures, soundingVoices(setup.order), { sortByPitch: false });
-  showEditable(wrap, drawn, heard, (bar, voice, step) => onClick(bar, voices[voice]?.key, step));
+  showEditable(wrap, drawn, heard, (spot) => {
+    const key = voices[spot.voice]?.key;
+    if (key) onPlace(spot.bar, key, pitchAt(spot, measures, key));
+  });
   wrap.querySelector('.score').classList.add('cf-score');
   markProblems(wrap, problems, voices.length - 1);
+  markCursor(wrap, cursor, voices);
   wrap.insertAdjacentHTML('beforeend', problemsHtml(proposta, problems));
 }

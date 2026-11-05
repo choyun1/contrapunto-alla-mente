@@ -52,6 +52,11 @@ function fillRests(steps) {
   return filled;
 }
 
+/** The clef each measure of one voice is drawn in, as voicesTune draws it (key: e.g. 'voiceI'). */
+export function clefsOf(measures, key) {
+  return clefsForVoice(fillRests(measures.map((m) => firstStep(m[key]))));
+}
+
 /** Middle pitch of a voice, used to decide which staff goes on top. */
 function median(steps) {
   const sorted = [...steps].sort((a, b) => a - b);
@@ -133,7 +138,7 @@ export function voicesTune(measures, voices, { sortByPitch = true } = {}) {
   const starts = lineStarts(measures);
   const staves = voices.map((voice) => {
     const steps = fillRests(measures.map((m) => firstStep(m[voice.key])));
-    const clefs = clefsForVoice(steps);
+    const clefs = clefsOf(measures, voice.key);
     return {
       ...voice,
       middle: median(steps),

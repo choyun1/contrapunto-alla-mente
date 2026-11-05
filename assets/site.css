@@ -122,6 +122,13 @@ details.notation summary:hover{border-color:var(--accent)}
 #splits[data-filter="first"] tbody tr:not([data-kind="first"]),
 #splits[data-filter="mixed"] tbody tr:not([data-kind="mixed"]),
 #splits[data-filter="none"] tbody tr:not([data-kind="none"]){display:none}
+/* three-voice page: the list of every split with an example, in tabs */
+.survey-tabs{display:flex;gap:6px;margin:8px 0;border-bottom:1px solid var(--line)}
+.survey-tabs button{font:inherit;font-weight:600;color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:6px 10px;cursor:pointer}
+.survey-tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.survey-line{margin:4px 0;line-height:2;font-variant-numeric:tabular-nums}
+.survey-line b{display:inline-block;min-width:3.2em}
+.survey-line button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:0 10px;cursor:pointer}
 /* an example that only mixed species (suspensions, passing tones) opens up */
 .mixed-tag{display:inline-block;padding:0 8px;border-radius:999px;border:1px solid var(--accent);color:var(--accent);font-weight:600;font-size:.8rem}
 .controls{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:end}
