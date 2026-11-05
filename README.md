@@ -26,7 +26,7 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 ## What it's for
 
 - **Taneyev consonance charts.** Pick a vertical shift (J<sub>v</sub>) and see what every interval of the original becomes, with Taneyev's suspension marks and which consonances stay free, which turn perfect and which become dissonant. Each chart shows n = m + J<sub>v</sub>, the interval strip on a staff and a Play button, and the charts are ordered by family: 0, the octave, the 12th and 10th, their reductions, the direct shifts and the rare ones.
-- **Canon proposta intervals.** In a two-voice canon every melodic interval the proposta makes across the delay becomes a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, and paste a proposta in pitch names to have every pairing checked.
+- **Canon proposta intervals.** In a two-voice canon every melodic interval the proposta makes across the delay becomes a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, and paste a proposta in pitch names to have every pairing checked. Below that, **canon over a cantus firmus** works Taneyev's imaginary-cantus method: enter a cantus and a canon setup to see the imaginary cantus, the J<sub>v</sub> each bar must be written in, the notes the proposta may sing there, and a whole-note framework to play.
 - **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 
 Coming next is a **canon workbench**, for writing a canon over a hymn-tune cantus firmus and checking each pairing as you go. See the [Roadmap](#roadmap).
@@ -43,13 +43,15 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/three-voices.js` | Splits an outer shift between the two inner pairs of a three-voice texture. |
 | `src/taneyev/three-voice-examples.js` | Finds a four-bar, note-against-note example in three voices that stays correct under a split, for the three-voice page to draw and play. |
 | `src/taneyev/canon.js` | The canon rules: which proposta intervals stay consonant at an interval of entrance, and the proposta checker. |
+| `src/taneyev/imaginary-cantus.js` | Canon over a cantus firmus: the imaginary cantus, its guide intervals (the J<sub>v</sub> of each bar) and the proposta notes each bar allows. |
+| `src/taneyev/canon-over-cantus.js` | Finds a whole-note canon framework over a cantus by the imaginary-cantus method, and lists the setups that have one. |
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
 | `src/taneyev/first-species.js` | Finds a four-bar first-species phrase for a shift that is correct both before and after it. |
 | `src/notation/range.js` | Moves a generated example by whole octaves into singing range (F2 to G5), keeping every interval. |
 | `src/notation/`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
-| `canon/` | The canon proposta page. |
+| `canon/` | The canon page: `proposta.js` draws the proposta tables and checker, `over-cantus.js` the canon over a cantus firmus. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
 | `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), the README banner with the name beside it (`banner-light.svg`, `banner-dark.svg`), and the browser-tab icon (`favicon.svg`). |
 | `test/` | Tests for the rules core, including the charts from *Movable Counterpoint* video 2. |
