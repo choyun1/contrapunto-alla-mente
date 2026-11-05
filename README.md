@@ -47,6 +47,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/ui/jv-picker.js` | The J<sub>v</sub> dropdown shared by the charts and canon pages, with ★ on the common shifts and ☆ on the others Taneyev works through. |
 | `src/taneyev/three-voices.js` | Splits an outer shift between the two inner pairs of a three-voice texture. |
 | `src/taneyev/three-voice-examples.js` | Finds a four-bar, note-against-note example in three voices that stays correct under a split, for the three-voice page to draw and play. |
+| `src/taneyev/self-questions.js` | The "Ask yourself" line on each chart: which consonances a shift turns dissonant or perfect, as a question (at the 12th: what if every 6th were a dissonance?). |
 | `src/taneyev/canon.js` | The canon rules: which proposta intervals stay consonant at an interval of entrance, and the proposta checker. |
 | `src/taneyev/imaginary-cantus.js` | Canon over a cantus firmus: the imaginary cantus, its guide intervals (the J<sub>v</sub> of each bar) and the proposta notes each bar allows. |
 | `src/taneyev/canon-hands.js` | The canon moves as a hand shape and a stacked chord: why there are always four note names (five at the unison), and which canons share them. |

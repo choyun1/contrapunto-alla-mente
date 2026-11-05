@@ -25,10 +25,10 @@ nav.site{display:flex;flex-wrap:wrap;align-items:center;gap:4px 18px;font-size:.
 nav.site a{text-decoration:none}
 nav.site a:hover{text-decoration:underline}
 nav.site a[aria-current="page"]{color:var(--ink);font-weight:600}
-nav.site .brand{margin-right:auto}
+nav.site .brand{flex-basis:100%} /* the site name on its own row, the page links on the row below */
 /* the Drills link stands apart from the pages for learning the rules */
 nav.site .nav-drills{padding-left:18px;border-left:1px solid var(--line)}
-@media (max-width:600px){nav.site .brand{flex-basis:100%}nav.site .nav-drills{padding-left:0;border-left:0}}
+@media (max-width:600px){nav.site .nav-drills{padding-left:0;border-left:0}}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
 .card h2{font-size:1.35rem;margin-bottom:4px}
@@ -219,3 +219,7 @@ button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);borde
 .strip li.free{background:var(--fc);color:var(--fc-ink)}.strip li.perfect{background:var(--vc);color:var(--vc-ink)}
 .strip li.miss{border-color:var(--no);color:var(--no);font-weight:600}.strip li.now{border-color:var(--accent);border-width:2px}
 .miss-key{border:1px solid var(--no);color:var(--no)}
+/* chart cards: the self-questions that sum up a shift (src/taneyev/self-questions.js) */
+.ask{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 6px 6px 0}
+.ask h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.ask ul{margin:0;padding-left:18px}.ask li{max-width:70ch}

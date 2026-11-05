@@ -3,6 +3,7 @@
 // All the theory comes from src/taneyev/rules.js; this file only builds markup.
 
 import { renderNotation } from './notation.js';
+import { selfQuestions } from '../src/taneyev/self-questions.js';
 import { chart, baseMarks, isPerfect, intervalName, forbidsSimilarMotion, parallelSurvives } from '../src/taneyev/rules.js';
 
 const fmt = (n) => (n < 0 ? `−${-n}` : String(n));
@@ -16,6 +17,11 @@ function formula(jv) {
   if (jv === 0) return `${general} = <i>m</i>`;
   const op = jv < 0 ? '−' : '+';
   return `${general} = <i>m</i> ${op} ${Math.abs(jv)}`;
+}
+/** Returns the "Ask yourself" reminders for a shift (self-questions.js), or '' when there are none. */
+function askYourself(jv) {
+  const items = selfQuestions(jv).map((q) => `<li><b>${q.question}</b> ${q.answer}</li>`);
+  return items.length ? `<div class="ask"><h3>Ask yourself</h3><ul>${items.join('')}</ul></div>` : '';
 }
 const yn = (b) => `<span class="${b ? 'yes' : 'no'}">${b ? 'yes' : 'no'}</span>`;
 
@@ -47,6 +53,7 @@ export function renderChart(jv, title, note, { id = slug(jv) } = {}) {
     <header><h2><span class="jv">J<sub>v</sub> = ${sign(jv)}</span> ${title}</h2>
     <p class="formula">${formula(jv)}</p>
     <p class="note">${note}</p>
+    ${askYourself(jv)}
     <dl class="facts"><div><dt>Fixed consonances</dt><dd>${fixed}</dd></div>
       <div><dt>Parallel 3rds</dt><dd>${yn(parallelSurvives(2, jv))}</dd></div>
       <div><dt>Parallel 6ths</dt><dd>${yn(parallelSurvives(5, jv))}</dd></div>
