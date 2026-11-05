@@ -29,8 +29,8 @@ export function exampleForSplit(split, { start }) {
 /**
  * Every split of every total Jv that has an example from `start`, as
  * { first: [[total, upper, lower], …], mixed: […] } in number order.
- * This is the slow search (15–30 s); the site build runs it once per
- * starting note (scripts/build-survey.js).
+ * This is the slow search (15–30 s); scripts/build-survey.js runs it once
+ * per starting note and commits the result as data/three-voice-survey.json.
  */
 export function surveyFrom(start) {
   const survey = { [KIND.FIRST]: [], [KIND.MIXED]: [] };

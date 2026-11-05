@@ -28,7 +28,7 @@ function caption(split) {
   return `The lower voice is the cantus firmus and stays put. In the shifted version the middle voice moves ${minus(middleLower)} and the upper voice ${minus(upperLower)}, so every pair shifts by its own J<sub>v</sub>.`;
 }
 
-/** Returns the score: original, a bar's rest, shifted, with each version labelled over its first bar. */
+/** Returns the score: original, a bar's rest, shifted, with each version labeled over its first bar. */
 function score(original, shifted) {
   const label = (bars, text) => bars.map((bar, k) => ({ ...bar, text: k === 0 ? text : undefined }));
   const first = label(original, 'original');
