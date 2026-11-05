@@ -21,9 +21,9 @@ const yn = (b) => `<span class="${b ? 'yes' : 'no'}">${b ? 'yes' : 'no'}</span>`
 
 /**
  * Returns the HTML for one chart card. `id` defaults to the shift's slug, e.g. "jvm11".
- * With `motion`, the card also gets a panel showing the shift as a 3D motion (shift-model.js).
+ * `data-jv` on the card lets the docked 3D model (model-dock.js) follow the chart in view.
  */
-export function renderChart(jv, title, note, { id = slug(jv), motion = false } = {}) {
+export function renderChart(jv, title, note, { id = slug(jv) } = {}) {
   const cols = chart(jv);
   const ms = cols.map((c) => c.m);
   const ns = ms.map((m) => m + jv);
@@ -43,7 +43,7 @@ export function renderChart(jv, title, note, { id = slug(jv), motion = false } =
   const fixed = cols.filter((c) => c.kind === 'fixed-consonance').map((c) => c.m).join(', ') || 'none';
   const similar = forbidsSimilarMotion(jv)
     ? '<div><dt>Similar motion</dt><dd><span class="no">none into any consonance (§101)</span></dd></div>' : '';
-  return `<section class="chart" id="${id}">
+  return `<section class="chart" id="${id}" data-jv="${jv}">
     <header><h2><span class="jv">J<sub>v</sub> = ${sign(jv)}</span> ${title}</h2>
     <p class="formula">${formula(jv)}</p>
     <p class="note">${note}</p>
@@ -53,14 +53,12 @@ export function renderChart(jv, title, note, { id = slug(jv), motion = false } =
       <div><dt>Parallel 10ths</dt><dd>${yn(parallelSurvives(9, jv))}</dd></div>${similar}</dl></header>
     <div class="scroll"><table><tbody>${working}${result}</tbody></table></div>
     <details class="notation" data-jv="${jv}"><summary>See and hear it in notation</summary>
-      <div class="examples"></div></details>${motion ? `
-    <details class="notation motion" data-jv="${jv}"><summary>See it as a motion in 3D</summary>
-      <div class="model"></div></details>` : ''}</section>`;
+      <div class="examples"></div></details></section>`;
 }
 
 /** Draws a chart's notation the first time its panel is opened. */
 export function wireNotation(root) {
-  root.querySelectorAll('details.notation:not(.motion)').forEach((panel) => {
+  root.querySelectorAll('details.notation').forEach((panel) => {
     panel.addEventListener('toggle', () => {
       const box = panel.querySelector('.examples');
       if (panel.open && !box.hasChildNodes()) renderNotation(box, Number(panel.dataset.jv));

@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to read the 3D models</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<!-- site navigation: the same on every page, in site order; aria-current marks this page -->
+<nav class="site" aria-label="Site">
+<a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
+<a href="../taneyev/charts.html">Consonance charts</a>
+<a href="../canon/proposta.html">Canon proposta</a>
+<a href="../taneyev/three-voices.html">Three-voice shifts</a>
+</nav>
+<h1>How to read the 3D models</h1>
+<p class="lead">On the <a href="charts.html">consonance charts</a> page, a model in the corner of the screen follows the chart you are reading. This page explains its three views: the coin, the helix and the Cayley graph. They show the same facts as the charts, drawn as motions, so you can see why a chart looks the way it does. Intervals are zero-indexed, as on the charts: unison 0, 3rd 2, octave 7, 10th 9, 12th 11.</p>
+</header>
+<article class="guide">
+
+<section>
+<h2>The idea in one paragraph</h2>
+<p>Fold every interval into one octave and there are seven of them: unison, 2nd, 3rd, 4th, 5th, 6th, 7th. Put them round a seven-sided figure. A shift J<sub>v</sub> then moves every interval at once, the same way, like turning a rigid shape. When the voices stay in order (J<sub>v</sub> ≥ 0, or the larger intervals of an inverse shift) the shape <b>turns</b>. When the voices cross, each interval is read the other way up (§90), and the shape <b>flips over</b>, like a coin. Turns and flips are the only two motions there are, and the charts are a record of where each interval lands.</p>
+</section>
+
+<section aria-labelledby="coin-h">
+<h2 id="coin-h">The coin: one octave</h2>
+<p>The two stacked heptagons are the top and bottom faces of one thin seven-sided coin. What you see:</p>
+<ul>
+<li><b>The ring outside the coin stays still.</b> Its seven slots are the intervals you hear after the shift, named on the outside. A filled dot is a consonance (unison, 3rd, 5th, 6th); a hollow one is a dissonance. Beside each slot are that interval’s own suspension marks, the derivative’s marks in the chart.</li>
+<li><b>The numbered discs ride on the coin.</b> Each is an interval <i>m</i> of the original, coloured as in the chart’s bottom row (green fixed consonance, and so on). It carries its own marks, the upper voice’s mark above and the lower voice’s below.</li>
+<li><b>Press Play again</b> (Replay on the corner model) and each disc moves to the slot it becomes. A dashed line is the axis of a flip.</li>
+</ul>
+<p>Try it: pick a J<sub>v</sub>, drag to turn the model, and press Play again.</p>
+<p class="picker" data-picker="coin"></p>
+<div class="model" id="coin"></div>
+<h3>Reading a rule off the coin</h3>
+<p>Take J<sub>v</sub> = −11 and follow disc 5, the 6th. All seven discs cross here, so the whole coin flips over the axis through the 3rd (n becomes 11 − n). Disc 5 lands on the slot of the 7th, a hollow dot: the 6th becomes a 7th, a variable consonance, so the disc is coloured that way.</p>
+<p>Before the flip the 6th shows <b>---</b> above (upper voice) and <b>x</b> below (lower voice). After the flip it is upside down: the lower voice’s <b>x</b> is now on top and the upper voice’s <b>---</b> underneath. That is §90 in one picture: in the inversion the voices have swapped.</p>
+<p>Now compare the disc with its slot, side by side. On top, the lower voice’s <b>x</b> meets the 7th’s <b>—</b> (must be a suspension): together they make <b>— x</b>, which the chart prints <i>below</i> the 6th because it is the lower voice’s rule. Underneath, the upper voice’s <b>---</b> meets the 7th’s <b>(—)</b> (can’t be suspended), and the stricter <b>(—)</b> is the rule printed <i>above</i> the 6th (§128). Look at the 6th in the −11 chart: (—) above, — x below.</p>
+<p>So the rule of thumb is: compare each mark on a disc with the slot’s mark on the same side, and the result belongs to the voice whose mark that was. After a turn nothing is upside down, so top goes with top as you would expect.</p>
+<h3>When only some discs flip</h3>
+<p>At J<sub>v</sub> = −4 (inversion at the 5th) only intervals smaller than 4 cross. Discs 0 to 3 flip; discs 4, 5 and 6 keep the voices in order and turn. The coin itself stays still, and the discs move one by one. The same happens at −2. At −7, by contrast, every disc flips together, over the axis through the unison.</p>
+<p>The axis of a flip always passes through the midpoint of the unison and the interval of inversion, counted within the octave: the unison for the octave, the 2nd for the 10th, the 3rd for the 12th.</p>
+</section>
+
+<section aria-labelledby="helix-h">
+<h2 id="helix-h">The helix: every register</h2>
+<p>The coin forgets the octave, so it cannot tell −7 from −14, or a 3rd from a 10th. The helix keeps them. It is the line of all intervals wound into a spiral, one turn per octave, rising with the interval: the unison at the middle, the octave one turn above, and below the unison the intervals with the voices crossed (marked ↓). Every corner of the coin is one column of the helix, seen from above.</p>
+<p>Replay runs in two steps. First every disc slides along the spiral by J<sub>v</sub>, to <i>n</i> = <i>m</i> + J<sub>v</sub>. Then any disc that ended below the unison folds up through the unison, a half-turn, to the interval you actually hear, |<i>n</i>|, turned upside down. That fold is the crossing of §90.</p>
+<p class="picker" data-picker="helix"></p>
+<div class="model" id="helix"></div>
+<p>Compare −7 and −14 here. At −14 every disc slides twice as far down the spiral, so the ones that cross fold up from an octave lower. Up to disc 9 they still end on consonances and dissonances in the same places, which is why the two charts agree that far. They part at 10 and 11 (the 11th and 12th): at −7 those become a 4th and a 5th, at −14 a 5th and a 4th.</p>
+</section>
+
+<section aria-labelledby="graph-h">
+<h2 id="graph-h">The Cayley graph: how the charts fit together</h2>
+<p>Counted within the octave there are exactly 14 shifts: seven turns and seven flips. The graph puts each on a dot. The top ring holds the turns (voices in order: 0, +1, …, +6), the bottom ring the flips (the inversions at the octave, 9th, 10th and so on). Charts an octave apart, such as −11 and −4, are the same motion and share a dot.</p>
+<ul>
+<li><b>A solid line</b> is one more step of shift. Walking round the top ring adds a step each time.</li>
+<li><b>A dashed line</b> is the octave flip, the inversion at the octave. It joins each turn to the flip below it.</li>
+<li><b>The number on a dot</b> is how many of the four consonances that shift keeps consonant: 4 for the 10th, 3 for the octave and 12th. That is one way to see why Taneyev practises those three first.</li>
+<li><b>A filled dot</b> has a chart on the charts page.</li>
+</ul>
+<p>Tap one dot, then another, to see what the two shifts make one after the other. For example, invert at the octave and then at the 10th, and the result is a direct shift up a 3rd: two flips make a turn. A turn and a flip always make a flip.</p>
+<div class="model" id="graph"></div>
+</section>
+
+<section>
+<h2>While you practise</h2>
+<ul>
+<li>Open the <a href="charts.html">consonance charts</a>. The model in the corner replays each chart as it scrolls into view. Hide it with the Hide button; the page remembers your choice.</li>
+<li>Use the coin to see the shape of a chart at a glance: which discs land on hollow slots (they become dissonant), and whether the coin flips as a whole or disc by disc.</li>
+<li>Switch to the helix when the register matters, as with −7 and −14.</li>
+<li>Switch to the Cayley graph to see how a chart relates to the others, for instance which inversions combine into which.</li>
+</ul>
+<p class="note">The group-theory reading (turns and flips, the dihedral group of the heptagon) is ours, not Taneyev’s. The rules it draws come from §§90 and 128 and are computed by the same code as the charts.</p>
+</section>
+</article>
+<footer class="foot">
+  <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
+    <!-- GitHub mark, from Primer Octicons (MIT) -->
+    <svg viewBox="0 0 16 16" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+</footer>
+</main>
+
+
+<script type="module" src="models.js"></script>
+</body>
+</html>

@@ -113,8 +113,7 @@ details.notation summary:hover{border-color:var(--accent)}
 .controls label{display:grid;gap:3px;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .controls input,.controls select{font:inherit;font-size:1rem;width:7em;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .controls button{font:inherit;font-weight:600;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:3px 14px;background:var(--panel);cursor:pointer}
-/* The shift as a 3D motion (taneyev/shift-model.js), under each chart. */
-details.motion{border-top:0;padding-top:0}
+/* The shift as a 3D motion (taneyev/shift-model.js, cayley.js): the guide page and the dock. */
 .model{display:grid;gap:10px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
 .model-bar{display:flex;flex-wrap:wrap;gap:6px}
 .model-bar button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
@@ -122,3 +121,28 @@ details.motion{border-top:0;padding-top:0}
 .model-bar button[aria-pressed="true"]{border-color:var(--accent);background:var(--fc)}
 .model canvas{display:block;width:100%;max-width:640px;aspect-ratio:4/3.2;background:var(--panel);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:grab}
 .model-note{margin:0;max-width:70ch;font-size:.9rem;color:var(--muted)}
+/* The docked model on the charts page (taneyev/model-dock.js): pinned to the corner, hidden with a button. */
+.dock{position:fixed;z-index:20;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom))}
+.dock-show{font:inherit;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--accent);border-radius:999px;padding:6px 16px;cursor:pointer;box-shadow:0 4px 14px rgb(0 0 0 / .15)}
+.dock.open .dock-show{display:none}
+.dock-panel{display:none;gap:8px;width:min(360px,calc(100vw - 32px));max-height:calc(100vh - 32px);overflow:auto;padding:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 28px rgb(0 0 0 / .18)}
+.dock.open .dock-panel{display:grid}
+.dock-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.dock-hide{font:inherit;font-size:.85rem;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
+.dock .model-bar button{font-size:.8rem;padding:2px 10px}
+.dock canvas{display:block;width:100%;aspect-ratio:4/3.4;background:var(--bg);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:grab}
+.dock .model-note{font-size:.82rem}
+.dock-graph{display:grid;gap:6px}
+.dock-graph[hidden],.dock-shift[hidden],.dock-say[hidden]{display:none}
+@media (max-width:600px){.dock canvas{aspect-ratio:4/2.8}.dock-panel{max-height:62vh}}
+/* on wide screens the page makes room for the open dock instead of hiding under it */
+@media (min-width:1100px){body.dock-open{padding-right:392px}}
+.guide-link{margin:0;color:var(--muted);font-size:.95rem}
+/* the guide page (taneyev/models.html) */
+.guide{display:grid;gap:22px;max-width:760px}
+.guide section{display:grid;gap:10px}
+.guide h2{margin:0}
+.guide p,.guide ul{margin:0}
+.guide p,.guide li{max-width:70ch}
+.guide h3{margin:6px 0 0}
+.guide .picker{display:flex;flex-wrap:wrap;gap:6px;align-items:center}

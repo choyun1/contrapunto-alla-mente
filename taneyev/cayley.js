@@ -82,22 +82,31 @@ function drawGraph(ctx, project, pal, picks, onPage) {
   return dots;
 }
 
-/** Builds the graph inside `box`. `jvs` are the charts on the page; `href(jv)` links to one. */
-export function renderCayley(box, jvs, href) {
-  box.innerHTML = `<canvas aria-label="Cayley graph of the shifts: a heptagonal prism"></canvas>
-    <p class="model-note">Top ring: the seven shifts with the voices in order. Bottom ring: the seven inversions.
+/**
+ * Builds the graph inside `box`. `jvs` are the charts on the page; `href(jv)` links to one.
+ * With `bare`, the long how-to-read note is left out (the docked model links to the guide instead).
+ * Returns { highlight(jv) }, which picks that shift's dot as the first pick.
+ */
+export function renderCayley(box, jvs, href, { bare = false } = {}) {
+  const help = bare ? '' : `<p class="model-note">Top ring: the seven shifts with the voices in order. Bottom ring: the seven inversions.
     Solid lines are one step of shift; dashed lines are the octave flip. The number on each dot is how many of
-    the four consonances that shift keeps; filled dots have a chart on this page. Drag to turn. Tap a dot, then
-    another, to see what the two make together.</p>
-    <p class="model-note" data-readout></p>`;
+    the four consonances that shift keeps; filled dots have a chart on the charts page. Drag to turn. Tap a dot, then
+    another, to see what the two make together.</p>`;
+  box.innerHTML = `<canvas aria-label="Cayley graph of the shifts: a heptagonal prism"></canvas>
+    ${help}<p class="model-note" data-readout></p>`;
   const canvas = box.querySelector('canvas');
   const readout = box.querySelector('[data-readout]');
   const ctx = canvas.getContext('2d');
   const state = { ...VIEW, first: element(-7), second: element(-9), next: 'first', dots: [] };
   const onPage = (e) => jvs.filter((jv) => same(element(jv), e));
 
-  const links = (e) => onPage(e).map((jv) => `<a href="${href(jv)}">${jv > 0 ? '+' : ''}${String(jv).replace('-', '−')}</a>`).join(', ') || 'none on this page';
+  const links = (e) => onPage(e).map((jv) => `<a href="${href(jv)}">${jv > 0 ? '+' : ''}${String(jv).replace('-', '−')}</a>`).join(', ') || 'none on the charts page';
   const describe = () => {
+    if (!state.second) {
+      readout.innerHTML = `In view: <b>${nameOf(state.first)}</b>, which keeps ${consonancesKept(jvOf(state.first))} of the
+        four consonances (charts: ${links(state.first)}). Tap another dot to see what it makes after this one.`;
+      return;
+    }
     const made = compose(state.second, state.first);
     readout.innerHTML = `<b>${nameOf(state.second)}</b> after <b>${nameOf(state.first)}</b> makes
       <b>${nameOf(made)}</b> (charts: ${links(made)}). First pick’s charts: ${links(state.first)}.
@@ -113,7 +122,7 @@ export function renderCayley(box, jvs, href) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const project = camera({ ...state, focal: Math.min(width, height) * state.focal, width, height });
     ctx.clearRect(0, 0, width, height);
-    state.dots = drawGraph(ctx, project, palette(), [state.first, state.second], onPage);
+    state.dots = drawGraph(ctx, project, palette(), [state.first, state.second].filter(Boolean), onPage);
   };
 
   let drag = null;
@@ -145,14 +154,15 @@ export function renderCayley(box, jvs, href) {
   window.addEventListener('resize', draw);
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
   new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const highlight = (jv) => {
+    state.first = element(jv);
+    state.second = null;
+    state.next = 'second';
+    describe();
+    draw();
+  };
   describe();
   draw();
+  return { highlight };
 }
 
-/** Builds the graph the first time its panel is opened. */
-export function wireCayley(panel, jvs, href) {
-  panel.addEventListener('toggle', () => {
-    const box = panel.querySelector('.model');
-    if (panel.open && !box.hasChildNodes()) renderCayley(box, jvs, href);
-  });
-}
