@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   crosses, motion, landing, mirrorStep, rotationSteps, consonancesKept, consonanceSymmetries,
-  element, act, compose, ALL_ELEMENTS,
+  element, act, compose, ALL_ELEMENTS, word, cycles, pieces,
 } from '../src/taneyev/symmetry.js';
 import { baseMarks, simple } from '../src/taneyev/rules.js';
 
@@ -97,4 +97,46 @@ test('octave inversion then 10th inversion is a shift up a 3rd; every flip undoe
     const flip = { kind: 'flip', step: k };
     assert.deepEqual(compose(flip, flip), { kind: 'turn', step: 0 });
   }
+});
+
+test('words in r and s: +3 is r³, −7 is s, −11 is r⁴s, and −11 and −4 share a name', () => {
+  assert.equal(word(element(0)), 'e');
+  assert.equal(word(element(1)), 'r');
+  assert.equal(word(element(3)), 'r³');
+  assert.equal(word(element(-7)), 's');
+  assert.equal(word(element(-8)), 'rs');
+  assert.equal(word(element(-11)), 'r⁴s');
+  assert.equal(word(element(-4)), word(element(-11)));
+});
+
+test('cycle notation: a turn is one 7-cycle, a flip three swaps around its mirror step', () => {
+  assert.equal(cycles(element(0)), '( )');
+  assert.equal(cycles(element(3)), '(0 3 6 2 5 1 4)');
+  assert.equal(cycles(element(-7)), '(1 6)(2 5)(3 4)');
+  assert.equal(cycles(element(-9)), '(0 2)(3 6)(4 5)');
+  assert.equal(cycles(element(-11)), '(0 4)(1 3)(5 6)');
+});
+
+test('each word is the same symmetry as doing s, then r k times', () => {
+  const r = { kind: 'turn', step: 1 };
+  const s = element(-7);
+  for (const k of [0, 1, 2, 3, 4, 5, 6]) {
+    let made = s;
+    for (let i = 0; i < k; i += 1) made = compose(r, made);
+    assert.deepEqual(made, { kind: 'flip', step: k });
+  }
+});
+
+test('the 14 symmetries have 14 different names', () => {
+  assert.equal(new Set(ALL_ELEMENTS.map(word)).size, 14);
+  assert.equal(new Set(ALL_ELEMENTS.map(cycles)).size, 14);
+});
+
+test('pieces: −4 flips 0–3 and turns 4–6 by three steps (§90); −11 and +3 are one piece', () => {
+  const p = pieces(-4);
+  assert.deepEqual(p.map((x) => x.ms), [[0, 1, 2, 3], [4, 5, 6]]);
+  assert.deepEqual(p[1].e, { kind: 'turn', step: 3 });
+  for (const x of p) for (const m of x.ms) assert.equal(act(x.e, m), landing(m, -4));
+  assert.equal(pieces(-11).length, 1);
+  assert.equal(pieces(3).length, 1);
 });

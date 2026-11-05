@@ -98,3 +98,50 @@ export function compose(b, a) {
 /** All 14 symmetries: the seven turns, then the seven flips. */
 export const ALL_ELEMENTS = [0, 1, 2, 3, 4, 5, 6].map((step) => ({ kind: 'turn', step }))
   .concat([0, 1, 2, 3, 4, 5, 6].map((step) => ({ kind: 'flip', step })));
+
+// ---------- Names for each symmetry: a word in r and s, and cycle notation ----------
+//
+// r is the turn by one step (Jv = +1) and s the octave flip (Jv = −7, n → −n).
+// Every turn is rᵃ and every flip is rᵏs (s first, then turn by k), so each
+// shift has one short name modulo the octave. The reading is ours, not Taneyev's.
+
+const SUPERSCRIPT = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶'];
+
+/** The symmetry as a word in r and s: 'e' (identity), 'r³', 's', 'r⁴s'. */
+export function word(e) {
+  const turn = e.step === 0 ? '' : e.step === 1 ? 'r' : `r${SUPERSCRIPT[e.step]}`;
+  if (e.kind === 'turn') return turn || 'e';
+  return `${turn}s`;
+}
+
+/** The symmetry in cycle notation on the corners 0–6, fixed corners left out: '(0 3 6 2 5 1 4)', '(1 6)(2 5)(3 4)'. */
+export function cycles(e) {
+  const seen = new Set();
+  const out = [];
+  for (let start = 0; start < 7; start += 1) {
+    if (seen.has(start)) continue;
+    const cycle = [];
+    for (let n = start; !seen.has(n); n = act(e, n)) {
+      seen.add(n);
+      cycle.push(n);
+    }
+    if (cycle.length > 1) out.push(`(${cycle.join(' ')})`);
+  }
+  return out.join('') || '( )';
+}
+
+/**
+ * The symmetries a shift applies to the seven simple intervals m = 0–6, with
+ * the intervals each one carries. An inverse shift smaller than the octave
+ * (−1 to −6) is two pieces: the intervals below k cross and flip, the rest
+ * stay in order and turn (§90). Every other shift is a single symmetry.
+ */
+export function pieces(jv) {
+  const all = [0, 1, 2, 3, 4, 5, 6];
+  const k = -jv;
+  if (jv >= 0 || k >= 7) return [{ e: element(jv), ms: all }];
+  return [
+    { e: element(jv), ms: all.filter((m) => m < k) },
+    { e: { kind: 'turn', step: mod7(jv) }, ms: all.filter((m) => m >= k) },
+  ];
+}

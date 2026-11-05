@@ -175,6 +175,7 @@ details.notation summary:hover{border-color:var(--accent)}
 .guide p,.guide ul{margin:0}
 .guide p,.guide li{max-width:70ch}
 .guide h3{margin:6px 0 0}
+.guide table.names td,.guide table.names th{position:static;text-align:left;padding:4px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.9rem}
 .guide .picker{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
 /* forms with labelled inputs (canon pages) and plain left-aligned tables */
