@@ -5,9 +5,10 @@
 import { renderModel } from './shift-model.js';
 import { renderCayley } from './cayley.js';
 import { sign, slug } from './chart-card.js';
+import { BOOK_SHIFTS } from '../src/taneyev/shifts.js';
 
-// The shifts that have a chart on the charts page (the same list as charts.js).
-const CHART_JVS = [0, -7, -14, -11, -9, -4, -2, 3, 5, -12, -13];
+// The shifts Taneyev works through: the Cayley graph fills their dots.
+const BOOK_JVS = BOOK_SHIFTS.map((entry) => entry.jv);
 
 // The shifts the guide offers on each model, and the one it starts on.
 const PICKS = {
@@ -30,4 +31,4 @@ for (const [name, { jvs, start }] of Object.entries(PICKS)) {
   const model = renderModel(document.getElementById(name), start, { model: name });
   wirePicker(document.querySelector(`[data-picker="${name}"]`), jvs, start, model);
 }
-renderCayley(document.getElementById('graph'), CHART_JVS, (jv) => `charts.html#${slug(jv)}`);
+renderCayley(document.getElementById('graph'), BOOK_JVS, (jv) => `charts.html#${slug(jv)}`);

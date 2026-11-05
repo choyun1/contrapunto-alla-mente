@@ -12,16 +12,15 @@
 // rules.js: −7 is the octave, −9 the 10th, −11 the 12th.
 
 import { chart, isConsonant, simple } from './rules.js';
+import { isCommonShift } from './shifts.js';
 
 /**
- * Inner-pair shifts that are comfortable to write against: inversion at the
- * octave, 10th and 12th, the three Taneyev treats at length. A shift of 0
- * (the pair keeps its original spacing) is simple counterpoint and also easy.
+ * Is this shift easy for one pair? The easy ones are the common shifts of
+ * shifts.js: 0 (the pair keeps its original spacing, simple counterpoint) and
+ * inversion at the octave, 10th and 12th (−7, −9, −11), the three Taneyev
+ * treats at length.
  */
-export const EASY_SHIFTS = [-7, -9, -11];
-
-/** Is this shift easy for one pair: 0 or one of EASY_SHIFTS? */
-export const isEasyShift = (jv) => jv === 0 || EASY_SHIFTS.includes(jv);
+export const isEasyShift = isCommonShift;
 
 /**
  * Every way to split an outer shift with the middle voice lying between the
