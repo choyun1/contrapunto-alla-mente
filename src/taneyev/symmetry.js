@@ -106,6 +106,16 @@ export const ALL_ELEMENTS = [0, 1, 2, 3, 4, 5, 6].map((step) => ({ kind: 'turn',
 // shift has one short name modulo the octave. The reading is ours, not Taneyev's.
 
 const SUPERSCRIPT = ['⁰', '¹', '²', '³', '⁴', '⁵', '⁶'];
+const SUBSCRIPT = ['₀', '₁', '₂', '₃', '₄', '₅', '₆'];
+
+/**
+ * The symmetry in music theory's T/I names, on scale steps mod 7: Tₐ is the
+ * turn n → n + a and Iₖ the flip n → k − n. So Jv = +a is Tₐ and Jv = −k is Iₖ:
+ * the 12th (−11) is I₄, the 10th (−9) I₂, the octave (−7) I₀.
+ */
+export function tiName(e) {
+  return `${e.kind === 'turn' ? 'T' : 'I'}${SUBSCRIPT[e.step]}`;
+}
 
 /** The symmetry as a word in r and s: 'e' (identity), 'r³', 's', 'r⁴s'. */
 export function word(e) {

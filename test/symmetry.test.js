@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   crosses, motion, landing, mirrorStep, rotationSteps, consonancesKept, consonanceSymmetries,
-  element, act, compose, ALL_ELEMENTS, word, cycles, pieces,
+  element, act, compose, ALL_ELEMENTS, word, cycles, pieces, tiName,
 } from '../src/taneyev/symmetry.js';
 import { baseMarks, simple } from '../src/taneyev/rules.js';
 
@@ -139,4 +139,19 @@ test('pieces: −4 flips 0–3 and turns 4–6 by three steps (§90); −11 and 
   for (const x of p) for (const m of x.ms) assert.equal(act(x.e, m), landing(m, -4));
   assert.equal(pieces(-11).length, 1);
   assert.equal(pieces(3).length, 1);
+});
+
+test('T/I names: Jv = +a is Tₐ, Jv = −k is Iₖ mod 7 (12th I₄, 10th I₂, octave I₀)', () => {
+  assert.equal(tiName(element(0)), 'T₀');
+  assert.equal(tiName(element(3)), 'T₃');
+  assert.equal(tiName(element(-11)), 'I₄');
+  assert.equal(tiName(element(-9)), 'I₂');
+  assert.equal(tiName(element(-7)), 'I₀');
+  assert.equal(tiName(element(-14)), 'I₀');
+});
+
+test('Iₖ swaps corners that add to k: I₆ after T₁ is I₅', () => {
+  const i6 = { kind: 'flip', step: 6 };
+  for (let n = 0; n < 7; n += 1) assert.equal((n + act(i6, n)) % 7, 6);
+  assert.equal(tiName(compose(i6, element(1))), 'I₅');
 });

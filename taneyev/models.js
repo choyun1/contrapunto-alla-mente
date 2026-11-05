@@ -6,7 +6,7 @@ import { renderModel } from './shift-model.js';
 import { renderCayley } from './cayley.js';
 import { sign, slug } from './chart-card.js';
 import { BOOK_SHIFTS } from '../src/taneyev/shifts.js';
-import { ALL_ELEMENTS, word, cycles, consonancesKept } from '../src/taneyev/symmetry.js';
+import { ALL_ELEMENTS, word, cycles, consonancesKept, tiName } from '../src/taneyev/symmetry.js';
 import { intervalName } from '../src/taneyev/rules.js';
 
 // The shifts Taneyev works through: the Cayley graph fills their dots.
@@ -42,13 +42,13 @@ function jvsFor(e) {
   return [-k - 7, -k].map(sign).join(', ');
 }
 
-/** One row of the names table: the symmetry's word, cycles, meaning, shifts and consonances kept. */
+/** One row of the names table: the symmetry's T/I name, word, cycles, meaning, shifts and consonances kept. */
 function nameRow(e) {
   const jv = e.kind === 'turn' ? e.step : -(7 + e.step);
   const what = e.kind === 'turn'
     ? (e.step === 0 ? 'no motion' : `turn: shift up a ${intervalName(e.step)}`)
     : `flip: inversion at the ${intervalName(7 + e.step)}`;
-  return `<tr><td><b>${word(e)}</b></td><td>${cycles(e)}</td><td>${what}</td><td>${jvsFor(e)}</td><td>${consonancesKept(jv)} of 4</td></tr>`;
+  return `<tr><td><b>${tiName(e)}</b></td><td>${word(e)}</td><td>${cycles(e)}</td><td>${what}</td><td>${jvsFor(e)}</td><td>${consonancesKept(jv)} of 4</td></tr>`;
 }
 
 document.getElementById('names').innerHTML = ALL_ELEMENTS.map(nameRow).join('');
