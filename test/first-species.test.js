@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { firstSpeciesExample } from '../src/taneyev/first-species.js';
+import { firstSpeciesExample, fourNoteCanti, CANTI } from '../src/taneyev/first-species.js';
 import { motion, isForbiddenMove, moveSurvivesShift } from '../src/taneyev/motion.js';
 import { isConsonant, isPerfect } from '../src/taneyev/rules.js';
 import { isTritone, MIDDLE_C } from '../src/common/diatonic.js';
@@ -59,4 +59,14 @@ test('Jv = −7 example stays C A B C over C F D C, closing on the unison after 
   const example = firstSpeciesExample(-7);
   assert.deepEqual(example.m, [7, 2, 5, 7]);
   assert.deepEqual(example.n, [0, -5, -2, 0]);
+});
+
+test('fourNoteCanti: every cantus starts and ends on its note, closes by step, and includes the four CANTI (Fux)', () => {
+  const canti = fourNoteCanti(MIDDLE_C);
+  for (const cantus of canti) {
+    assert.equal(cantus[0], MIDDLE_C);
+    assert.equal(cantus[3], MIDDLE_C);
+    assert.equal(Math.abs(cantus[2] - cantus[3]), 1);
+  }
+  for (const cantus of CANTI) assert.ok(canti.some((c) => c.join() === cantus.join()), cantus.join());
 });

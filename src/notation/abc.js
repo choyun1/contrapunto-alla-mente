@@ -3,7 +3,9 @@
 // Each voice gets its own staff, labeled I (upper voice of the original) and
 // II (lower voice), as in Taneyev. Pitches are diatonic steps from
 // src/common/diatonic.js; every measure holds one dyad, a whole note unless the
-// measure gives another `length` (e.g. '1/2' for a half-bar rest).
+// measure gives another `length` (e.g. '1/2' for a half-bar rest). A voice may
+// instead hold a list of notes for the bar, { step, length, tie } each, for
+// half notes and ties (see barNotes).
 
 import { letterOf, octaveOf } from '../common/diatonic.js';
 import { clefsForVoice } from './clefs.js';
@@ -16,8 +18,24 @@ export function abcPitch(step) {
   return letter + ','.repeat(4 - octave);
 }
 
-/** abc for one bar's note: a pitch, or a rest for null. Length is in whole notes. */
+/** abc for one note: a pitch, or a rest for null. Length is in whole notes. */
 const abcNote = (step, length = '1') => (step === null ? `z${length}` : `${abcPitch(step)}${length}`);
+
+/**
+ * abc for one voice in one bar. `value` is a step (or null) lasting the bar,
+ * or a list of { step, length, tie } notes, where tie joins a note to the next
+ * one, across the bar line too: [{ step: 30, length: '1/2', tie: true }].
+ */
+function barNotes(value, length) {
+  if (!Array.isArray(value)) return abcNote(value, length);
+  return value.map((note) => `${abcNote(note.step, note.length)}${note.tie ? '-' : ''}`).join(' ');
+}
+
+/** The first pitch a voice sounds in a bar, or null: a list of notes stands for its first pitch. */
+function firstStep(value) {
+  if (!Array.isArray(value)) return value;
+  return value.find((note) => note.step !== null)?.step ?? null;
+}
 
 /**
  * A voice with each rest replaced by the next real pitch (or the last one),
@@ -44,7 +62,7 @@ function median(steps) {
 export const MEASURES_PER_LINE = 8;
 
 /** Is a measure silent in every voice (no pitch anywhere)? */
-const isRestBar = (measure) => !Object.values(measure).some((value) => typeof value === 'number');
+const isRestBar = (measure) => !Object.values(measure).some((value) => typeof firstStep(value) === 'number');
 
 /**
  * Index of the first measure on each printed line. A line holds
@@ -80,7 +98,7 @@ function voiceLines(measures, voice, textKey, clefs, starts) {
       const clefChange = k > start && clefs[k] !== clefs[k - 1] ? `[K:clef=${clefs[k]}] ` : '';
       const text = measure[textKey] === undefined ? '' : `"^${measure[textKey]}"`;
       const bar = measure.doubleBarAfter ? '||' : '|';
-      parts.push(`${clefChange}${text}${abcNote(measure[voice], measure.length)} ${bar}`);
+      parts.push(`${clefChange}${text}${barNotes(measure[voice], measure.length)} ${bar}`);
     }
     return parts.join(' ');
   });
@@ -114,7 +132,7 @@ export function twoVoiceTune(measures, { names = ['I', 'II'] } = {}) {
 export function voicesTune(measures, voices, { sortByPitch = true } = {}) {
   const starts = lineStarts(measures);
   const staves = voices.map((voice) => {
-    const steps = fillRests(measures.map((m) => m[voice.key]));
+    const steps = fillRests(measures.map((m) => firstStep(m[voice.key])));
     const clefs = clefsForVoice(steps);
     return {
       ...voice,

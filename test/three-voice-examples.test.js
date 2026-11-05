@@ -83,3 +83,13 @@ test('the cantus starts on the chosen note: F3 for −4 + −7', () => {
   assert.equal(example.original[0].lower, F3);
   assert.equal(example.shifted[0].lower, F3);
 });
+
+test('voicesTune writes half notes and ties a note over the bar line', () => {
+  const measures = [
+    { a: [{ step: null, length: '1/2' }, { step: 30, length: '1/2', tie: true }] },
+    { a: [{ step: 30, length: '1/2' }, { step: 29, length: '1/2' }] },
+    { a: 28 },
+  ];
+  const abc = voicesTune(measures, [{ id: 'A', key: 'a', name: 'A' }]);
+  assert.match(abc, /z1\/2 E1\/2- \| E1\/2 D1\/2 \| C1 \|\]/);
+});
