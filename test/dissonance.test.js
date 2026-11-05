@@ -27,6 +27,6 @@ test('a suspension resolves by the suspended voice stepping down (Fux, fourth sp
 test('a passing tone steps in and on in the same direction (Fux, second species)', () => {
   assert.equal(isPassingTone(28, 29, 30), true); // C D E
   assert.equal(isPassingTone(30, 29, 28), true); // E D C
-  assert.equal(isPassingTone(28, 29, 28), false); // a neighbour, not a passing tone
+  assert.equal(isPassingTone(28, 29, 28), false); // a neighbor, not a passing tone
   assert.equal(isPassingTone(28, 30, 32), false); // leaps
 });
