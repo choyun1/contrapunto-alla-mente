@@ -12,7 +12,9 @@ import { checkCanon } from '../src/taneyev/canon-check.js';
 import { canonOverCantus, fittingSetups } from '../src/taneyev/canon-over-cantus.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
+import { keyCommand } from '../src/notation/note-entry.js';
 import { renderScore } from './over-cantus-score.js';
+import { placeNote, runCommand, cursorName } from './over-cantus-entry.js';
 import { guideTableHtml, setupButtonsHtml, setupName } from './over-cantus-table.js';
 
 const $ = (id) => document.getElementById(id);
@@ -25,6 +27,7 @@ const state = {
   size: 11, // a 12th
   delay: 3,
   generated: true, // the proposta is the computer's framework, not yet edited
+  cursor: { voice: VOICE.PROPOSTA, bar: 0 }, // where typed notes go
 };
 
 /** The setup for the current state (canon-voices.js). */
@@ -58,39 +61,58 @@ function startNote(bar) {
   return setup.cantus[bar] + (setup.side === SIDE.ABOVE ? 2 : -2);
 }
 
-/** Handles a click or drag on the score: moves a cantus or proposta note, or fills an empty bar. */
-function editNote(bar, voice, step) {
-  if (Number.isNaN(bar)) return;
-  if (voice === VOICE.CANTUS) {
-    state.cantus[bar] += step;
+/** What the entry code (over-cantus-entry.js) needs from the page. */
+const hooks = {
+  startNote,
+  cantusChanged: () => {
     if (state.generated) fillFramework();
-  } else if (voice === VOICE.PROPOSTA) {
-    const note = state.proposta[bar];
-    state.proposta[bar] = note === null ? startNote(bar) : note + step;
-    state.generated = false;
-  } else {
-    return; // the risposta and imaginary cantus follow from the others
-  }
-  render();
+  },
+};
+
+/** Handles a click on the score: puts the note there, if it's in CF or P. */
+function clickNote(bar, voice, pitch) {
+  if (placeNote(state, bar, voice, pitch, hooks)) render({ focus: true });
+}
+
+/** Handles a key press on the score, MuseScore style (note-entry.js). */
+function pressKey(event) {
+  const command = keyCommand(event);
+  if (!command) return;
+  event.preventDefault();
+  runCommand(state, command, hooks);
+  render({ focus: true });
 }
 
 /** The score's title and caption for the current proposta. */
 function scoreText(setup) {
   const title = `Your canon: ${setupName(state)}`;
   const who = state.generated ? 'The proposta shown is a framework the page found; change any note. ' : '';
-  const caption = `${who}Drag a CF or P note up or down, or click it and use the arrow keys. `
-    + 'Click a rest in P to write a note there. R follows from P, and the gray I.C.F. staff is drawn but not played. '
-    + `The number over each P bar is the J<sub>v</sub> it is written in. Red bars break a rule.`;
+  const caption = `${who}Click a line or space on the CF or P staff to put a note there, or type: `
+    + 'A–G writes that note in the nearest octave and moves on, ↑/↓ moves it a step, Ctrl+↑/↓ (⌘ on a Mac) an octave, '
+    + '←/→ moves the cursor, Alt+↑/↓ switches between P and CF, Backspace empties a P bar or removes a CF bar. '
+    + 'R follows from P, and the gray I.C.F. staff is drawn but not played. '
+    + 'The number over each P bar is the J<sub>v</sub> it is written in. Red bars break a rule.';
   return { title, caption: setup.cantus.length ? caption : '' };
 }
 
-/** Redraws the text fields, score and table from the state. */
-function render() {
+/** Keeps the cursor inside the music after the cantus got shorter. Returns it. */
+function clampedCursor() {
+  const { voice, bar } = state.cursor;
+  const last = voice === VOICE.CANTUS ? state.cantus.length : state.cantus.length - 1;
+  state.cursor = { voice, bar: Math.min(bar, last) };
+  return state.cursor;
+}
+
+/** Redraws the text fields, score and table from the state; `focus` keeps typing on the score. */
+function render({ focus = false } = {}) {
   const setup = currentSetup();
   $('cf-notes').value = state.cantus.map(pitchName).join(' ');
   $('p-notes').value = state.proposta.map((note) => (note === null ? '-' : pitchName(note))).join(' ');
   const problems = checkCanon(state.proposta, setup);
-  renderScore($('cf-score'), { proposta: state.proposta, setup, problems, ...scoreText(setup) }, editNote);
+  const cursor = clampedCursor();
+  renderScore($('cf-score'), { proposta: state.proposta, setup, problems, cursor, ...scoreText(setup) }, clickNote);
+  $('cf-cursor').textContent = `Cursor: ${cursorName(state, pitchName)}`;
+  if (focus) $('cf-score').focus();
   const none = state.generated && state.proposta.every((note) => note === null);
   $('cf-none').hidden = !none;
   $('cf-table').innerHTML = guideTableHtml(setup);
@@ -184,6 +206,7 @@ function wire() {
   $('cf-fill').addEventListener('click', () => apply(useFramework));
   $('cf-clear').addEventListener('click', () => apply(clearProposta));
   $('cf-find').addEventListener('click', showFittingSetups);
+  $('cf-score').addEventListener('keydown', pressKey);
   $('cf-setups').addEventListener('click', (event) => {
     if (event.target.matches('.setups button')) useSetup(event.target);
   });
