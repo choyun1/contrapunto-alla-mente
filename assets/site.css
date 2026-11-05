@@ -106,6 +106,8 @@ details.notation summary:hover{border-color:var(--accent)}
 .splits tr.picked td{font-weight:700}
 .splits tr.picked td:first-child{box-shadow:inset 4px 0 var(--accent)}
 .splits tbody tr{cursor:pointer}
+.splits .key{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:4px}
+.splits .key b,.splits .key .sw{margin-right:6px}
 .splits tbody tr:hover td{background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
 .splits tbody tr.easy:hover td{background:var(--fc);filter:brightness(.96)}
 .splits tbody tr:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
