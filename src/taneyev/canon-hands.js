@@ -123,6 +123,18 @@ export function moveNames(from, entry) {
 }
 
 /**
+ * Is `step` a note the hand shape allows for the proposta's next note, in any
+ * octave on the proposta's own side of the risposta? (Cho's mnemonic: "the same
+ * keys an octave further out on your side work too".) At the unison each side
+ * is checked with its own hand, so a 4th below the risposta is still wrong.
+ */
+export function isHandNote(step, from, entry) {
+  const risposta = rispostaNote(from, entry);
+  return propostaSides(entry).some((side) => side * (step - risposta) >= 0
+    && handKeys(risposta, side).some((key) => letterOf(key.step) === letterOf(step)));
+}
+
+/**
  * For a risposta above at simple interval `size` (1–7), the simple interval
  * below that gives the same note names, from any starting note. The two always
  * stack to a 10th or a 3rd (inversion at the 10th).

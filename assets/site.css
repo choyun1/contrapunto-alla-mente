@@ -26,7 +26,9 @@ nav.site a{text-decoration:none}
 nav.site a:hover{text-decoration:underline}
 nav.site a[aria-current="page"]{color:var(--ink);font-weight:600}
 nav.site .brand{margin-right:auto}
-@media (max-width:600px){nav.site .brand{flex-basis:100%}}
+/* the Drills link stands apart from the pages for learning the rules */
+nav.site .nav-drills{padding-left:18px;border-left:1px solid var(--line)}
+@media (max-width:600px){nav.site .brand{flex-basis:100%}nav.site .nav-drills{padding-left:0;border-left:0}}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
 .card h2{font-size:1.35rem;margin-bottom:4px}
@@ -178,7 +180,7 @@ details.notation summary:hover{border-color:var(--accent)}
 .guide table.names td,.guide table.names th{position:static;text-align:left;padding:4px 10px;border-bottom:1px solid var(--line);white-space:nowrap;font-size:.9rem}
 .guide .picker{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
-/* forms with labelled inputs (canon pages) and plain left-aligned tables */
+/* forms with labeled inputs (canon pages) and plain left-aligned tables */
 .checkform{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.checkform label{display:grid;gap:2px;font-size:.8rem;color:var(--muted)}
 .checkform input,.checkform select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
 .checkform input{width:5em}.checkform input.wide{width:min(28em,80vw)}
@@ -188,7 +190,7 @@ table.spans td{padding:3px 10px;text-align:left}table.spans th{text-align:left;p
 nav.sub{display:flex;flex-wrap:wrap;gap:4px 6px;margin:0 0 12px;font-size:.85rem}
 nav.sub a{text-decoration:none;padding:3px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel)}
 nav.sub a[aria-current="page"]{color:var(--ink);font-weight:600;border-color:var(--accent)}
-/* piano keyboard (canon/keyboard.js); dots use the verdict colors */
+/* piano keyboard (src/ui/keyboard.js); dots use the verdict colors */
 .keyboard{display:block}
 .kb-white{fill:#fdfdfb;stroke:#222826;stroke-width:1}
 .kb-black{fill:#222826}
@@ -197,3 +199,23 @@ nav.sub a[aria-current="page"]{color:var(--ink);font-weight:600;border-color:var
 .kb-finger{font-size:12px;font-weight:700;text-anchor:middle;fill:#fff}
 .kb-tag{font-size:13px;font-weight:700;text-anchor:middle}
 .kb-tag.r{fill:#233a8a}.kb-tag.p{fill:#5b6474}
+/* on-screen keyboard in the drills: the computer key on each key, and keys lit by your answer */
+.kb-label{font-size:10px;text-anchor:middle;fill:#8a919c;pointer-events:none}
+.kb-white.kb-on{fill:#cfe6ea}.kb-white.kb-good{fill:#bfe6d6}.kb-white.kb-bad{fill:#f3c4c4}
+.drill-keys .kb-white{cursor:pointer}
+/* drill pages: settings, the prompt, the strip of beats; a hidden section stays hidden though .chart is a grid */
+.chart[hidden]{display:none}
+.legend .sw{flex:none}
+.drill-controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px}
+.drill-controls label{display:inline-flex;gap:6px;align-items:center;color:var(--muted)}
+.drill-controls select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:999px;padding:6px 18px;cursor:pointer}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) button.go{color:#10161d}}
+.prompt{font-family:var(--display);font-size:1.6rem;margin:0}
+.status{color:var(--muted);margin:0;min-height:1.5em}
+.strip{display:flex;gap:4px;list-style:none;margin:0;padding:0 0 6px;overflow-x:auto}
+.strip li{display:grid;min-width:62px;padding:4px 6px;border:1px solid var(--line);border-radius:6px;text-align:center;font-size:.8rem;font-variant-numeric:tabular-nums}
+.strip li span:nth-child(2){font-weight:700;font-size:.95rem}
+.strip li.free{background:var(--fc);color:var(--fc-ink)}.strip li.perfect{background:var(--vc);color:var(--vc-ink)}
+.strip li.miss{border-color:var(--no);color:var(--no);font-weight:600}.strip li.now{border-color:var(--accent);border-width:2px}
+.miss-key{border:1px solid var(--no);color:var(--no)}

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  handMoves, stackedChord, chordSymbol, moveNames, sameNamesBelow, propostaSides, SIDE,
+  handMoves, stackedChord, chordSymbol, moveNames, sameNamesBelow, propostaSides, SIDE, isHandNote,
 } from '../src/taneyev/canon-hands.js';
 import { consonantSpans, moveChord, canonInterval } from '../src/taneyev/canon.js';
 import { isConsonant } from '../src/taneyev/rules.js';
@@ -73,4 +73,20 @@ test('canons that stack to a 10th share note names (2nd–2nd, 3rd–octave, 4th
   const pairs = [1, 2, 3, 4, 5, 6, 7].map(sameNamesBelow);
   assert.deepEqual(pairs, [1, 7, 6, 5, 4, 3, 2]);
   assert.equal(canonInterval(0, 4), 4); // sanity: a repeated note at the 5th above is a 5th
+});
+
+test('isHandNote: a hand note in any octave on the proposta’s side is exactly a consonance that keeps the sides', () => {
+  for (const entry of ENTRIES) {
+    for (let step = C4 - 21; step <= C4 + 21; step += 1) {
+      const n = canonInterval(step - C4, entry);
+      const risposta = C4 + entry;
+      const onSide = propostaSides(entry).some((side) => side * (step - risposta) >= 0);
+      assert.equal(isHandNote(step, C4, entry), isConsonant(n) && onSide, `entry ${entry}, step ${step}`);
+    }
+  }
+});
+
+test('isHandNote at the unison: a 5th above the risposta is right, a 4th below is wrong', () => {
+  assert.ok(isHandNote(C4 + 4, C4, 0));
+  assert.ok(!isHandNote(C4 - 3, C4, 0));
 });

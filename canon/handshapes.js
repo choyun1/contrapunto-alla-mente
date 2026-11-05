@@ -10,8 +10,8 @@ import { parsePitch, pitchName, letterOf, MIDDLE_C } from '../src/common/diatoni
 import { chordTune } from '../src/notation/abc.js';
 import { drawSmall } from '../src/notation/playback.js';
 import { mountJvPicker } from '../src/ui/jv-picker.js';
-import { keyboard } from './keyboard.js';
-import { withArticle, entryName } from './names.js';
+import { keyboard } from '../src/ui/keyboard.js';
+import { withArticle, entryName, handName } from './names.js';
 
 const START_ENTRY = 4; // canon at the 5th above
 const CHORD_WIDTH = 90;
@@ -25,12 +25,6 @@ function spanName(span) {
 
 /** Treble or bass, whichever suits the notes. */
 const clefFor = (steps) => (Math.min(...steps) < MIDDLE_C - 3 ? 'bass' : 'treble');
-
-/** Which hand plays, in words. */
-function handName(entry) {
-  if (entry === 0) return 'both hands, thumbs together';
-  return entry > 0 ? 'left hand, going down' : 'right hand, going up';
-}
 
 /** The keyboard for one canon from `from`, with P on the old note and R on the risposta's. */
 function canonKeyboard(from, entry) {

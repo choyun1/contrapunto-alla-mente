@@ -3,7 +3,7 @@
 // Keys are diatonic steps (src/common/diatonic.js): white keys only are
 // marked, since every step is a white key in C major.
 
-import { letterOf, pitchName } from '../src/common/diatonic.js';
+import { letterOf, pitchName } from '../common/diatonic.js';
 
 const KEY_WIDTH = 30;
 const KEY_HEIGHT = 130;
@@ -13,12 +13,20 @@ const HAS_BLACK_AFTER = ['C', 'D', 'F', 'G', 'A']; // a black key sits to the ri
 /** x of the left edge of the white key for `step`. */
 const keyX = (step, low) => 1 + (step - low) * KEY_WIDTH;
 
-/** SVG for the white keys, with a C label under each C. */
-function whiteKeys(low, high) {
+/**
+ * SVG for the white keys, with a C label under each C. `lit` maps a step to
+ * a class that colors its key; `labels` maps a step to a short text printed
+ * near the bottom of the key (the computer key that plays it).
+ */
+function whiteKeys(low, high, lit, labels) {
   let svg = '';
   for (let step = low; step <= high; step += 1) {
     const x = keyX(step, low);
-    svg += `<rect class="kb-white" x="${x}" y="1" width="${KEY_WIDTH}" height="${KEY_HEIGHT}"/>`;
+    const kind = lit.get(step) ? ` ${lit.get(step)}` : '';
+    svg += `<rect class="kb-white${kind}" data-step="${step}" x="${x}" y="1" width="${KEY_WIDTH}" height="${KEY_HEIGHT}"/>`;
+    if (labels.has(step)) {
+      svg += `<text class="kb-label" x="${x + KEY_WIDTH / 2}" y="${KEY_HEIGHT - 6}">${labels.get(step)}</text>`;
+    }
     if (letterOf(step) === 'C') {
       svg += `<text class="kb-name" x="${x + KEY_WIDTH / 2}" y="${KEY_HEIGHT + 20}">${pitchName(step)}</text>`;
     }
@@ -41,12 +49,15 @@ function blackKeys(low, high) {
  * SVG keyboard from step `low` to `high`.
  * marks: [{ step, finger, perfect }] drawn as numbered dots;
  * tags: [{ step, text, kind }] drawn as letters above the dots (kind: 'r' or 'p').
+ * options.lit: Map of step to a key color class ('kb-good', 'kb-bad', 'kb-on');
+ * options.labels: Map of step to a label near the bottom of the key.
+ * Each white key carries data-step, so a page can tell which one was clicked.
  */
-export function keyboard(low, high, marks, tags = []) {
+export function keyboard(low, high, marks, tags = [], { lit = new Map(), labels = new Map() } = {}) {
   const width = (high - low + 1) * KEY_WIDTH + 2;
   const height = KEY_HEIGHT + 28;
   let svg = `<svg class="keyboard" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Keyboard">`;
-  svg += whiteKeys(low, high) + blackKeys(low, high);
+  svg += whiteKeys(low, high, lit, labels) + blackKeys(low, high);
   for (const mark of marks) {
     const cx = keyX(mark.step, low) + KEY_WIDTH / 2;
     const kind = mark.perfect ? 'perfect' : 'free';

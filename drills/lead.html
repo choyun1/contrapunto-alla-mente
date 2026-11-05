@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lead the canon</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<!-- site navigation: the same on every page, in site order; aria-current marks this page -->
+<nav class="site" aria-label="Site">
+<a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
+<a href="../taneyev/charts.html">Consonance charts</a>
+<a href="../canon/proposta.html">Canon proposta</a>
+<a href="../canon/over-cantus.html">Canon over a cantus firmus</a>
+<a href="../taneyev/three-voices.html">Three-voice shifts</a>
+<a class="nav-drills" href="../drills/move-chords.html" aria-current="page">Drills</a>
+</nav>
+<!-- section tabs: the drills; aria-current marks this page -->
+<nav class="sub" aria-label="Drills">
+<a href="move-chords.html">Move chords</a>
+<a href="lead.html" aria-current="page">Lead the canon</a>
+<a href="follow.html">Follow the leader</a>
+</nav>
+<h1>Lead the canon</h1>
+<p class="lead">You make up the proposta, one note at a time, and the site sings it back as the risposta: the same notes, moved by the interval of entrance, after the delay. Every note you play is checked against the note the risposta is singing with it. Start with <b>Wait for me</b> and the hand shown, then hide the hand, lengthen the delay and set a beat.</p>
+</header>
+<section class="chart" aria-label="Settings">
+<form class="drill-controls" id="settings">
+<label>Canon at the <select id="entry"></select></label>
+<label>Delay <select id="delay"></select></label>
+<label>Tempo <select id="tempo"></select></label>
+<label>Length <select id="length"></select></label>
+<label><input type="checkbox" id="hints" checked> Show the hand</label>
+<button type="button" class="go" id="start">Start</button>
+</form>
+<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. On a beat, a bar of clicks counts you in; play on each click. <span id="midi"></span></p>
+</section>
+<section class="chart" aria-live="polite">
+<p class="prompt" id="prompt">Press Start, then play your first note.</p>
+<ol class="strip" id="strip" aria-label="Your notes so far"></ol>
+<div class="scroll drill-keys" id="keys"></div>
+</section>
+<section class="chart" id="result" hidden aria-labelledby="result-h">
+<header><h2 id="result-h">Your canon</h2><p class="note" id="summary"></p></header>
+<div id="score"></div>
+</section>
+<section class="legend" aria-label="How to read the strip">
+<div><h3>Each note</h3><ul>
+<li><span class="sw k-fixed-consonance">free</span>Imperfect consonance with the risposta</li>
+<li><span class="sw k-variable-consonance">perfect</span>Perfect consonance: not twice in a row while both voices move</li>
+<li><span class="sw miss-key">dissonant</span>Not allowed here in first species</li></ul></div>
+<div><h3>Also marked</h3><ul>
+<li><span class="sw miss-key">parallel</span>Two perfect consonances of the same size in a row</li>
+<li><span class="sw miss-key">direct</span>Both voices move the same way into a perfect consonance</li>
+<li><span class="sw miss-key">crossed</span>You crossed to the risposta’s side</li>
+<li><span class="sw miss-key">tritone</span>A tritone leap in your line</li></ul></div>
+</section>
+<p class="foot">Every note is a whole note in first species, so each one is checked as on a strong beat. The checks come from the rules core (src/taneyev/canon.js), which follows Taneyev’s n = m + J<sub>v</sub> with the canon at the unison as the original (video 4, 09:06).</p>
+<footer class="foot">
+  <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
+    <!-- GitHub mark, from Primer Octicons (MIT) -->
+    <svg viewBox="0 0 16 16" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+</footer>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
+<script type="module" src="lead.js"></script>
+</body>
+</html>
