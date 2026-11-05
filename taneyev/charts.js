@@ -1,6 +1,5 @@
 import { renderChart, wireNotation, sign, slug } from './chart-card.js';
-import { wireModels } from './shift-model.js';
-import { wireCayley } from './cayley.js';
+import { mountDock } from './model-dock.js';
 
 // Order: Jv = 0, then the octave family (−7, −14), the 12th and 10th, their
 // octave-reduced forms (−4 = −11 + 7, −2 = −9 + 7), direct shifts, then the rare ones.
@@ -21,19 +20,18 @@ const CHARTS = [
 document.getElementById('links').innerHTML = CHARTS
   .map(([jv]) => `<a href="#${slug(jv)}">${sign(jv)}</a>`).join(' ');
 document.getElementById('charts').innerHTML = CHARTS
-  .map(([jv, title, note]) => renderChart(jv, title, note, { motion: true })).join('');
+  .map(([jv, title, note]) => renderChart(jv, title, note)).join('');
 
 wireNotation(document.getElementById('charts'));
-wireModels(document.getElementById('charts'));
-wireCayley(document.getElementById('cayley'), CHARTS.map(([jv]) => jv), (jv) => `#${slug(jv)}`);
+const dock = mountDock(CHARTS.map(([jv]) => jv), (jv) => `#${slug(jv)}`);
 
 const form = document.getElementById('custom');
 const showCustom = (jv) => {
   const box = document.getElementById('custom-chart');
   box.innerHTML = renderChart(jv, jv < 0 ? 'Inverse shift' : jv > 0 ? 'Direct shift' : 'Simple counterpoint',
-    'Generated on request.', { motion: true });
+    'Generated on request.');
   wireNotation(box);
-  wireModels(box);
+  dock.watch(box.querySelector('section.chart'));
   box.scrollIntoView({ behavior: 'smooth' });
 };
 form.addEventListener('submit', (e) => {

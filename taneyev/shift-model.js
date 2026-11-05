@@ -184,7 +184,7 @@ function drawHelix(ctx, pal, project, jv, phase, t) {
 }
 
 /** One sentence on the motion for this shift, in the chart's terms. */
-function describe(jv) {
+export function describe(jv) {
   if (jv === 0) return 'Jv = 0 moves nothing: these are the reference marks every other chart compares against.';
   if (jv > 0) return `Every interval moves up ${jv} steps and the voices stay in order: a turn of the coin by ${rotationSteps(jv)} steps, a slide up the helix.`;
   const k = -jv;
@@ -193,17 +193,21 @@ function describe(jv) {
   return `Intervals below ${k} cross, so they flip over ${where}.${rest} Consonances kept: ${consonancesKept(jv)} of 4.`;
 }
 
-/** Builds one model inside `box` for shift jv. */
-export function renderModel(box, jv) {
-  box.innerHTML = `<div class="model-bar">
-      <button type="button" data-model="coin" aria-pressed="true">Coin (one octave)</button>
-      <button type="button" data-model="helix" aria-pressed="false">Helix (every register)</button>
-      <button type="button" data-again>Play again</button></div>
-    <canvas aria-label="3D model of the shift Jv = ${jv}"></canvas>
-    <p class="model-note">${describe(jv)} Each label carries its own suspension marks, above and below. On the coin, the slot it lands on shows the derivative’s marks beside it: compare top with top and bottom with bottom, and the stricter mark is the rule (§128). On the helix, watch a crossed label turn upside down as it folds back up (§90).</p>`;
+/**
+ * Builds one model inside `box` for shift jv: a canvas, plus a coin/helix
+ * switch and a one-line description unless `bare` is set.
+ * Returns { setJv, setModel, play } so a page can drive it.
+ */
+export function renderModel(box, jv, { model = 'coin', bare = false } = {}) {
+  const bar = bare ? '' : `<div class="model-bar">
+      <button type="button" data-model="coin" aria-pressed="${model === 'coin'}">Coin (one octave)</button>
+      <button type="button" data-model="helix" aria-pressed="${model === 'helix'}">Helix (every register)</button>
+      <button type="button" data-again>Play again</button></div>`;
+  box.innerHTML = `${bar}<canvas aria-label="3D model of the shift"></canvas>${bare ? '' : '<p class="model-note"></p>'}`;
   const canvas = box.querySelector('canvas');
+  const note = box.querySelector('.model-note');
   const ctx = canvas.getContext('2d');
-  const state = { jv, model: 'coin', phase: 0, t: 0, ...VIEWS.coin };
+  const state = { jv, model, phase: 0, t: 0, ...VIEWS[model] };
   let frame = 0;
 
   const draw = () => {
@@ -215,8 +219,9 @@ export function renderModel(box, jv) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const project = camera({ ...state, focal: Math.min(width, height) * state.focal, width, height });
     const pal = palette();
-    if (state.model === 'coin') drawCoin(ctx, pal, project, jv, ease(state.t));
-    else drawHelix(ctx, pal, project, jv, state.phase, ease(state.t));
+    ctx.clearRect(0, 0, width, height);
+    if (state.model === 'coin') drawCoin(ctx, pal, project, state.jv, ease(state.t));
+    else drawHelix(ctx, pal, project, state.jv, state.phase, ease(state.t));
   };
 
   const play = () => {
@@ -243,13 +248,20 @@ export function renderModel(box, jv) {
     frame = requestAnimationFrame(tick);
   };
 
-  box.querySelectorAll('[data-model]').forEach((button) => button.addEventListener('click', () => {
-    state.model = button.dataset.model;
-    Object.assign(state, VIEWS[state.model]);
-    box.querySelectorAll('[data-model]').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+  const setModel = (name) => {
+    state.model = name;
+    Object.assign(state, VIEWS[name]);
+    box.querySelectorAll('[data-model]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.model === name)));
     play();
-  }));
-  box.querySelector('[data-again]').addEventListener('click', play);
+  };
+  const setJv = (value) => {
+    state.jv = value;
+    canvas.setAttribute('aria-label', `3D model of the shift Jv = ${value}`);
+    if (note) note.textContent = describe(value);
+    play();
+  };
+  box.querySelectorAll('[data-model]').forEach((button) => button.addEventListener('click', () => setModel(button.dataset.model)));
+  box.querySelector('[data-again]')?.addEventListener('click', play);
 
   let drag = null;
   canvas.addEventListener('pointerdown', (e) => {
@@ -266,17 +278,8 @@ export function renderModel(box, jv) {
   canvas.addEventListener('pointercancel', () => { drag = null; });
 
   models.add(draw);
-  play();
-}
-
-/** Builds each chart's model the first time its panel is opened. */
-export function wireModels(root) {
-  root.querySelectorAll('details.motion').forEach((panel) => {
-    panel.addEventListener('toggle', () => {
-      const box = panel.querySelector('.model');
-      if (panel.open && !box.hasChildNodes()) renderModel(box, Number(panel.dataset.jv));
-    });
-  });
+  setJv(jv);
+  return { setJv, setModel, play };
 }
 
 // Redraw every model when the window or the theme changes.
