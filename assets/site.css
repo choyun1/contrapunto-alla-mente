@@ -160,3 +160,10 @@ details.notation summary:hover{border-color:var(--accent)}
 .guide p,.guide li{max-width:70ch}
 .guide h3{margin:6px 0 0}
 .guide .picker{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+
+/* forms with labelled inputs (canon pages) and plain left-aligned tables */
+.checkform{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.checkform label{display:grid;gap:2px;font-size:.8rem;color:var(--muted)}
+.checkform input,.checkform select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.checkform input{width:5em}.checkform input.wide{width:min(28em,80vw)}
+.checkform button{font:inherit;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 14px;cursor:pointer}
+table.spans td{padding:3px 10px;text-align:left}table.spans th{text-align:left;padding:3px 10px}table.spans td.c{text-align:center}

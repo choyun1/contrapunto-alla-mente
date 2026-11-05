@@ -1,4 +1,4 @@
-// Renders the "Canon over a cantus firmus" section of the canon page. All the
+// Renders the canon over a cantus firmus page (over-cantus.html). All the
 // theory is in src/taneyev/imaginary-cantus.js (the imaginary cantus and its
 // guide intervals) and src/taneyev/canon-over-cantus.js (the worked canon);
 // this file only builds the page.

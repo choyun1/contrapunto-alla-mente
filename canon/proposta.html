@@ -16,6 +16,7 @@
 <a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
 <a href="../taneyev/charts.html">Consonance charts</a>
 <a href="../canon/proposta.html" aria-current="page">Canon proposta</a>
+<a href="../canon/over-cantus.html">Canon over a cantus firmus</a>
 <a href="../taneyev/three-voices.html">Three-voice shifts</a>
 </nav>
 <h1>Canon proposta intervals</h1>
@@ -43,33 +44,14 @@
 <header><h2 id="check-h">Check a proposta</h2>
 <p class="note">Write the proposta as pitch names in equal note values, one per time unit (C4 is middle C). The delay is counted in the same units. Every note is treated as a strong beat, as in a whole-note framework.</p></header>
 <form id="check" class="checkform">
-<label><span>Proposta</span> <input id="notes" type="text" value="D4 F4 A4 F4 D4 G4 E4 C4 F4 D4 E4" spellcheck="false"></label>
+<label><span>Proposta</span> <input id="notes" class="wide" type="text" value="D4 F4 A4 F4 D4 G4 E4 C4 F4 D4 E4" spellcheck="false"></label>
 <label><span>J<sub>v</sub></span> <input id="entry" type="number" min="-21" max="21" step="1" value="7"></label>
 <label><span>Delay</span> <input id="delay" type="number" min="1" max="16" step="1" value="1"></label>
 <button>Check</button>
 </form>
 <div id="report"></div>
 </section>
-<section class="chart" aria-labelledby="cf-h">
-<header><h2 id="cf-h">Canon over a cantus firmus</h2>
-<p class="note">To add a two-voice canon to a given melody, don’t guess. Write the canon against an imaginary voice first (Taneyev’s method, as taught in Movable Counterpoint 4).</p>
-<ol class="steps">
-<li><b>Choose the setup:</b> the interval and distance of entrance, and which side of the cantus the proposta takes.</li>
-<li><b>Place the imaginary cantus firmus:</b> copy the cantus, moved the opposite way to the canon (down by the interval of entrance and earlier by the delay). Whatever the proposta forms against this copy, the risposta will form against the real cantus a delay later.</li>
-<li><b>Read the guide intervals.</b> The interval between the two copies in each bar is the vertical shift J<sub>v</sub> the proposta must be written in there: a unison is simple counterpoint, an octave, 10th or 12th is textbook invertible counterpoint, and a 2nd or 7th leaves almost no notes. Parallel 2nds or 7ths mean the setup won’t work, so change it.</li>
-<li><b>Write the proposta</b> one bar at a time, consonant with both the cantus and the imaginary cantus, then copy each note into the risposta and check the three sounding voices together. Each bar is a two-voice shift chart (see the <a href="../taneyev/charts.html">consonance charts</a>), and the three voices follow the <a href="../taneyev/three-voices.html">three-voice shifts</a> page: a 4th is fine between two upper voices over a consonant bass.</li>
-<li><b>Elaborate</b> the whole-note framework with faster notes, suspensions and passing tones, and relax the imitation near the cadence.</li>
-</ol>
-<p class="note">The default is Fux’s Dorian cantus in the alto, with the risposta a 12th above the proposta. At one bar, as in the video, bar 4 has a 9th guide (J<sub>v</sub> = −8) and needs a suspension, so no whole-note framework exists; at three bars one does. Pitches are diatonic (no sharps or flats), one note per bar; write a hymn tune’s notes in order and transpose it to C major or a church mode first.</p></header>
-<form id="cf-form" class="checkform">
-<label><span>Cantus firmus</span> <input id="cf-notes" type="text" value="D4 F4 E4 D4 G4 F4 A4 G4 F4 E4 D4" spellcheck="false"></label>
-<label><span>Interval of entrance (steps, + is up)</span> <input id="cf-entry" type="number" min="-21" max="21" step="1" value="11"></label>
-<label><span>Delay (bars)</span> <input id="cf-delay" type="number" min="1" max="8" step="1" value="3"></label>
-<label><span>Proposta is</span> <select id="cf-side"></select></label>
-<button>Show</button>
-</form>
-<div id="cf-out"></div>
-</section>
+<p class="note">To write a canon over a given melody, see <a href="over-cantus.html">Canon over a cantus firmus</a>.</p>
 <p class="foot">The 4th counts as a dissonance, as in two-voice writing. Between upper voices over a consonant bass it can act as an imperfect consonance (Movable Counterpoint 4, 10:23). Steps are diatonic, so a tritone counts as its diatonic size. These rules are derived from the rules core, not yet checked against a § of Taneyev’s <i>Doctrine of the Canon</i>.</p>
 <footer class="foot">
   <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
@@ -81,16 +63,9 @@
 <style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}#custom{display:flex;gap:6px;margin-left:auto}
 .wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}
 #links{display:flex;flex-wrap:wrap;gap:6px;margin:0;min-width:0}.legend .sw{flex:none}
-.checkform{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.checkform label{display:grid;gap:2px;font-size:.8rem;color:var(--muted)}
-.checkform input{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px;width:5em}
-.checkform #notes,.checkform #cf-notes{width:min(28em,80vw)}.checkform select{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
-.steps{margin:8px 0 0;padding-left:1.4em;display:grid;gap:4px;max-width:70ch}.setups{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.setups button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}.checkform button{font:inherit;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 14px;cursor:pointer}
 
-.move-chord{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:8px;margin-top:6px}.move-chord .chord-score{flex:none;width:110px;color:var(--ink)}.move-chord p{margin:0}
-table.spans td{padding:3px 10px;text-align:left}table.spans th{text-align:left;padding:3px 10px}table.spans td.c{text-align:center}</style>
+.move-chord{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:8px;margin-top:6px}.move-chord .chord-score{flex:none;width:110px;color:var(--ink)}.move-chord p{margin:0}</style>
 <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
 <script type="module" src="proposta.js"></script>
-<script type="module" src="over-cantus.js"></script>
 </body>
 </html>
