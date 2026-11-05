@@ -29,9 +29,17 @@ export const isConsonant = (i) => [0, 2, 4, 5].includes(simple(i));
 /** Perfect consonances: unison, 5th and their compounds. */
 export const isPerfect = (i) => [0, 4].includes(simple(i));
 
+/** English ordinal for a 1-indexed interval number: 16 → "16th", 21 → "21st", 22 → "22nd". */
+function ordinal(k) {
+  const teen = k % 100 >= 11 && k % 100 <= 13;
+  const suffix = teen ? 'th' : { 1: 'st', 2: 'nd', 3: 'rd' }[k % 10] || 'th';
+  return `${k}${suffix}`;
+}
+
+/** Name of a zero-indexed interval: 0 → "unison", 11 → "12th", 21 → "22nd". */
 export function intervalName(i) {
   const a = Math.abs(i);
-  const name = a < NAMES.length ? NAMES[a] : `${a + 1}th`;
+  const name = a < NAMES.length ? NAMES[a] : ordinal(a + 1);
   return i < 0 ? `${name} (crossed)` : name;
 }
 

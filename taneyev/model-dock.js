@@ -48,7 +48,8 @@ function dockHtml() {
 
 /**
  * Adds the dock to the page. `jvs` are the charts on the page and `href(jv)`
- * links to one. Returns { watch(section) } for chart cards added later.
+ * links to one. Returns { watch(section) } for chart cards added later, and
+ * { follow(jv) } to switch the model straight to one chart.
  */
 export function mountDock(jvs, href) {
   const saved = loadPrefs();
@@ -114,6 +115,12 @@ export function mountDock(jvs, href) {
   const watch = (section) => observer.observe(section);
   document.querySelectorAll('section.chart[data-jv]').forEach(watch);
 
+  /** Shows the model for jv now, for a page that swaps one chart in place. */
+  const follow = (jv) => {
+    current = jv;
+    show();
+  };
+
   layout();
-  return { watch };
+  return { watch, follow };
 }

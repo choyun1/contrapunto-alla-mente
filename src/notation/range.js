@@ -27,7 +27,7 @@ function overshoot(pitches, shift) {
 }
 
 /** How far the middle of the pitches sits from middle C after a shift. */
-function offCentre(pitches, shift) {
+function offCenter(pitches, shift) {
   const middle = (Math.min(...pitches) + Math.max(...pitches)) / 2;
   return Math.abs(middle + shift - MIDDLE_C);
 }
@@ -47,7 +47,7 @@ export function octaveShiftFor(pitches) {
   for (const shift of [-21, -14, -7, 0, 7, 14, 21]) {
     const better = overshoot(pitches, shift) < overshoot(pitches, best)
       || (overshoot(pitches, shift) === overshoot(pitches, best)
-        && offCentre(pitches, shift) < offCentre(pitches, best));
+        && offCenter(pitches, shift) < offCenter(pitches, best));
     if (better) best = shift;
   }
   return best;

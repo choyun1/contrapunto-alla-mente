@@ -34,7 +34,7 @@ const shortName = (e) => {
   return `inv ${intervalName(7 + e.step)}`;
 };
 
-/** Reads the site's colour and font tokens. */
+/** Reads the site's color and font tokens. */
 function palette() {
   const css = getComputedStyle(document.documentElement);
   const v = (name) => css.getPropertyValue(name).trim();
@@ -83,14 +83,14 @@ function drawGraph(ctx, project, pal, picks, onPage) {
 }
 
 /**
- * Builds the graph inside `box`. `jvs` are the charts on the page; `href(jv)` links to one.
+ * Builds the graph inside `box`. `jvs` are the shifts whose dots are filled; `href(jv)` links to one.
  * With `bare`, the long how-to-read note is left out (the docked model links to the guide instead).
  * Returns { highlight(jv) }, which picks that shift's dot as the first pick.
  */
 export function renderCayley(box, jvs, href, { bare = false } = {}) {
   const help = bare ? '' : `<p class="model-note">Top ring: the seven shifts with the voices in order. Bottom ring: the seven inversions.
     Solid lines are one step of shift; dashed lines are the octave flip. The number on each dot is how many of
-    the four consonances that shift keeps; filled dots have a chart on the charts page. Drag to turn. Tap a dot, then
+    the four consonances that shift keeps; filled dots hold shifts Taneyev works through. Drag to turn. Tap a dot, then
     another, to see what the two make together.</p>`;
   box.innerHTML = `<canvas aria-label="Cayley graph of the shifts: a heptagonal prism"></canvas>
     ${help}<p class="model-note" data-readout></p>`;
@@ -100,7 +100,7 @@ export function renderCayley(box, jvs, href, { bare = false } = {}) {
   const state = { ...VIEW, first: element(-7), second: element(-9), next: 'first', dots: [] };
   const onPage = (e) => jvs.filter((jv) => same(element(jv), e));
 
-  const links = (e) => onPage(e).map((jv) => `<a href="${href(jv)}">${jv > 0 ? '+' : ''}${String(jv).replace('-', '−')}</a>`).join(', ') || 'none on the charts page';
+  const links = (e) => onPage(e).map((jv) => `<a href="${href(jv)}">${jv > 0 ? '+' : ''}${String(jv).replace('-', '−')}</a>`).join(', ') || 'none Taneyev works through';
   const describe = () => {
     if (!state.second) {
       readout.innerHTML = `In view: <b>${nameOf(state.first)}</b>, which keeps ${consonancesKept(jvOf(state.first))} of the

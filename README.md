@@ -25,7 +25,7 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 
 ## What it's for
 
-- **Taneyev consonance charts.** Pick a vertical shift (J<sub>v</sub>) and see what every interval of the original becomes, with Taneyev's suspension marks and which consonances stay free, which turn perfect and which become dissonant. Each chart shows n = m + J<sub>v</sub>, the interval strip on a staff and a Play button, and the charts are ordered by family: 0, the octave, the 12th and 10th, their reductions, the direct shifts and the rare ones.
+- **Taneyev consonance charts.** Pick a vertical shift (J<sub>v</sub>) and see what every interval of the original becomes, with Taneyev's suspension marks and which consonances stay free, which turn perfect and which become dissonant. Each chart shows n = m + J<sub>v</sub>, the interval strip on a staff and a Play button, and any J<sub>v</sub> from −21 to +21 can be picked. The common shifts (0, −7, −9, −11) are marked with a ✓, and the others Taneyev works through stand out from the rarely used ones.
 - **Canon proposta intervals.** In a two-voice canon every melodic interval the proposta makes across the delay becomes a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, and paste a proposta in pitch names to have every pairing checked.
 - **Canon over a cantus firmus.** Taneyev's imaginary-cantus method: enter a cantus and a canon setup to see the imaginary cantus, the J<sub>v</sub> each bar must be written in, the notes the proposta may sing there, and a whole-note framework to play.
 - **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
@@ -41,6 +41,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | Path | What it holds |
 | --- | --- |
 | `src/taneyev/rules.js` | The rules core for Taneyev's vertical-shifting counterpoint. Every page and checker uses it. |
+| `src/taneyev/shifts.js` | Which shifts J<sub>v</sub> the site offers (−21 to +21), which are common (0, −7, −9, −11), the ones Taneyev works through, and their chart titles. |
 | `src/taneyev/three-voices.js` | Splits an outer shift between the two inner pairs of a three-voice texture. |
 | `src/taneyev/three-voice-examples.js` | Finds a four-bar, note-against-note example in three voices that stays correct under a split, for the three-voice page to draw and play. |
 | `src/taneyev/canon.js` | The canon rules: which proposta intervals stay consonant at an interval of entrance, and the proposta checker. |

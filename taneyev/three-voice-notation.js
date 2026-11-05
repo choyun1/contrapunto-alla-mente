@@ -31,12 +31,12 @@ export function renderThreeVoiceExample(parent, split, lowerStep) {
   parent.replaceChildren();
   const example = threeVoiceExample(split, { start: lowerStep });
   if (!example) {
-    parent.innerHTML = '<p class="note">No four-bar example exists for this split on this starting note: the three pairs share too few fixed consonances, or every way between them makes forbidden parallels.</p>';
+    parent.innerHTML = '<p class="note">No four-bar example in strict first species exists for this split on this starting note: note against note, every interval in both versions must be a fixed consonance, and the three pairs share too few of them, or every way between them makes forbidden parallels. Later species can still use this split: variable intervals can stand on weak beats as passing or neighbour tones, or on downbeats as suspensions (the — marks on the charts).</p>';
     return;
   }
   const original = example.original.map((c, k) => ({ ...c, text: k === 0 ? 'original' : undefined }));
   const shifted = example.shifted.map((c, k) => ({ ...c, text: k === 0 ? 'shifted' : undefined }));
   original[original.length - 1].doubleBarAfter = true;
   const chords = [...original, BAR_REST, ...shifted];
-  show(block(parent, 'Four bars in three voices: original ‖ shifted', caption(split)), voicesTune(chords, VOICES, { sortByPitch: false }));
+  show(block(parent, 'First species, four bars in three voices: original ‖ shifted', caption(split)), voicesTune(chords, VOICES, { sortByPitch: false }));
 }
