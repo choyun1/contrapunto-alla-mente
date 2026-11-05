@@ -34,22 +34,14 @@ a.card{text-decoration:none;color:inherit}
 a.card:hover{border-color:var(--accent)}
 .card p{margin:0;color:var(--muted)}
 .soon{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-nav.jump{display:flex;flex-wrap:wrap;gap:6px;align-items:center;position:sticky;top:0;background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--line)}
-nav.jump span{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:4px}
-nav.jump a,nav.jump button{font:inherit;font-variant-numeric:tabular-nums;text-decoration:none;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:3px 11px;font-weight:600;background:var(--panel);cursor:pointer}
-nav.jump input{font:inherit;width:5em;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
-/* the charts page's Jv picker: every shift, the common ones with a ✓, the rare ones muted */
-.jv-pick{display:grid;gap:10px}
-.jv-pick h2{font-size:1.25rem}
-#jv-picker{display:grid;gap:8px}
-.jv-group{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
-.jv-group>span{flex-basis:100%;font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.chip{font-variant-numeric:tabular-nums;text-decoration:none;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-weight:600;background:var(--panel);white-space:nowrap}
-.chip.common{background:var(--fc);color:var(--fc-ink);border-color:var(--fc-ink)}
-.chip.rare{color:var(--muted);font-weight:400}
-a.chip:hover{border-color:var(--accent)}
-a.chip[aria-current]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.jv-key{margin:0;color:var(--muted);font-size:.9rem;line-height:2}
+/* the charts page's Jv picker: one dropdown with step buttons; icons mark the common shifts */
+.jv-pick{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line)}
+.jv-pick label{font-weight:600}
+.jv-pick select,.jv-pick button{font:inherit;font-variant-numeric:tabular-nums;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:4px 8px}
+.jv-ctl{display:flex;gap:6px;min-width:0;max-width:100%}
+.jv-pick select{min-width:0;flex:1}
+.jv-pick button{cursor:pointer;color:var(--accent);font-weight:700;padding:4px 10px}
+.jv-key{color:var(--muted);font-size:.85rem}
 .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
 .legend h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
 .legend ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}
