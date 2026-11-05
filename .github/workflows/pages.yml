@@ -11,8 +11,10 @@ permissions:
   pages: write
   id-token: write
 
+# One group per branch or PR: a newer push cancels an older run of the same
+# branch, but runs on different PRs (or on main) no longer cancel each other.
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
