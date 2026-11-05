@@ -5,6 +5,8 @@
 //
 // This runs only in the browser; it holds no music theory.
 
+import { staffSpotAt } from './staff-click.js';
+
 const RENDER_OPTIONS = {
   add_classes: true,
   foregroundColor: 'currentColor', // follows the page's light or dark theme
@@ -45,23 +47,17 @@ export function show(wrap, abc, colorMeasure, sound = SOUND.FLUTE, tempo = TEMPO
 }
 
 /**
- * Renders an editable score into a block, where notes can be clicked and
- * dragged up or down by step (abcjs dragging; arrow keys work on a focused
- * note). `onClick(measure, voice, step)` gets the bar and voice clicked,
- * counted from 0, and how many steps the note was dragged (positive: up).
- * The play button plays `audioAbc` instead of what is drawn, so a voice can
- * be shown without being heard.
+ * Renders an editable score into a block. A click on or near a staff calls
+ * `onSpot(spot)` with where it landed: { voice, bar, stepsAboveBottom } (see
+ * staff-click.js). The play button plays `audioAbc` instead of what is drawn,
+ * so a voice can be shown without being heard.
  */
-export function showEditable(wrap, abc, audioAbc, onClick) {
+export function showEditable(wrap, abc, audioAbc, onSpot) {
   const score = wrap.querySelector('.score');
-  ABCJS.renderAbc(score, abc, {
-    ...RENDER_OPTIONS,
-    dragging: true,
-    selectTypes: ['note'],
-    clickListener: (abcelem, tuneNumber, classes, analysis, drag) => {
-      const measure = Number(/abcjs-mm(\d+)/.exec(classes)?.[1]);
-      onClick(measure, analysis.voice, 0 - (drag?.step ?? 0)); // abcjs counts steps downward
-    },
+  ABCJS.renderAbc(score, abc, RENDER_OPTIONS);
+  score.addEventListener('click', (event) => {
+    const spot = staffSpotAt(score.querySelector('svg'), event.clientX, event.clientY);
+    if (spot) onSpot(spot);
   });
   const tune = audioTune(audioAbc);
   const button = wrap.querySelector('button');
