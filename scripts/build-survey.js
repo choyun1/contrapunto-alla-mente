@@ -1,7 +1,9 @@
-// Builds the list at the bottom of the three-voice page once, at deploy time,
-// so the page loads it instead of searching for 15–30 seconds.
+// Builds data/three-voice-survey.json, the precomputed answer key the
+// three-voice page reads: which splits have a four-bar example, and of which
+// kind. The search takes a few minutes, so it runs here, by hand, and the file
+// is committed. Run it again after changing the example rules:
 //
-//   node scripts/build-survey.js _site/data/three-voice-survey.json
+//   npm run build-survey
 //
 // Writes { "<starting step>": { first: [[total, upper, lower], …], mixed: […] } }
 // for every starting note the page offers. Each starting note is searched in
@@ -37,11 +39,13 @@ async function main(outFile) {
   };
   await Promise.all(Array.from({ length: availableParallelism() }, runOne));
   mkdirSync(dirname(outFile), { recursive: true });
-  writeFileSync(outFile, JSON.stringify(result));
+  // One line per starting note, so a change to the rules shows up as a readable diff.
+  const lines = starts.map((start) => `  "${start}": ${JSON.stringify(result[start])}`);
+  writeFileSync(outFile, `{\n${lines.join(',\n')}\n}\n`);
 }
 
 if (isMainThread) {
-  await main(process.argv[2] ?? '_site/data/three-voice-survey.json');
+  await main(process.argv[2] ?? 'data/three-voice-survey.json');
 } else {
   parentPort.postMessage(surveyFrom(workerData.start));
 }
