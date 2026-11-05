@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canon over a cantus firmus</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<!-- site navigation: the same on every page, in site order; aria-current marks this page -->
+<nav class="site" aria-label="Site">
+<a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
+<a href="../taneyev/charts.html">Consonance charts</a>
+<a href="../canon/proposta.html">Canon proposta</a>
+<a href="../canon/over-cantus.html" aria-current="page">Canon over a cantus firmus</a>
+<a href="../taneyev/three-voices.html">Three-voice shifts</a>
+</nav>
+<h1>Canon over a cantus firmus</h1>
+<p class="lead">To add a two-voice canon to a given melody, don’t guess. Write the canon against an imaginary voice first (Taneyev’s method, as taught in Movable Counterpoint 4).</p>
+<ol class="steps lead">
+<li><b>Choose the setup:</b> the interval and distance of entrance, and which side of the cantus the proposta takes.</li>
+<li><b>Place the imaginary cantus firmus:</b> copy the cantus, moved the opposite way to the canon (down by the interval of entrance and earlier by the delay). Whatever the proposta forms against this copy, the risposta will form against the real cantus a delay later.</li>
+<li><b>Read the guide intervals.</b> The interval between the two copies in each bar is the vertical shift J<sub>v</sub> the proposta must be written in there: a unison is simple counterpoint, an octave, 10th or 12th is textbook invertible counterpoint, and a 2nd or 7th leaves almost no notes. Parallel 2nds or 7ths mean the setup won’t work, so change it.</li>
+<li><b>Write the proposta</b> one bar at a time, consonant with both the cantus and the imaginary cantus, then copy each note into the risposta and check the three sounding voices together. Each bar is a two-voice shift chart (see the <a href="../taneyev/charts.html">consonance charts</a>), and the three voices follow the <a href="../taneyev/three-voices.html">three-voice shifts</a> page: a 4th is fine between two upper voices over a consonant bass.</li>
+<li><b>Elaborate</b> the whole-note framework with faster notes, suspensions and passing tones, and relax the imitation near the cadence.</li>
+</ol>
+<p class="lead">The default is Fux’s Dorian cantus in the alto, with the risposta a 12th above the proposta. At one bar, as in the video, bar 4 has a 9th guide (J<sub>v</sub> = −8) and needs a suspension, so no whole-note framework exists; at three bars one does. Pitches are diatonic (no sharps or flats), one note per bar; write a hymn tune’s notes in order and transpose it to C major or a church mode first.</p>
+</header>
+<section class="chart" aria-label="Your canon">
+<form id="cf-form" class="checkform">
+<label><span>Cantus firmus</span> <input id="cf-notes" class="wide" type="text" value="D4 F4 E4 D4 G4 F4 A4 G4 F4 E4 D4" spellcheck="false"></label>
+<label><span>Interval of entrance (steps, + is up)</span> <input id="cf-entry" type="number" min="-21" max="21" step="1" value="11"></label>
+<label><span>Delay (bars)</span> <input id="cf-delay" type="number" min="1" max="8" step="1" value="3"></label>
+<label><span>Proposta is</span> <select id="cf-side"></select></label>
+<button>Show</button>
+</form>
+<div id="cf-out"></div>
+</section>
+<p class="foot">The rules for the canon pair itself are on the <a href="proposta.html">canon proposta</a> page. Sources: Movable Counterpoint 3 (imaginary voices) and 4 (canon against a cantus firmus), and Segall’s article cited there; not yet checked against a § of Taneyev’s <i>Doctrine of the Canon</i>.</p>
+<footer class="foot">
+  <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
+    <!-- GitHub mark, from Primer Octicons (MIT) -->
+    <svg viewBox="0 0 16 16" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+</footer>
+</main>
+<style>.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}
+.steps{margin:10px 0 0;padding-left:1.4em;display:grid;gap:4px;max-width:70ch}
+.setups{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.setups button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}</style>
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
+<script type="module" src="over-cantus.js"></script>
+</body>
+</html>
