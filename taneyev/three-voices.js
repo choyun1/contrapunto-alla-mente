@@ -27,14 +27,13 @@ function canonCell(total, lowerStep, split) {
 /** Returns one table row for a split. */
 function splitRow(total, lowerStep, split, index) {
   const { upperMiddle, middleLower, upperLower } = pairShifts(split);
-  return `<tr class="${isEasySplit(split) ? 'easy' : ''}" data-index="${index}">
+  return `<tr class="${isEasySplit(split) ? 'easy' : ''}" data-index="${index}" tabindex="0" title="Show this split">
     <td>${shiftCell(upperMiddle)}</td>
     <td>${shiftCell(middleLower)}</td>
     <td>${sign(upperMiddle)} + ${sign(middleLower)} = ${sign(upperLower)}</td>
     <td>${canonCell(total, lowerStep, split)}</td>
     <td>${fixedConsonances(upperMiddle).join(', ') || 'none'}</td>
-    <td>${fixedConsonances(middleLower).join(', ') || 'none'}</td>
-    <td><button type="button">Charts</button></td></tr>`;
+    <td>${fixedConsonances(middleLower).join(', ') || 'none'}</td></tr>`;
 }
 
 /** Returns the whole table of splits. */
@@ -46,8 +45,7 @@ function splitsTable(total, lowerStep, splits) {
     <th scope="col">Sum</th>
     <th scope="col">Middle enters (canon)</th>
     <th scope="col">Fixed cons. upper–middle</th>
-    <th scope="col">Fixed cons. middle–lower</th>
-    <th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    <th scope="col">Fixed cons. middle–lower</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 /** Returns the note under the table explaining the canon column. */
@@ -81,9 +79,15 @@ function update() {
   document.getElementById('canon-note').textContent = canonNote(total, lowerStep);
   splitsBox.querySelectorAll('tbody tr').forEach((tr) => {
     const index = Number(tr.dataset.index);
-    tr.querySelector('button').addEventListener('click', () => {
+    const pick = () => {
       showSplit(splits[index], index);
       document.getElementById('demo').parentElement.scrollIntoView({ behavior: 'smooth' });
+    };
+    tr.addEventListener('click', pick);
+    tr.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault(); // stops Space from scrolling the page
+      pick();
     });
   });
   const firstEasy = Math.max(0, splits.findIndex(isEasySplit));
