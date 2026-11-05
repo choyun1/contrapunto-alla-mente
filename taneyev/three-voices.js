@@ -5,14 +5,12 @@
 import { renderChart, wireNotation, sign } from './chart-card.js';
 import { renderThreeVoiceExample } from './three-voice-notation.js';
 import { splitShift, pairShifts, isEasySplit, isEasyShift, fixedConsonances } from '../src/taneyev/three-voices.js';
-import { exampleForSplit, KIND } from '../src/taneyev/three-voice-pick.js';
+import { exampleForSplit, KIND, STARTING_NOTES } from '../src/taneyev/three-voice-pick.js';
 import { shiftTitle } from '../src/taneyev/shifts.js';
 import { mountJvPicker } from '../src/ui/jv-picker.js';
 import { mountSurvey } from './split-survey.js';
-import { pitchName, MIDDLE_C } from '../src/common/diatonic.js';
+import { pitchName } from '../src/common/diatonic.js';
 
-// Entry pitches offered for the lower voice: every natural from C2 to C5.
-const LOWEST_CHOICES = { from: MIDDLE_C - 14, to: MIDDLE_C + 7, default: MIDDLE_C - 4 }; // default F3
 
 const START = -11; // the total shift shown first: inversion at the 12th
 const lowestSelect = document.getElementById('lowest');
@@ -145,8 +143,8 @@ function update() {
   fillExampleColumn(splits, table);
 }
 
-for (let step = LOWEST_CHOICES.from; step <= LOWEST_CHOICES.to; step += 1) {
-  const selected = step === LOWEST_CHOICES.default ? ' selected' : '';
+for (let step = STARTING_NOTES.from; step <= STARTING_NOTES.to; step += 1) {
+  const selected = step === STARTING_NOTES.default ? ' selected' : '';
   lowestSelect.insertAdjacentHTML('beforeend', `<option value="${step}"${selected}>${pitchName(step)}</option>`);
 }
 /** Shows one split of one total, from the list at the bottom, and scrolls to its example. */
