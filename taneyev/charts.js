@@ -1,6 +1,6 @@
 // The charts page: a row of every Jv from −21 to +21, and the chart for the
 // one you pick. The common shifts carry a ✓ and the others Taneyev works
-// through are in full colour; the rest are generated from the same rules.
+// through are in full color; the rest are generated from the same rules.
 // The URL hash (#jvm11) names the chart, so links and the back button work.
 // Which shifts matter and what they are called comes from src/taneyev/shifts.js.
 

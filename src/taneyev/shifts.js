@@ -22,7 +22,7 @@ export const COMMON_SHIFTS = [0, -7, -9, -11];
 /**
  * The shifts Taneyev works through, with his practice order where he gives
  * one (the order in which he sets the exercises; § to check against the book).
- * `order` is null for 0 and −14, which he does not practise as separate kinds.
+ * `order` is null for 0 and −14, which he does not practice as separate kinds.
  */
 export const BOOK_SHIFTS = [
   { jv: 0, order: null, note: 'The reference marks that every other chart is built from.' },
