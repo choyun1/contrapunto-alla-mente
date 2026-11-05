@@ -4,12 +4,15 @@
 
 import { spanTable, checkProposta, moveChord, VERDICT } from '../src/taneyev/canon.js';
 import { intervalName } from '../src/taneyev/rules.js';
-import { examplesBothWays, EXAMPLE_ENTRIES } from '../src/taneyev/canon-examples.js';
+import { examplesBothWays } from '../src/taneyev/canon-examples.js';
 import { parsePitch, pitchName, letterOf, MIDDLE_C } from '../src/common/diatonic.js';
 import { twoVoiceTune, chordTune } from '../src/notation/abc.js';
 import { intoVocalRange } from '../src/notation/range.js';
 import { block, show, drawSmall } from '../src/notation/playback.js';
 import { fmt, sign, withArticle, entryName } from './names.js';
+import { mountJvPicker } from '../src/ui/jv-picker.js';
+
+const START = 0; // the canon at the unison, the original that every other entry shifts
 
 /** Plain words for a span, e.g. "up a 3rd", "repeat". */
 function spanName(span) {
@@ -143,23 +146,20 @@ function runCheck() {
   document.getElementById('report').innerHTML = renderReport(text, entry, delay);
 }
 
-document.getElementById('links').innerHTML = EXAMPLE_ENTRIES
-  .map((entry) => `<button type="button" data-entry="${entry}" title="${entryName(entry)}">${sign(entry)}</button>`)
-  .join(' ');
-document.getElementById('links').addEventListener('click', (event) => {
-  const entry = event.target.dataset.entry;
-  if (entry !== undefined) showTable(Number(entry));
-});
-document.getElementById('custom').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const value = document.getElementById('jvin').value;
-  if (value !== '') showTable(Number(value));
+const picker = mountJvPicker(document.getElementById('entry-pick'), {
+  label: 'Interval of entrance J<sub>v</sub>',
+  title: (entry) => `Canon at the ${entryName(entry)}`,
+  onPick: (entry) => {
+    picker.set(entry);
+    showTable(entry);
+  },
 });
 document.getElementById('check').addEventListener('submit', (event) => {
   event.preventDefault();
   runCheck();
 });
 
-showTable(EXAMPLE_ENTRIES[0]);
+picker.set(START);
+showTable(START);
 runCheck();
 

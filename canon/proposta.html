@@ -20,15 +20,14 @@
 <a href="../taneyev/three-voices.html">Three-voice shifts</a>
 </nav>
 <h1>Canon proposta intervals</h1>
-<p class="lead">In a two-voice canon the risposta plays what the proposta played one delay ago, moved by the interval of entrance. So every melodic interval the proposta makes across the delay turns into a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, with a short first-species canon to see and hear. The order follows the consonance charts page. Intervals are zero-indexed (step 1, 3rd 2, octave 7).</p>
+<p class="lead">In a two-voice canon the risposta plays what the proposta played one delay ago, moved by the interval of entrance. So every melodic interval the proposta makes across the delay turns into a harmonic interval between the voices. Pick an interval of entrance to see which melodic intervals stay consonant, with a short first-species canon to see and hear. Any J<sub>v</sub> from −21 to +21 can be picked; the common ones are starred, as on the consonance charts page. Intervals are zero-indexed (step 1, 3rd 2, octave 7).</p>
 <dl class="terms">
 <div><dt>span</dt><dd>The proposta’s melodic interval from a note to the note one delay later. Positive: rising. With a delay of one measure in whole notes, that is from one note to the next; with two measures, from one note to the note after next.</dd></div>
 <div><dt>J<sub>v</sub></dt><dd>The interval of entrance, in steps. Positive: the risposta is above.</dd></div>
 <div><dt><i>n</i></dt><dd>The interval the risposta forms against the proposta: <i>n</i> = J<sub>v</sub> − span. This is Taneyev’s <i>n</i> = <i>m</i> + J<sub>v</sub>, with the canon at the unison as the original (<i>m</i> = −span). A negative <i>n</i> means the risposta is below.</dd></div>
 </dl>
 </header>
-<nav class="jump" aria-label="Interval of entrance"><span>J<sub>v</sub></span><span id="links"></span>
-<form id="custom"><label><span class="sr">Any interval of entrance</span> <input id="jvin" type="number" min="-21" max="21" step="1" placeholder="e.g. 11"></label> <button>Show</button></form></nav>
+<form id="entry-pick" aria-label="Pick an interval of entrance"></form>
 <section class="legend" aria-label="How to read the table">
 <div><h3>Verdict</h3><ul>
 <li><span class="sw k-fixed-consonance">free</span>Imperfect consonance: use it freely</li>
@@ -60,9 +59,9 @@
   </a>
 </footer>
 </main>
-<style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}#custom{display:flex;gap:6px;margin-left:auto}
+<style>
 .wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}
-#links{display:flex;flex-wrap:wrap;gap:6px;margin:0;min-width:0}.legend .sw{flex:none}
+.legend .sw{flex:none}
 
 .move-chord{display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:8px;margin-top:6px}.move-chord .chord-score{flex:none;width:110px;color:var(--ink)}.move-chord p{margin:0}</style>
 <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
