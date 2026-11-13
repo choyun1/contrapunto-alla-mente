@@ -4,5 +4,5 @@ L:1/4
 K:C
 V:R clef=alto name="R"
 V:P clef=alto name="P"
-[V:R] z4 | G3/2 F/ D E | F2 A G/F/ | E3/2 D/ C _B,/C/ | D F E D | C A,3/2 G,/ A,/B,/ | C2- C/B,/ C/D/ | E C E3/2 F/ | G4 |]
-[V:P] C3/2 B,/ G, A, | B,2 D C/B,/ | A,3/2 G,/ F, E,/F,/ | G, _B, A, G, | F, D,3/2 C,/ D,/E,/ | F,2- F,/E,/ F,/G,/ | A, F, A,3/2 =B,/ | C4- | C4 |]
+[V:R] z4 | G3/2 F/ D E | F2 A G/F/ | E3/2 D/ C _B,/C/ | D F E D | C A,3/2 G,/A,/B,/ | C2- C/B,/ C/D/ | E C E3/2 F/ | G4 |]
+[V:P] C3/2 B,/ G, A, | B,2 D C/B,/ | A,3/2 G,/ F, E,/F,/ | G, _B, A, G, | F, D,3/2 C,/D,/E,/ | F,2- F,/E,/ F,/G,/ | A, F, A,3/2 =B,/ | C4- | C4 |]
