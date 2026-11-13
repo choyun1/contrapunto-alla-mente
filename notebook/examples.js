@@ -23,6 +23,9 @@
 // (invertible counterpoint: the lower is the upper moved `shift` steps, e.g.
 // −11 at the 12th). The page plays the upper pair, a bar's rest, then the
 // lower pair, and checks each pair on its own; the test checks the shift.
+//
+// With `rounds`, an infinite canon is drawn with its repeat signs and heard
+// going round the repeat that many times before the ending.
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
 const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
@@ -63,8 +66,9 @@ export const SECTIONS = [
         file: 'ic19b-canon-5th-above-with-ficta.abc',
         title: 'Canon at the 5th above, with ficta',
         source: 'IC p. 19, second system',
-        note: '“w/ ficta.” P leads in the alto clef and R answers a 5th above; the B♭s are the ficta.',
-        canon: canon(4, 1, [1, 7]),
+        note: '“w/ ficta.” P leads in the alto clef and R answers a 5th above; the B♭s are the ficta. '
+          + 'P’s last C is held over two bars while R answers it.',
+        canon: canon(4, 1, [1, 8]),
         icf: false,
       },
       {
@@ -93,20 +97,24 @@ export const SECTIONS = [
         title: 'Infinite canon at the octave, in F',
         source: 'IC p. 25, top',
         note: '“2-part ∞ canon @ Jv = 7.” P’s bars 2–4 go round, since its bar 4 is its bar 1 '
-          + 'again; here they go round three times, and the canon stops on whole notes, A over F. '
-          + 'The page’s other drafts (in F and in G) are crossed out and scribbled over, and are left out.',
-        canon: canon(-7, 1, [1, 9]),
+          + 'again, and the canon stops on whole notes, A over F. The page’s other drafts (in F and in G) '
+          + 'are crossed out and scribbled over, and are left out.',
+        caption: 'Playback goes round the repeat three times before the ending.',
+        canon: canon(-7, 1, [1, 3]),
+        rounds: 3,
         icf: false,
       },
       {
         file: 'ic26a-infinite-canon-octave-g.abc',
         title: 'Infinite canon at the octave, in G',
         source: 'IC p. 26, middle',
-        note: '“OK!” R answers an octave below, one bar later. P’s bars 2–8 go round three times, '
+        note: '“OK!” R answers an octave below, one bar later. P’s bars 2–8 go round, '
           + 'and the canon stops on whole notes, B over G. The page’s canons '
           + 'in F are left out for now: the first is crossed out, and the second is written too '
           + 'densely to read reliably from the scan.',
-        canon: canon(-7, 1, [1, 21]),
+        caption: 'Playback goes round the repeat three times before the ending.',
+        canon: canon(-7, 1, [1, 7]),
+        rounds: 3,
         icf: false,
       },
     ],

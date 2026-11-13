@@ -188,3 +188,17 @@ test('marks change only what is drawn: the notes read the same', () => {
     for (const [id, bars] of Object.entries(readVoices(abc))) assert.deepEqual(drawn[id], bars, example.file);
   }
 });
+
+test('an infinite canon is heard three times round its repeat, and stays a canon all the way (IC pp. 25, 26)', () => {
+  for (const example of EXAMPLES.filter((e) => e.rounds)) {
+    const written = readVoices(load(example.file));
+    const heard = readVoices(heardAbc(load(example.file), example));
+    const loop = written.P.length - 2; // the bars inside the repeat
+    assert.equal(heard.P.length, 2 + 3 * loop, example.file);
+    const { entry } = example.canon;
+    for (let bar = 0; bar < heard.P.length - 2; bar++) {
+      const copy = heard.R[bar + 1].map((note) => note.step);
+      assert.deepEqual(copy, heard.P[bar].map((note) => (note.step === null ? null : note.step + entry)), `${example.file}, bar ${bar + 1}`);
+    }
+  }
+});

@@ -76,6 +76,10 @@ export function canonMarks(abc, example) {
   const voices = readVoices(abc);
   const ids = [example.canon.lead, ...followers(example)];
   const bars = Math.max(...ids.map((id) => voices[id].length));
+  if (example.rounds) {
+    // an infinite canon is strict all the way round its repeat; only the ending is free
+    return Object.fromEntries(ids.map((id) => [id, { [bars]: 'cadence' }]));
+  }
   const entry = Object.fromEntries(ids.map((id) => [id, 1 + voices[id].findIndex((bar) => firstStep(bar) !== null)]));
   const free = (id, bar) => bar >= entry[id] && !isStrict(example.canon, bar, id !== example.canon.lead);
   const allFree = (bar) => ids.every((id) => free(id, bar));
@@ -168,6 +172,11 @@ function onlyVoices(voices, ids) {
  */
 export const dissonancesOf = (abc, ids) => worthShowing(dissonances(onlyVoices(timelines(abc), ids)));
 
+/** The abc with each voice's |: … :| repeat written out `times` times, for playback (abcjs plays a repeat twice). */
+export function withRounds(abc, times) {
+  return abc.replace(/\|:(.*?):\|/g, (_, inside) => `| ${Array(times).fill(inside.trim()).join(' | ')} |`);
+}
+
 /** A voice's music without its final bar line, so more can follow it. */
 const open = (music) => music.trim().replace(/\|\]$/, '').trim();
 
@@ -178,6 +187,7 @@ const open = (music) => music.trim().replace(/\|\]$/, '').trim();
  * bar's rest, then the lower pair. Any other example is heard as written.
  */
 export function heardAbc(abc, example) {
+  if (example.rounds) return withRounds(abc, example.rounds);
   if (!example.alternatives) return abc;
   const { upper, shared, lower } = example.alternatives;
   const music = voiceMusic(abc);
