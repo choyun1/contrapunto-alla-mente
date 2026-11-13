@@ -64,6 +64,30 @@ export function showEditable(wrap, abc, audioAbc, onSpot) {
   button.addEventListener('click', () => toggle(tune, button, SOUND.FLUTE, TEMPO.EXAMPLE));
 }
 
+/**
+ * Line breaks for long hand-written scores: abcjs breaks the systems itself,
+ * about five bars to a line, so busy bars of eighth notes stay readable.
+ */
+const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine: 5 };
+
+/**
+ * Renders abc into a block and wires the play button to `audioAbc`, which
+ * may differ from what is drawn. Staff `silentVoice` (counted from 0, top
+ * down), when given, is drawn in gray: the audio leaves it out, so it is seen
+ * but not heard (the imaginary cantus). It plays at TEMPO.NOTEBOOK. The
+ * playback tune is made at the first click, so a page of many examples draws
+ * only what it shows.
+ */
+export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
+  const score = wrap.querySelector('.score');
+  ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
+  if (silentVoice !== undefined) {
+    score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
+  }
+  const button = wrap.querySelector('button');
+  button.addEventListener('click', () => toggle(audioTune(audioAbc), button, SOUND.FLUTE, TEMPO.NOTEBOOK));
+}
+
 let audioBox = null; // the off-page box that playback-only tunes are drawn into
 
 /**
@@ -84,10 +108,13 @@ function audioTune(abc) {
 /**
  * Playback tempos, in quarter notes per minute. Music examples play a whole
  * note every 1.125 s (213); the interval demonstrations over a held note play
- * one every 0.56 s (426), since each dyad is heard on its own.
+ * one every 0.56 s (426), since each dyad is heard on its own. The notebook's
+ * hand-written examples, busy with eighth notes, play at a bit over half the
+ * example tempo (118), a whole note about every 2 s.
  */
 export const TEMPO = {
   EXAMPLE: 213,
+  NOTEBOOK: 118,
   DEMO: 426,
 };
 

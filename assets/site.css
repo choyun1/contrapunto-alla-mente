@@ -92,6 +92,7 @@ details.notation summary::before{content:"";width:0;height:0;border-style:solid;
   border-color:transparent transparent transparent currentColor;transition:transform .15s}
 details.notation[open] summary::before{transform:rotate(90deg)}
 details.notation summary:hover{border-color:var(--accent)}
+ul.dissonances{margin:8px 0 4px;padding-left:20px;font-size:.88rem;line-height:1.5}
 .examples{display:grid;gap:14px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
 .example{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px 6px}
 .example-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
@@ -100,6 +101,8 @@ details.notation summary:hover{border-color:var(--accent)}
 .example button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
 .example button:hover{border-color:var(--accent)}
 .score{color:var(--ink);max-width:720px}
+/* a staff that is drawn but not played, such as the imaginary cantus (I.C.F.) */
+.silent-voice{color:var(--muted);opacity:.7}
 /* the logo (assets/logo.svg) before the site name, sized to the text it sits in */
 .brand{display:inline-flex;align-items:center;gap:.35em}
 .brand img{width:1.1em;height:1.1em;flex:none}
