@@ -84,3 +84,19 @@ export const upward = (steps) => (((steps % 7) + 7) % 7) + 1;
  * the delay, both zero-indexed and signed as in imaginary-cantus.js.
  */
 export const batheSpot = (entry, span) => ({ place: upward(entry), course: upward(span) });
+
+/**
+ * Every leader interval in one cell, worked out: [{ leader, follower, fits }],
+ * 1-indexed within the octave. `leader` is the leader above the current
+ * plain-song note, `follower` is the follower (the leader's note moved by the
+ * place, a note later) above the next one, and `fits` says both are consonant.
+ * Only the four consonances (1 3 5 6) are tried for the leader.
+ */
+export function batheWorked(place, course) {
+  const guide = batheGuide(place, course);
+  return [0, 2, 4, 5].map((leader) => ({
+    leader: leader + 1,
+    follower: upward(leader + guide),
+    fits: isConsonant(leader + guide),
+  }));
+}

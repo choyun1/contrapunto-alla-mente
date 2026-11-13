@@ -44,6 +44,16 @@
 <div id="bathe-table"></div>
 <p class="note">* Course 5, place 2 is printed 3 6. It is a known misprint; the editors correct it to 1 6, which is also what the rule below gives. The other 55 cells match the rule as printed.</p>
 </section>
+<section class="chart" aria-labelledby="ex-h">
+<h2 id="ex-h">One row of the table, notated</h2>
+<p class="note">Pick how the plain song moves. Each card is one canon interval: in the first bar the leader (P) sings every note the cell allows over the plain song (CF); in the second the follower (R) copies them, moved by the canon’s interval, over the plain song’s next note. The gray I.C.F. is that next note moved back by the canon’s interval: P against it is R against the CF, a bar early. Under each card, every consonance the leader could try, and what the follower makes of it.</p>
+<div class="checkform"><label><span>The plain song moves</span> <select id="bathe-move"></select></label></div>
+<div class="bathe-exs" id="bathe-exs"></div>
+</section>
+<section class="chart" aria-labelledby="fold-h">
+<h2 id="fold-h">From Bathe’s grid to Taneyev’s rows</h2>
+<div id="bathe-fold"></div>
+</section>
 <section class="chart" aria-labelledby="taneyev-h">
 <h2 id="taneyev-h">The same table in Taneyev’s terms</h2>
 <p class="note">Taneyev counts from 0 (unison 0, 3rd 2, 5th 4, octave 7) and calls a shift J<sub>v</sub>. The follower’s note against the next plain-song note is the leader’s note against that next note moved down by the place: the imaginary cantus. So each bar is a shift of the leader’s interval above the plain song, <i>m</i>, to its interval above the imaginary cantus, <i>n</i> = <i>m</i> + J<sub>v</sub>, with</p>
@@ -64,6 +74,7 @@
 </footer>
 </main>
 <style>.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}.lead.c{text-align:center}</style>
+<script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
 <script type="module" src="bathe.js"></script>
 </body>
 </html>

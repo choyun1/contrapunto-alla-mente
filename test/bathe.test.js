@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  PRINTED, MISPRINT, PLACES, COURSES, batheCell, batheGuide, batheTable, batheSpot, placeUp, courseUp,
+  PRINTED, MISPRINT, PLACES, COURSES, batheCell, batheGuide, batheTable, batheSpot, batheWorked, placeUp, courseUp,
 } from '../src/taneyev/bathe.js';
 import { chart } from '../src/taneyev/rules.js';
 
@@ -49,4 +49,20 @@ test('a canon bar finds its cell: a 12th above over a step down is place 5, cour
   assert.equal(courseUp(2), 7);
   assert.equal(batheGuide(5, 7), (11 - (-1)) % 7); // the guide is 12 steps, an octave and a 6th
   assert.deepEqual(batheCell(5, 7), [1, 3, 5]);
+});
+
+test('worked cell: a canon at the 5th above over a step up (course 2): 3 → 6 and 5 → 8 fit, 1 → 4 and 6 → 9 do not', () => {
+  assert.deepEqual(batheWorked(5, 2), [
+    { leader: 1, follower: 4, fits: false },
+    { leader: 3, follower: 6, fits: true },
+    { leader: 5, follower: 1, fits: true },
+    { leader: 6, follower: 2, fits: false },
+  ]);
+});
+
+test('worked cells keep exactly the leader intervals of the printed cell', () => {
+  COURSES.forEach(({ up: course }) => PLACES.forEach(({ up: place }) => {
+    const kept = batheWorked(place, course).filter((w) => w.fits).map((w) => w.leader);
+    assert.deepEqual(kept, batheCell(place, course));
+  }));
 });

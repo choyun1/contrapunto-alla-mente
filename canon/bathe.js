@@ -7,6 +7,8 @@
 import { PLACES, COURSES, MISPRINT, batheTable, batheGuide } from '../src/taneyev/bathe.js';
 import { chart, intervalName } from '../src/taneyev/rules.js';
 import { slug, sign } from '../taneyev/chart-card.js';
+import { MOVES, drawMove } from './bathe-examples.js';
+import { mountFold } from './bathe-fold.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -72,3 +74,16 @@ function taneyevHtml() {
 $('bathe-table').innerHTML = batheHtml();
 $('bathe-grid').innerHTML = jvGridHtml();
 $('bathe-taneyev').innerHTML = taneyevHtml();
+
+/** Fills the move picker, a 3rd up first, and draws the cards for the chosen move. */
+function mountExamples() {
+  const pick = $('bathe-move');
+  pick.innerHTML = MOVES.map((m, i) => `<option value="${i}">${m.name}</option>`).join('');
+  pick.value = String(MOVES.findIndex((m) => m.steps === 2));
+  const draw = () => drawMove($('bathe-exs'), MOVES[Number(pick.value)].steps);
+  pick.addEventListener('change', draw);
+  draw();
+}
+
+mountExamples();
+mountFold($('bathe-fold'));

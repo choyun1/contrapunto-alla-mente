@@ -10,6 +10,7 @@ import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
 import { icfDiagram } from './icf-diagram.js';
 import { block, drawSmall, showWithAudio } from '../src/notation/playback.js';
+import { movesTableHtml } from './moves-table.js';
 
 /** The text of one example's abc file. */
 async function load(file) {
@@ -99,9 +100,9 @@ async function drawProcedure(header, section) {
   const list = document.createElement('ol');
   list.className = 'procedure';
   header.append(list);
-  for (const { text, snippet } of section.procedure) {
+  for (const { text, snippet, moves } of section.procedure) {
     const item = document.createElement('li');
-    item.innerHTML = text;
+    item.innerHTML = text + (moves ? movesTableHtml(moves) : '');
     list.append(item);
     if (snippet) await drawSnippet(item, section, snippet);
   }
