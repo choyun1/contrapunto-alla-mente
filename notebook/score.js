@@ -16,16 +16,29 @@ export const ICF = { id: 'ICF', name: 'I.C.F.' };
 const firstStep = (bar) => bar.find((note) => note.step !== null)?.step ?? null;
 
 /**
- * The imaginary cantus, one whole note per bar: the cantus moved against the
- * canon (`entry` steps the other way, `delay` bars earlier). A bar where the
- * proposta is silent, or past the cantus's end, gets null.
+ * The delay in force at bar `bar` (counted from 0): that of the span holding
+ * it, or of the last span before it (a cadence or free passage keeps the
+ * delay of the canon it ends), or else of the first span.
  */
-export function imaginaryBars(abc, { lead, entry, delay }) {
+export function delayAt(canon, bar) {
+  const started = canon.spans.filter(([first]) => first <= bar + 1);
+  const span = started.at(-1) ?? canon.spans[0];
+  return span[2] ?? canon.delay;
+}
+
+/**
+ * The imaginary cantus, one whole note per bar: the cantus moved against the
+ * canon (`entry` steps the other way, one delay earlier, with the delay in
+ * force at that bar). A bar where the proposta is silent, or past the
+ * cantus's end, gets null.
+ */
+export function imaginaryBars(abc, canon) {
   const voices = readVoices(abc);
   const cantus = voices.CF.map(firstStep);
-  return imaginaryCantus(cantus, entry, delay).map((step, bar) => {
-    const proposta = voices[lead][bar];
-    return proposta && firstStep(proposta) !== null ? step : null;
+  return cantus.map((_, bar) => {
+    const proposta = voices[canon.lead][bar];
+    if (!proposta || firstStep(proposta) === null) return null;
+    return imaginaryCantus(cantus, canon.entry, delayAt(canon, bar))[bar];
   });
 }
 

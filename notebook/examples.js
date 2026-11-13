@@ -8,8 +8,10 @@
 // Each example with a `canon` names the leading and following voice, the
 // interval of entrance in steps (zero-indexed: 5th 4, octave 7, 12th 11;
 // negative when the risposta is below) and the delay in bars. `spans` are the
-// leader's bars, first to last and counted from 1, that the follower copies
-// exactly; the cadences and free passages between them are left out.
+// leader's bars, [first, last] counted from 1, that the follower copies
+// exactly; the cadences and free passages between them are left out. A span
+// can give its own delay as a third number, [first, last, delay], for an
+// exercise whose second canon enters at another distance.
 // test/notebook.test.js checks them against the notes. With
 // `icf`, the page adds the imaginary cantus (src/taneyev/imaginary-cantus.js)
 // as a gray staff that is drawn but not played, as Cho drew it on the page.
@@ -83,22 +85,14 @@ export const SECTIONS = [
         icf: true,
       },
       {
-        file: 'ic10a-canon-5th-below-then-free.abc',
-        title: 'Canon at the 5th below, delay of two bars, then free',
-        source: 'IC p. 10, top and middle',
-        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” '
-          + 'From bar 8 both voices are marked “free.”',
-        canon: canon(-4, 2, [1, 5]),
-        icf: true,
-      },
-      {
-        file: 'ic10b-11-canon-5th-below.abc',
-        title: 'Canon at the 5th below, delay of one bar',
-        source: 'IC pp. 10 (bottom) and 11',
-        note: 'Another try at the same exercise, running from the bottom of p. 10 to the end of p. 11. '
-          + 'From bar 13 both voices are marked “free,” ending on an A major chord.',
-        caption: 'The free bars 14–15 are faint, so their notes are a best guess.',
-        canon: canon(-4, 1, [1, 11]),
+        file: 'ic10-11-canon-5th-below.abc',
+        title: 'Canon at the 5th below, in two canons',
+        source: 'IC pp. 10–11',
+        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” One exercise: '
+          + 'a canon at a delay of two bars that goes “free” from bar 8 and stops on the dominant, then a '
+          + 'new canon at a delay of one bar from bar 11, free again from bar 23, ending on an A major chord.',
+        caption: 'The free bars 24–25 are faint, so their notes are partly a best guess.',
+        canon: canon(-4, 2, [1, 5], [11, 21, 1]),
         icf: true,
       },
       {

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { SECTIONS } from '../notebook/examples.js';
-import { ICF, drawnAbc, imaginaryBars } from '../notebook/score.js';
+import { ICF, delayAt, drawnAbc, imaginaryBars } from '../notebook/score.js';
 
 const EXAMPLES = SECTIONS.flatMap((section) => section.examples);
 
@@ -27,11 +27,12 @@ function timeline(bars) {
 const inSpans = (spans, bar) => spans.some(([first, last]) => bar + 1 >= first && bar + 1 <= last);
 
 /** The first of the leader's notes in the canon's spans that the follower does not copy, or null. */
-function firstUncopied(voices, { lead, follow, entry, delay, spans }) {
+function firstUncopied(voices, canon) {
+  const { lead, follow, entry, spans } = canon;
   const follower = new Map(timeline(voices[follow]).map((note) => [note.at, note]));
   const leader = timeline(voices[lead]).filter((note) => note.step !== null && inSpans(spans, Math.floor(note.at)));
   return leader.find((note) => {
-    const copy = follower.get(note.at + delay);
+    const copy = follower.get(note.at + delayAt(canon, Math.floor(note.at)));
     return !copy || copy.step !== note.step + entry || copy.length !== note.length;
   }) ?? null;
 }
@@ -58,7 +59,7 @@ test('every notebook example has full 4/4 bars, the same number in every voice',
   }
 });
 
-test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–7, 10–11, WIP p. 7)', () => {
+test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–7 and 10–11, WIP p. 7)', () => {
   for (const example of EXAMPLES.filter((e) => e.canon)) {
     const miss = firstUncopied(readVoices(load(example.file)), example.canon);
     assert.equal(miss, null, `${example.file}: not copied at ${miss?.at} whole notes`);
@@ -68,10 +69,11 @@ test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5�
 test('P over the imaginary cantus equals R over the cantus, one delay later (IC p. 9)', () => {
   for (const example of EXAMPLES.filter((e) => e.icf)) {
     const voices = readVoices(load(example.file));
-    const { lead, follow, delay, spans } = example.canon;
+    const { lead, follow, spans } = example.canon;
     const imaginary = imaginaryBars(load(example.file), example.canon);
     for (let bar = 0; bar < voices[lead].length; bar++) {
       if (!inSpans(spans, bar)) continue;
+      const delay = delayAt(example.canon, bar);
       const p = voices[lead][bar][0].step;
       const r = voices[follow][bar + delay][0].step;
       const cantus = voices.CF[bar + delay][0].step;
@@ -82,9 +84,9 @@ test('P over the imaginary cantus equals R over the cantus, one delay later (IC 
 });
 
 test('the imaginary cantus of IC p. 10 is the cantus a 5th up and two bars earlier, as Cho wrote it', () => {
-  const example = EXAMPLES.find((e) => e.file.startsWith('ic10a'));
-  // D4 C4 E4 G4 F4 D4 E4 E4, then nothing: the cantus has run out
-  assert.deepEqual(imaginaryBars(load(example.file), example.canon), [29, 28, 30, 32, 31, 29, 30, 30, null, null]);
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic10-11'));
+  // D4 C4 E4 G4 F4 D4 E4 E4 in the first canon (delay of two bars)
+  assert.deepEqual(imaginaryBars(load(example.file), example.canon).slice(0, 8), [29, 28, 30, 32, 31, 29, 30, 30]);
 });
 
 test('the drawn score adds the imaginary cantus as the bottom staff', () => {
