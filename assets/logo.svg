@@ -3,8 +3,8 @@
        step and back down a little; the follower (accent) sings the same figure later and lower.
        Colors are the site's ink and accent (assets/site.css), light and dark. -->
   <style>
-    .leader { fill: #1a2130; } .follower { fill: #1f5f6b; }
-    @media (prefers-color-scheme: dark) { .leader { fill: #e7eaf0; } .follower { fill: #7cc3cf; } }
+    .leader { fill: #191b2a; } .follower { fill: #3343a0; }
+    @media (prefers-color-scheme: dark) { .leader { fill: #e8e9f2; } .follower { fill: #a3aef5; } }
   </style>
   <!-- each notehead is an ellipse tilted like an engraved one -->
   <g class="leader">

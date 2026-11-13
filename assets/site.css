@@ -1,6 +1,7 @@
 :root{
-  --bg:#f6f7f9; --panel:#ffffff; --ink:#1a2130; --muted:#5b6474; --line:#d9dde4;
-  --accent:#1f5f6b;
+  --bg:#f7f7fa; --panel:#ffffff; --ink:#191b2a; --muted:#5a5e72; --line:#dcdde6;
+  --accent:#3343a0; /* indigo; the logo and favicon use the same ink and accent */
+  --planned:#8a5a12; /* amber, for pages that are planned but not built (home page) */
   --fc:#d7eee6; --fc-ink:#14513f; --vc:#fbe7c6; --vc-ink:#7a4a05;
   --vd:#e6defa; --vd-ink:#4b2f8f; --fd:#eceef2; --fd-ink:#4a5261;
   --yes:#14513f; --no:#9a2c2c;
@@ -9,7 +10,7 @@
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#12161d; --panel:#1a2029; --ink:#e7eaf0; --muted:#9aa3b2; --line:#2e3542; --accent:#7cc3cf;
+  --bg:#14151f; --panel:#1c1e2b; --ink:#e8e9f2; --muted:#a0a3b8; --line:#2f3244; --accent:#a3aef5; --planned:#f0c27a;
   --fc:#163a31; --fc-ink:#a6e3cc; --vc:#3d2d10; --vc-ink:#f5cf86;
   --vd:#2e2547; --vd-ink:#cdbcff; --fd:#232933; --fd-ink:#b3bac6;
   --yes:#8fdcbf; --no:#f0a0a0; color-scheme:dark}}
@@ -29,13 +30,26 @@ nav.site .brand{flex-basis:100%} /* the site name on its own row, the page links
 /* the Drills link stands apart from the pages for learning the rules */
 nav.site .nav-drills{padding-left:18px;border-left:1px solid var(--line)}
 @media (max-width:600px){nav.site .nav-drills{padding-left:0;border-left:0}}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
-.card h2{font-size:1.35rem;margin-bottom:4px}
-a.card{text-decoration:none;color:inherit}
-a.card:hover{border-color:var(--accent)}
-.card p{margin:0;color:var(--muted)}
-.soon{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+/* The home page (index.html): sections divided by rules, each a list of "Page: what it does".
+   A notehead before each page shows its state: filled = built, half = in progress, open = planned. */
+.home h1{font-size:clamp(2.3rem,6vw,3.4rem);font-weight:500;letter-spacing:-.015em;line-height:1.05;margin-top:18px}
+.home .lead{font-family:var(--display);font-size:1.15rem;color:var(--ink);margin-top:12px}
+.home-section{border-top:1px solid var(--line);padding-top:24px}
+.home-section h2{font-size:1.7rem}
+.home-section .intro{margin:2px 0 12px;color:var(--muted)}
+ul.pages{list-style:none;margin:0;padding:0;display:grid;gap:12px;max-width:72ch;font-family:var(--display);font-size:1.08rem}
+ul.pages li{position:relative;padding-left:1.7em}
+ul.pages li::before{content:"";position:absolute;left:0;top:.5em;width:.8em;height:.56em;border-radius:50%;
+  transform:rotate(-22deg);background:var(--accent);border:2px solid var(--accent)}
+ul.pages li > a:first-child{font-weight:600}
+ul.pages .also{display:block;font-family:var(--body);font-size:.85rem;color:var(--muted)}
+.in-progress ul.pages li::before{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
+.in-progress .tag{font-family:var(--body);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);border:1px dashed var(--muted);border-radius:999px;padding:0 8px;white-space:nowrap;vertical-align:.15em}
+.home-section.planned{border-top:2px dashed var(--planned)}
+.planned h2,.planned ul.pages b{color:var(--planned)}
+.planned ul.pages li{color:var(--muted)}
+.planned ul.pages li::before{background:transparent;border-color:var(--planned)}
 /* the charts page's Jv picker: one dropdown with step buttons; icons mark the common shifts */
 .jv-pick{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line)}
 .jv-pick label{font-weight:600}
@@ -206,7 +220,7 @@ nav.sub a[aria-current="page"]{color:var(--ink);font-weight:600;border-color:var
 .kb-tag.r{fill:#233a8a}.kb-tag.p{fill:#5b6474}
 /* on-screen keyboard in the drills: the computer key on each key, and keys lit by your answer */
 .kb-label{font-size:10px;text-anchor:middle;fill:#8a919c;pointer-events:none}
-.kb-white.kb-on{fill:#cfe6ea}.kb-white.kb-good{fill:#bfe6d6}.kb-white.kb-bad{fill:#f3c4c4}
+.kb-white.kb-on{fill:#d6dbf7}.kb-white.kb-good{fill:#bfe6d6}.kb-white.kb-bad{fill:#f3c4c4}
 .drill-keys .kb-white{cursor:pointer}
 /* drill pages: settings, the prompt, the strip of beats; a hidden section stays hidden though .chart is a grid */
 .chart[hidden]{display:none}
