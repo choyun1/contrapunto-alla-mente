@@ -2,7 +2,8 @@
 // transcribed into abc (one file per example in examples/). This file is the
 // list the page draws, from the simplest kind of exercise to the hardest, with
 // where each one comes from. Each section gives its procedure, step by step,
-// before its examples; `diagram: 'icf'` adds the imaginary-cantus diagram.
+// before its examples, each step with a few bars that show it where that
+// helps; `diagram: 'icf'` adds the imaginary-cantus diagram.
 //
 // Sources are the scanned notebooks: "IC" is Invertible counterpoint, "WIP"
 // is the work-in-progress book. Page numbers are the PDF's pages.
@@ -27,6 +28,12 @@
 // With `rounds`, an infinite canon is drawn with its repeat signs and heard
 // going round the repeat that many times before the ending.
 
+/**
+ * One step of a section's procedure: its text, and the excerpt that shows it
+ * (notebook/snippets.js), if any.
+ */
+const step = (text, snippet = null) => ({ text, snippet });
+
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
 const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
 
@@ -37,11 +44,16 @@ export const SECTIONS = [
     intro: 'The simplest: a proposta (P) and its risposta (R), with no cantus. R copies P one delay later, '
       + 'moved by the interval of entry.',
     procedure: [
-      'Choose the interval of entry and the delay. Intervals are zero-indexed: a 5th is 4, an octave 7, a 12th 11, negative when R is below.',
-      'Write one bar of P, then copy it into R one delay later, moved by the interval.',
-      'Write P’s next bar against the R already written under it. Each new P bar also fixes an R bar to come, so check the melodic step it makes in R too (IC p. 13: “the melodic interval must follow the rules @ distance of two measures”).',
-      'Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”).',
-      'When the canon can go no further, let both voices go free into a cadence. The score marks where the strict canon stops.',
+      step('Choose the interval of entry and the delay. Intervals are zero-indexed: a 5th is 4, an octave 7, a 12th 11, negative when R is below.',
+        { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [1, 2], labels: { R: { 2: 'R: a 12th below, a bar later' } } }),
+      step('Write one bar of P, then copy it into R one delay later, moved by the interval.',
+        { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b']] }),
+      step('Write P’s next bar against the R already written under it. Each new P bar also fixes an R bar to come, so check the melodic step it makes in R too (IC p. 13: “the melodic interval must follow the rules @ distance of two measures”).',
+        { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [2, 3], color: [['P', 2, 'a'], ['R', 2, 'a'], ['R', 3, 'b']], labels: { P: { 2: 'new bar of P' }, R: { 2: 'checked against this', 3: 'and copied here' } } }),
+      step('Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”).',
+        { file: 'ic19b-canon-5th-above-with-ficta.abc', bars: [4, 5], color: [['P', 4, 'a'], ['R', 5, 'a']], labels: { P: { 4: 'B♭ in P' }, R: { 5: 'answered by F' } } }),
+      step('When the canon can go no further, let both voices go free into a cadence. The scores mark where the strict canon stops.',
+        { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [6, 8] }),
     ],
     examples: [
       {
@@ -87,9 +99,12 @@ export const SECTIONS = [
     title: 'Infinite canons',
     intro: 'A two-part canon that can go round for ever: P comes back to its first bar, so R’s copy lines up again.',
     procedure: [
-      'Write a two-part canon as above, bar by bar.',
-      'Steer P back to its own first bar, sounding against R just as it did at the start. From then on the bars between go round, and R goes round with them.',
-      'To stop, leave the loop at the end of a round and end both voices on a consonance, here whole notes on the third and the tonic.',
+      step('Write a two-part canon as above, bar by bar.',
+        { file: 'ic25a-infinite-canon-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b']] }),
+      step('Steer P back to its own first bar, sounding against R just as it did at the start. From then on the bars between go round, and R goes round with them.',
+        { file: 'ic25a-infinite-canon-octave.abc', bars: [1, 4], color: [['P', 1, 'a'], ['P', 4, 'a']], labels: { P: { 1: 'bar 1', 4: 'bar 1 again' } } }),
+      step('To stop, leave the loop at the end of a round and end both voices on a consonance, here whole notes on the third and the tonic.',
+        { file: 'ic25a-infinite-canon-octave.abc', bars: [4, 5] }),
     ],
     examples: [
       {
@@ -125,9 +140,10 @@ export const SECTIONS = [
     intro: 'One P answered two ways at once: R a 5th above and R8 an octave below. The two answers are a 12th apart, '
       + 'so P with R is invertible counterpoint at the 12th (Jv = −11).',
     procedure: [
-      'Write P so that it works as a canon at both intervals: at the 5th above and at the octave below.',
-      'Avoid the moves that fail at either one (IC p. 21: “5/8 ⇒ no 2nd up or 3rd up”).',
-      'Check P with each answer on its own. The two answers are alternatives, so the page plays the upper pair, then the lower pair.',
+      step('Write P so that it works as a canon at both intervals: at the 5th above and at the octave below.',
+        { file: 'ic21-canon-5th-and-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['R8', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b'], ['R8', 3, 'b']], labels: { R: { 2: 'a 5th above' }, R8: { 2: 'an octave below' } } }),
+      step('Avoid the moves that fail at either one (IC p. 21: “5/8 ⇒ no 2nd up or 3rd up”).'),
+      step('Check P with each answer on its own. The two answers are alternatives, so the page plays the upper pair, then the lower pair.'),
     ],
     examples: [
       {
@@ -149,10 +165,13 @@ export const SECTIONS = [
     intro: 'A line over a cantus firmus (the original, top staff) and the same line moved below it (the derivative, '
       + 'bottom staff). There are three staves, but only two sound at a time: each outer voice must work with the cantus.',
     procedure: [
-      'Choose Jv, the shift that takes the original below the cantus: −7 for the octave, −11 for the 12th (Taneyev; zero-indexed).',
-      'For each note, write its interval from the cantus above the staff (n) and the derivative’s below it (n + Jv), as on IC p. 29.',
-      'Check both numbers on every beat. At the octave a 5th (4) becomes a 4th (−3), so treat 5ths as dissonances (IC p. 29: “What if 5ths are dissonant?”). At the 12th a 6th (5) becomes a 7th (−6), so 6ths and 7ths must come as suspensions (IC p. 23).',
-      'Play both pairs: original and cantus, then cantus and derivative.',
+      step('Choose Jv, the shift that takes the original below the cantus: −7 for the octave, −11 for the 12th (Taneyev; zero-indexed).',
+        { file: 'ic29a-invertible-octave-c.abc', bars: [1, 3], labels: { O: { 1: 'original' }, D: { 1: 'derivative: the original moved −7' } } }),
+      step('For each note, write its interval from the cantus above the staff (n) and the derivative’s below it (n + Jv), as on IC p. 29.',
+        { file: 'ic29a-invertible-octave-c.abc', bars: [1, 3], numbers: { against: 'CF', above: ['O'], below: ['D'] } }),
+      step('Check both numbers on every beat. At the octave a 5th (4) becomes a 4th (−3), so treat 5ths as dissonances (IC p. 29: “What if 5ths are dissonant?”). At the 12th a 6th (5) becomes a 7th (−6), so 6ths and 7ths must come as suspensions (IC p. 23).',
+        { file: 'ic29a-invertible-octave-c.abc', bars: [2, 2], numbers: { against: 'CF', above: ['O'], below: ['D'] }, color: [['O', 2, 'a'], ['D', 2, 'a']], labels: { O: { 2: 'a 5th (4) on a weak beat' }, D: { 2: 'becomes a passing 4th (−3)' } } }),
+      step('Play both pairs: original and cantus, then cantus and derivative.'),
     ],
     examples: [
       {
@@ -192,11 +211,15 @@ export const SECTIONS = [
       + 'It is worked out from the cantus here, so it can sit an octave or two away from where it is on paper.',
     diagram: 'icf',
     procedure: [
-      'Choose the interval of entry and the delay. The I.C.F. is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “I.C.F. is a 5th below, since R follows 5th above”).',
-      'Write P against both the CF and the I.C.F. What P forms against the I.C.F. now, R will form against the CF one delay later (IC p. 10: “Check P + I.C.F. ⇒ R + CF”).',
-      'Copy P into R as in a two-part canon, and check P against R.',
-      'Bellermann’s rule: check every two-voice pair. With P, R and CF that is P + CF, P + R and R + CF, and the I.C.F. turns R + CF into P + I.C.F., which is checked while P is written (WIP p. 11).',
-      'When the cantus ends, or the canon can go no further, leave it for a free cadence.',
+      step('Choose the interval of entry and the delay. The I.C.F. is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “I.C.F. is a 5th below, since R follows 5th above”).',
+        { file: 'ic05a-canon-5th-above.abc', bars: [1, 3], voices: ['CF', 'ICF'], color: [['CF', 2, 'a'], ['ICF', 1, 'a'], ['CF', 3, 'b'], ['ICF', 2, 'b']], labels: { ICF: { 1: 'CF bar 2, a 5th down' } } }),
+      step('Write P against both the CF and the I.C.F. What P forms against the I.C.F. now, R will form against the CF one delay later (IC p. 10: “Check P + I.C.F. ⇒ R + CF”).',
+        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the I.C.F.…' }, R: { 3: '…is R against the CF' } } }),
+      step('Copy P into R as in a two-part canon, and check P against R.',
+        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], voices: ['R', 'P'], color: [['P', 2, 'a'], ['R', 3, 'a']] }),
+      step('Bellermann’s rule: check every two-voice pair. With P, R and CF that is P + CF, P + R and R + CF, and the I.C.F. turns R + CF into P + I.C.F., which is checked while P is written (WIP p. 11). The diagram below shows it bar by bar.'),
+      step('When the cantus ends, or the canon can go no further, leave it for a free cadence.',
+        { file: 'ic05a-canon-5th-above.abc', bars: [6, 8], voices: ['R', 'P', 'CF'] }),
     ],
     examples: [
       {

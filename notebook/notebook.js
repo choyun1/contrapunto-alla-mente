@@ -3,12 +3,13 @@
 // cantus comes from score.js (and from there the rules core).
 
 import { SECTIONS } from './examples.js';
-import { drawnAbc, dissonancesOf, heardAbc } from './score.js';
+import { ICF, drawnAbc, dissonancesOf, heardAbc } from './score.js';
+import { snippetAbc } from './snippets.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
 import { icfDiagram } from './icf-diagram.js';
-import { block, showWithAudio } from '../src/notation/playback.js';
+import { block, drawSmall, showWithAudio } from '../src/notation/playback.js';
 
 /** The text of one example's abc file. */
 async function load(file) {
@@ -76,11 +77,35 @@ async function drawExample(parent, example) {
   showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1);
 }
 
-/** A section's procedure as a numbered list, with the I.C.F. diagram after it when the section asks for it. */
-function procedureHtml(section) {
-  const steps = section.procedure.map((step) => `<li>${step}</li>`).join('');
-  const diagram = section.diagram === 'icf' ? icfDiagram() : '';
-  return `<h3>Procedure</h3><ol class="procedure">${steps}</ol>${diagram}`;
+/** Draws one procedure step's excerpt into `item`: a few bars of its example, with the named bars colored. */
+async function drawSnippet(item, section, snippet) {
+  const example = section.examples.find((e) => e.file === snippet.file);
+  const { abc, colors } = snippetAbc(drawnAbc(await load(snippet.file), example), snippet);
+  const box = document.createElement('div');
+  box.className = 'snippet';
+  item.append(box);
+  const bars = snippet.bars[1] - snippet.bars[0] + 1;
+  drawSmall(box, abc, Math.max(460, 120 + 170 * bars));
+  const imaginary = (snippet.voices ?? voiceIds(abc)).indexOf(ICF.id);
+  if (imaginary >= 0) box.querySelectorAll(`.abcjs-v${imaginary}`).forEach((el) => el.classList.add('silent-voice'));
+  for (const { voice, bar, color } of colors) {
+    box.querySelectorAll(`.abcjs-note.abcjs-v${voice}.abcjs-mm${bar}`).forEach((el) => el.classList.add(`snip-${color}`));
+  }
+}
+
+/** Draws a section's procedure as a numbered list, each step with its excerpt, then the I.C.F. diagram if asked for. */
+async function drawProcedure(header, section) {
+  header.insertAdjacentHTML('beforeend', '<h3>Procedure</h3>');
+  const list = document.createElement('ol');
+  list.className = 'procedure';
+  header.append(list);
+  for (const { text, snippet } of section.procedure) {
+    const item = document.createElement('li');
+    item.innerHTML = text;
+    list.append(item);
+    if (snippet) await drawSnippet(item, section, snippet);
+  }
+  if (section.diagram === 'icf') header.insertAdjacentHTML('beforeend', icfDiagram());
 }
 
 /** Draws one section: its heading, its introduction, its procedure and its examples in order. */
@@ -88,12 +113,12 @@ async function drawSection(main, section) {
   const card = document.createElement('section');
   card.className = 'chart';
   card.id = section.id;
-  card.innerHTML = `<header><h2>${section.title}</h2><p class="note">${section.intro}</p>`
-    + `${procedureHtml(section)}</header>`;
+  card.innerHTML = `<header><h2>${section.title}</h2><p class="note">${section.intro}</p></header>`;
   const examples = document.createElement('div');
   examples.className = 'examples';
   card.append(examples);
   main.append(card);
+  await drawProcedure(card.querySelector('header'), section);
   for (const example of section.examples) await drawExample(examples, example);
 }
 
