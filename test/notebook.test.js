@@ -124,3 +124,41 @@ test('alternative staves are heard one pair after the other, with a bar of rest 
   assert.equal(heard.D[bars][0].step, null);
   assert.equal(heardAbc(abc, {}), abc);
 });
+
+/** One token of a music line: a bar line, or a note or rest with its length text. */
+const TOKEN = /(\|\]|\|\||\|:|:\||\|)|([_=^]*[A-Ga-gz][,']*)([\d/]*)(-?)/y;
+
+/** A music line re-spaced so notes shorter than a quarter share a beam within each quarter beat. */
+function beamedByBeat(music, unit) {
+  const out = [];
+  let at = 0;
+  let time = 0;
+  let previous = null;
+  while (at < music.length) {
+    if (/\s/.test(music[at])) { at += 1; continue; }
+    TOKEN.lastIndex = at;
+    const match = TOKEN.exec(music);
+    at = TOKEN.lastIndex;
+    if (match[1]) { out.push(' ', match[1]); time = 0; previous = null; continue; }
+    const [note] = readBars(match[0], unit);
+    const { length } = note[0];
+    const short = length < 0.25 - 1e-9 && note[0].step !== null;
+    const beat = Math.floor((time + 1e-9) / 0.25);
+    const joined = previous?.short && short && previous.beat === beat;
+    out.push(joined ? '' : ' ', match[0]);
+    const endsInBeat = Math.floor((time + length - 1e-9) / 0.25) === beat;
+    previous = { short, beat: endsInBeat ? beat : -1 };
+    time += length;
+  }
+  return out.join('').trim();
+}
+
+test('every example beams its eighth notes by the beat, and only within it', () => {
+  for (const file of [...EXAMPLES.map((e) => e.file), 'ic14-three-voice-canon-c-minor.abc', 'wip07-canon-over-leoni.abc']) {
+    const abc = load(file);
+    const unit = Number(/^L:\s*1\/(\d+)/m.exec(abc)[1]);
+    for (const [, music] of abc.matchAll(/^\[V:[^\]]+\]\s*(.*)$/gm)) {
+      assert.equal(music, beamedByBeat(music, 1 / unit), file);
+    }
+  }
+});

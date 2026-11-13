@@ -104,31 +104,9 @@ export const SECTIONS = [
   {
     id: 'two-voice-canons',
     title: 'Canons without a cantus',
-    intro: 'Free canons in two voices (one in three), from the pages after the canons over a cantus. '
-      + 'P leads and R follows. Some of these Cho marked “bad” or “garbage” at the time; they are '
-      + 'here to be heard again.',
+    intro: 'Free canons in two voices (one with a second answer), from the pages after the canons '
+      + 'over a cantus. P leads and R follows.',
     examples: [
-      {
-        file: 'ic13-canon-12th-two-bars.abc',
-        title: 'Canon at the 12th above, delay of two bars, with ficta',
-        source: 'IC p. 13',
-        note: '“Canon @ 12th (Jh ≠ 1) w/ ficta.” “The melodic interval must follow the rules @ '
-          + 'distance of two measures!!” The canon holds to bar 25; bars 26–31 are the cadence, '
-          + 'marked “Cadence.” At the end: “garbage!”',
-        caption: 'The sharps in R (F♯, D♯) are ficta: P has B and G♯ there.',
-        canon: canon(11, 2, [1, 25]),
-        icf: false,
-      },
-      {
-        file: 'ic14-three-voice-canon-c-minor.abc',
-        title: 'Three-voice canon in C minor, unfinished',
-        source: 'IC p. 14',
-        note: '“?? bad!” The page is crossed out. R enters a 5th below P after two bars and R2 an '
-          + 'octave below R after three more; the voices stop one by one.',
-        caption: 'R follows P for four bars; R2 follows R for three.',
-        canon: canon(-4, 2, [1, 4]),
-        icf: false,
-      },
       {
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
@@ -136,16 +114,6 @@ export const SECTIONS = [
         note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence. At the '
           + 'end: “garbage!”',
         canon: canon(-11, 3, [1, 14]),
-        icf: false,
-      },
-      {
-        file: 'ic18-canon-12th-below-hexachords.abc',
-        title: 'Canon at the 12th below, delay of one bar, through the hexachords',
-        source: 'IC p. 18',
-        note: '“Incomprehensible nonsense!” The page is crossed out. The hexachords are marked over '
-          + 'the staves (V, I, IV, V, I); R takes B♭ where P’s line is in the IV (F) hexachord.',
-        caption: 'R’s flats are written on the page; they are ficta, since P has F there.',
-        canon: canon(-11, 1, [1, 19]),
         icf: false,
       },
       {
@@ -175,32 +143,24 @@ export const SECTIONS = [
         icf: false,
       },
       {
-        file: 'ic19d-canon-12th-above-failed.abc',
-        title: 'Canon at the 12th above, in B♭',
-        source: 'IC p. 19, bottom',
-        note: '“failed!” R goes its own way in bars 5–6 (P’s D is answered by G, not A), '
-          + 'then follows strictly to the end.',
-        canon: canon(11, 1, [1, 3], [6, 14]),
-        icf: false,
-      },
-      {
         file: 'ic25a-infinite-canon-octave.abc',
         title: 'Infinite canon at the octave, in F',
         source: 'IC p. 25, top',
-        note: '“2-part ∞ canon @ Jv = 7.” Bars 2–4 repeat: P’s bar 4 leads back into its bar 2, '
-          + 'so R can go round with it. The page’s other drafts (in F and in G) are crossed out and '
-          + 'scribbled over, and are left out here.',
-        canon: canon(-7, 1, [1, 3]),
+        note: '“2-part ∞ canon @ Jv = 7.” P’s bars 2–4 go round, since its bar 4 is its bar 1 '
+          + 'again; here they go round three times, and the canon stops on whole notes, A over F. '
+          + 'The page’s other drafts (in F and in G) are crossed out and scribbled over, and are left out.',
+        canon: canon(-7, 1, [1, 9]),
         icf: false,
       },
       {
         file: 'ic26a-infinite-canon-octave-g.abc',
         title: 'Infinite canon at the octave, in G',
         source: 'IC p. 26, middle',
-        note: '“OK!” R answers an octave below, one bar later; bars 2–8 repeat. The page’s canons '
+        note: '“OK!” R answers an octave below, one bar later. P’s bars 2–8 go round three times, '
+          + 'and the canon stops on whole notes, B over G. The page’s canons '
           + 'in F are left out for now: the first is crossed out, and the second is written too '
           + 'densely to read reliably from the scan.',
-        canon: canon(-7, 1, [1, 7]),
+        canon: canon(-7, 1, [1, 21]),
         icf: false,
       },
       {
@@ -230,13 +190,6 @@ export const SECTIONS = [
         source: 'IC p. 23, top',
         note: '“Invertible counterpoint @ 12th (Jv = −11).” “Consonances (5th, octave, 3rd); '
           + '6th/7th lead to suspensions.”',
-        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
-      },
-      {
-        file: 'ic23b-invertible-12th-second-try.abc',
-        title: 'Invertible counterpoint at the 12th, second try',
-        source: 'IC p. 23, bottom',
-        note: '“sucks!” Here to be heard again.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
       },
       {

@@ -3,6 +3,6 @@ M:C
 L:1/4
 K:G
 V:P clef=treble name="P"
-V:R clef=bass name="R"
-[V:P] G3/2 F/ G A |: B2 d c | B/A/ G- G/ A/B/c/ | d e d/e/f/g/- | g f g e | d3/2 c/ B/ A/ G | B A3/2 G/ E/ F/ | G3/2 F/ G A :|
-[V:R] z4 |: G,3/2 F,/ G, A, | B,2 D C | B,/A,/ G,- G,/ A,/B,/C/ | D E D/E/F/G/- | G F G E | D3/2 C/ B,/ A,/ G, | B, A,3/2 G,/ E,/ F,/ :|
+V:R clef=alto name="R"
+[V:P] G3/2 F/ G A | B2 d c | B/A/ G- G/A/ B/c/ | d/ e d/ e/f/ g- | g f g e | d3/2 c/ B/A/ G | B A3/2 G/ E/F/ | G3/2 F/ G A | B2 d c | B/A/ G- G/A/ B/c/ | d/ e d/ e/f/ g- | g f g e | d3/2 c/ B/A/ G | B A3/2 G/ E/F/ | G3/2 F/ G A | B2 d c | B/A/ G- G/A/ B/c/ | d/ e d/ e/f/ g- | g f g e | d3/2 c/ B/A/ G | B A3/2 G/ E/F/ | G3/2 F/ G A | B4 |]
+[V:R] z4 | G,3/2 F,/ G, A, | B,2 D C | B,/A,/ G,- G,/A,/ B,/C/ | D/ E D/ E/F/ G- | G F G E | D3/2 C/ B,/A,/ G, | B, A,3/2 G,/ E,/F,/ | G,3/2 F,/ G, A, | B,2 D C | B,/A,/ G,- G,/A,/ B,/C/ | D/ E D/ E/F/ G- | G F G E | D3/2 C/ B,/A,/ G, | B, A,3/2 G,/ E,/F,/ | G,3/2 F,/ G, A, | B,2 D C | B,/A,/ G,- G,/A,/ B,/C/ | D/ E D/ E/F/ G- | G F G E | D3/2 C/ B,/A,/ G, | B, A,3/2 G,/ E,/F,/ | G,4 |]
