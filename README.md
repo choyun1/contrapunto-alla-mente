@@ -31,7 +31,8 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 - **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 
 - **Drills.** Practice at the keyboard with live feedback. **Move chords**: the site names a canon and the risposta's note, and you play every note the proposta may move to, timed, with the ones you miss coming back more often. **Lead the canon**: you improvise the proposta and the site plays it back as the risposta, marking each note as it sounds. **Follow the leader**: the site plays a fresh first-species proposta and you play (or sing) the risposta. Play on the on-screen keys, the computer keyboard (one octave per row of letters) or a MIDI keyboard, either waiting for each note or on a beat.
-- **Notebook.** Worked examples from Cho's handwritten counterpoint notebooks, notated and played back, each with its notebook page and the note written beside it. The first batch is two-voice canons over a cantus firmus, with the imaginary cantus worked out from the rules core and drawn in gray, not played.
+- **Notebook.** Worked examples from Cho's handwritten counterpoint notebooks, notated and played back, each with its notebook page and the note written beside it. Sections run from the simplest to the hardest: two-part canons, infinite canons, invertible counterpoint over a cantus, one proposta with two answers, and canons over a cantus firmus with the imaginary cantus (drawn in gray, not played). Each section has a procedure with short excerpts, and the scores mark where a canon goes free or cadences.
+- **Bathe's canon table (c. 1596).** William Bathe's lookup table for two parts in one over a plain song, notated row by row and folded, step by step, into the seven Taneyev shifts it really is.
 
 See the [Roadmap](#roadmap) for what comes next.
 
@@ -89,6 +90,10 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **More drills.** Counterpoint over a hymn tune (and hearing it shifted by J<sub>v</sub>), then a live canon over a hymn tune with imaginary-cantus hints, starting from standard Lutheran chorale tunes. Singing input through the microphone later.
 - **Work-in-progress page.** One page for every example from Cho's work-in-progress (WIP) notebook, starting with the unfinished canon over Leoni (WIP p. 7, `notebook/examples/wip07-canon-over-leoni.abc`) and the three-voice canon in C minor from IC p. 14 (`ic14-three-voice-canon-c-minor.abc`), which Cho wants to rework, kept apart from the finished notebook examples.
+- **Notebook, batch 3.** IC pp. 17, 20, 27, 28, 30 and 31, and the parts skipped so far (p. 26's F-major canons, p. 25's drafts, p. 29's last two systems), once the scans can be read.
+- **Continue the proposta.** A drill built from the notebook canons: the site plays a few bars, you continue the proposta, and Cho's own continuation is the answer to compare with.
+- **Ficta in the move chords.** Flag the two B–F tritones Cho's paper chart marks (F♯ at the 2nd with the proposta on top, B♭ at the 4th with it below); the move chords are purely diatonic for now.
+- **Bathe's observations.** His six observations around the table (perfect intervals not to repeat, leader leaps to avoid) as checks on the canon over a c.f. page.
 - **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license
