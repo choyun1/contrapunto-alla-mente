@@ -6,10 +6,12 @@
 <title>Contrapunto alla mente</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<main class="wrap">
+<main class="wrap home">
 <header>
 <!-- site navigation: the same links as on every page, in site order -->
 <nav class="site" aria-label="Site">
@@ -21,36 +23,59 @@
 <a href="notebook/">Notebook</a>
 </nav>
 <h1 class="brand"><img src="assets/logo.svg" alt="">Contrapunto alla mente</h1>
-<p class="lead">Tools for learning to improvise counterpoint: fast drills to put the rules in your fingers, and a workbench for slower, worked-out exercises.</p>
+<p class="lead">Taneyev’s theory of invertible counterpoint, explained simply, with examples you can see and hear. The goal is to learn to write counterpoint in the strict style, and eventually to improvise it.</p>
 </header>
-<section class="cards" aria-label="Sections">
-<a class="card" href="taneyev/charts.html">
-<h2>Taneyev consonance charts</h2>
-<p>Pick a vertical shift (J<sub>v</sub>) and see what every interval becomes, with Taneyev’s suspension rules.</p>
-</a>
-<a class="card" href="canon/proposta.html">
-<h2>Canon proposta intervals</h2>
-<p>Which melodic intervals the leading voice may use at each interval of entrance, with a checker for your own proposta.</p>
-</a>
-<a class="card" href="canon/over-cantus.html">
-<h2>Canon over a cantus firmus</h2>
-<p>Plan and write a two-voice canon over a given melody with Taneyev’s imaginary cantus: write on the staff, MuseScore style, and have every bar checked.</p>
-</a>
-<a class="card" href="taneyev/three-voices.html">
-<h2>Three-voice shifts</h2>
-<p>Split the outer voices’ J<sub>v</sub> for a middle voice, and see all three pair charts.</p>
-</a>
-<div class="card"><span class="soon">Planned</span>
-<h2>Tune screening</h2>
-<p>Rank a tune’s canon intervals and time distances by how hard their indices are.</p></div>
-<a class="card" href="drills/move-chords.html">
-<h2>Drills</h2>
-<p>Practice at the keyboard with live feedback: play a canon’s allowed moves as a chord, lead a canon the site follows, and follow one the site leads.</p>
-</a>
-<a class="card" href="notebook/">
-<h2>Notebook</h2>
-<p>Worked examples from handwritten counterpoint notebooks, notated and played back: canons over a cantus firmus, with the imaginary cantus in gray.</p>
-</a>
+
+<!-- The site's sections. A filled notehead marks a page that is built, a half-filled one a page
+     still being worked on, and an open one a page that is only planned (and so not a link). -->
+<section class="home-section" aria-labelledby="h-rules">
+<h2 id="h-rules">The rules</h2>
+<p class="intro">What a shift does to every interval, in two voices and in three.</p>
+<ul class="pages">
+<li><a href="taneyev/charts.html">Taneyev consonance charts</a>: pick a vertical shift (J<sub>v</sub>) and see what every interval becomes, with Taneyev’s suspension rules.
+  <span class="also">Also: <a href="taneyev/models.html">How to read the 3D models</a></span></li>
+<li><a href="taneyev/three-voices.html">Three-voice shifts</a>: split the outer voices’ J<sub>v</sub> for a middle voice, and see all three pair charts.</li>
+</ul>
+</section>
+
+<section class="home-section" aria-labelledby="h-canons">
+<h2 id="h-canons">Canons</h2>
+<p class="intro">The leading voice, and a canon written over a given melody.</p>
+<ul class="pages">
+<li><a href="canon/proposta.html">Canon proposta intervals</a>: which melodic intervals the leading voice may use at each interval of entrance, with a checker for your own proposta.
+  <span class="also">Also: <a href="canon/handshapes.html">Handshapes</a></span></li>
+<li><a href="canon/over-cantus.html">Canon over a cantus firmus</a>: plan a two-voice canon over a given melody with Taneyev’s imaginary cantus, write it on the staff, and have every bar checked.
+  <span class="also">Also: <a href="canon/bathe.html">Bathe’s table (c. 1596)</a></span></li>
+</ul>
+</section>
+
+<section class="home-section" aria-labelledby="h-notebook">
+<h2 id="h-notebook">Notebook</h2>
+<p class="intro">Worked examples from handwritten notebooks, notated and played back.</p>
+<ul class="pages">
+<li><a href="notebook/">Notebook</a>: canons over a cantus firmus and invertible counterpoint, with the imaginary cantus in gray.</li>
+</ul>
+</section>
+
+<section class="home-section in-progress" aria-labelledby="h-drills">
+<h2 id="h-drills">Drills</h2>
+<p class="intro">At the keyboard, with live feedback. These work, but they are still being worked on.</p>
+<ul class="pages">
+<li><a href="drills/move-chords.html">Move chords</a> <span class="tag">In progress</span>: play every note the proposta may move to next, as one chord, as fast as you can.</li>
+<li><a href="drills/lead.html">Lead the canon</a> <span class="tag">In progress</span>: make up the proposta and hear the site answer it as the risposta, each note checked as it sounds.</li>
+<li><a href="drills/follow.html">Follow the leader</a> <span class="tag">In progress</span>: the site leads and you play or sing the risposta.</li>
+</ul>
+</section>
+
+<section class="home-section planned" aria-labelledby="h-planned">
+<h2 id="h-planned">Planned</h2>
+<p class="intro">Not built yet, so nothing here is a link.</p>
+<ul class="pages">
+<li><b>Tune screening</b>: rank a tune’s canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.</li>
+<li><b>Drills over a hymn tune</b>: counterpoint over a chorale tune, then a live canon over one with imaginary-cantus hints.</li>
+<li><b>Work in progress</b>: unfinished sketches, such as the canon over Leoni, kept apart from the finished notebook.</li>
+<li><b>Partimento</b>: realizing basses with the rule of the octave and the common schemata.</li>
+</ul>
 </section>
 <footer class="foot">
   <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
