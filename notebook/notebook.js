@@ -5,7 +5,7 @@
 import { SECTIONS } from './examples.js';
 import { drawnAbc } from './score.js';
 import { voiceIds } from '../src/notation/abc-read.js';
-import { block, show, showWithSilentVoice } from '../src/notation/playback.js';
+import { block, show, showWithSilentVoice, SOUND, TEMPO } from '../src/notation/playback.js';
 
 /** The text of one example's abc file. */
 async function load(file) {
@@ -26,7 +26,7 @@ async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
   const abc = await load(example.file);
   if (!example.icf) {
-    show(wrap, abc);
+    show(wrap, abc, null, SOUND.FLUTE, TEMPO.NOTEBOOK);
     return;
   }
   const drawn = drawnAbc(abc, example);
