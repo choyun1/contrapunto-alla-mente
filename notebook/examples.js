@@ -221,6 +221,10 @@ export const SECTIONS = [
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the I.C.F.…' }, R: { 3: '…is R against the CF' } } }),
       step('Copy P into R as in a two-part canon, and check P against R.',
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], voices: ['R', 'P'], color: [['P', 2, 'a'], ['R', 3, 'a']] }),
+      step('With the cantus below both voices, Bathe’s table (c. 1596) gives P’s choices for each bar at once: the column is the canon’s interval (the “place”) and the row is the cantus’s next move (the “course”). '
+        + 'The labels here are Bathe’s cells, counted from 1 as he prints them, and each of P’s downbeats is in its cell. The table on the <a href="../canon/over-cantus.html#bathe-h">Canon over a c.f.</a> page marks them for any cantus. '
+        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the I.C.F. does the same work.',
+        { file: 'ic05a-canon-5th-above.abc', bars: [4, 6], voices: ['R', 'P', 'CF'], labels: { P: { 4: 'Bathe: 3 5', 5: '1 3 5', 6: '6' } } }),
       step('Bellermann’s rule: every two-voice pair must work. With the I.C.F. there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + I.C.F. '
         + 'Those three guarantee the other three. R + CF is P + I.C.F. again, a bar later and a 5th up, so it is already right; R + I.C.F. and CF + I.C.F. are never heard, since the I.C.F. is silent. '
         + 'The diagram below shows it bar by bar. WIP p. 11 makes the same point for a canon with three risposte, one of them imaginary: “Check: P + R1, P + R2, P + R3 … ⇒ R1 + R2 is guaranteed!”'),
