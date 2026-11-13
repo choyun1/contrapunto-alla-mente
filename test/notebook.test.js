@@ -84,8 +84,8 @@ test('P over the imaginary cantus equals R over the cantus, one delay later (IC 
 });
 
 test('the imaginary cantus of IC p. 10 is the cantus a 5th up and two bars earlier, as Cho wrote it', () => {
-  const example = EXAMPLES.find((e) => e.file.startsWith('ic10-11'));
-  // D4 C4 E4 G4 F4 D4 E4 E4 in the first canon (delay of two bars)
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic10'));
+  // D4 C4 E4 G4 F4 D4 E4 E4 (delay of two bars)
   assert.deepEqual(imaginaryBars(load(example.file), example.canon).slice(0, 8), [29, 28, 30, 32, 31, 29, 30, 30]);
 });
 

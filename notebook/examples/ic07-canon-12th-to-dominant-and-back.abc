@@ -5,6 +5,6 @@ K:A
 V:R clef=treble name="R"
 V:CF clef=alto name="CF"
 V:P clef=bass name="P"
-[V:R] z4 | z E G F/E/ | D E F G | A3 G/F/ | c2 G3/2 A/ | B c d B | B c/B/ A3/2 G/ | F G A2- | A2 G2 | z4 | z2 B2- | B A B c | d b a3/2 g/ | f2 A B | c B A2 | F B/A/ TG2 | A4 |]
+[V:R] z4 | z E G F/E/ | D E F G | A3 G/F/ | c2 G3/2 A/ | B c d B | A c/B/ A3/2 G/ | F G A2- | A2 G2 | z4 | z2 B2- | B A B c | d b a3/2 g/ | f2 A B | c B A2 | F B/A/ G2 | A4 |]
 [V:CF] A,4 | B,2 E2 | D4 | C2 F2 | E4 | F4 | E4- | E2 ^D2 | E4 | E3 F | G3 A | B2 G2 | F3 E | D4 | C3 D/C/ | B, C D2 | C4 |]
 [V:P] z A,, C, B,,/A,,/ | G,, A,, B,, C, | D,3 C,/B,,/ | F,2 C,3/2 D,/ | E, F, G, E, | D,3 E,/D,/ | C, B,, F,, G,, | A,, F,, B,,2 | E,,4 | z2 E,2- | E, ^D, E, F, | G, E D3/2 C/ | B,2 D, E, | F, E, D,2 | E, G, F, E, | D, C, E, E,, | A,,4 |]

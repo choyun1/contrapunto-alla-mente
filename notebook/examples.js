@@ -85,14 +85,12 @@ export const SECTIONS = [
         icf: true,
       },
       {
-        file: 'ic10-11-canon-5th-below.abc',
-        title: 'Canon at the 5th below, in two canons',
-        source: 'IC pp. 10–11',
-        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” One exercise: '
-          + 'a canon at a delay of two bars that goes “free” from bar 8 and stops on the dominant, then a '
-          + 'new canon at a delay of one bar from bar 11, free again from bar 23, ending on an A major chord.',
-        caption: 'The free bars 24–25 are faint, so their notes are partly a best guess.',
-        canon: canon(-4, 2, [1, 5], [11, 21, 1]),
+        file: 'ic10-canon-5th-below-then-free.abc',
+        title: 'Canon at the 5th below, delay of two bars, then free',
+        source: 'IC p. 10, top and middle',
+        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” '
+          + 'From bar 8 both voices are marked “free,” stopping on the dominant.',
+        canon: canon(-4, 2, [1, 5]),
         icf: true,
       },
       {
