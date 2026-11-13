@@ -1,9 +1,0 @@
-X:1
-T:Canon at the 12th below, in F
-M:C
-L:1/4
-K:F
-V:P clef=treble name="P"
-V:R clef=bass name="R"
-[V:P] z2 F2 | G3 E/G/ | A2 F G/A/ | B d2 c/B/ | c3/2 B/ A F/A/ | d/B/ d/e/ f e/d/ | g c2 f- | f/e/ d2 e/d/ | c3/2 B/ A B/c/ | d c B A | G3 A/B/ | c d3/2 c/ B | A2 G2 | F4- | F4 |]
-[V:R] z4 | z2 B,,2 | C,3 A,,/C,/ | D,2 B,, C,/D,/ | E, G,2 F,/E,/ | F,3/2 E,/ D, B,,/D,/ | G,/E,/ G,/A,/ B, A,/G,/ | C F,2 B,- | B,/A,/ G,2 A,/G,/ | F,3/2 E,/ D, E,/F,/ | G, F, E, D, | C,3 D,/E,/ | F, G,3/2 F,/ E, | D,2 E,2 | F,4 |]
