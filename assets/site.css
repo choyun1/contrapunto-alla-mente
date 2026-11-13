@@ -284,3 +284,8 @@ ul.icf-steps .icf-number{color:var(--accent)}
 @media (prefers-reduced-motion: reduce){.fold-cell,.fold-head,.fold-jvtag{transition:none}}
 .moves-wrap{display:flex;flex-wrap:wrap;gap:8px 24px;margin:6px 0}table.moves caption{text-align:left;font-weight:600;font-size:.85rem;padding:0 10px}
 table.moves .moves-both td{border-top:1px solid var(--line)}
+/* Bathe's canon table (canon/bathe.html): each number is a button showing its move chord (bathe-chords.js) */
+table.bathe button.bn{font:inherit;color:var(--accent);background:none;border:0;border-radius:4px;padding:0 2px;cursor:pointer}
+table.bathe button.bn[aria-pressed="true"]{color:var(--panel);background:var(--accent)}
+table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
+.bathe-chord-note{border-left:3px solid var(--accent);padding:2px 12px;margin:8px 0;max-width:72ch}.bathe-chord-note p{margin:4px 0}

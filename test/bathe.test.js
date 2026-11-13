@@ -2,7 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PRINTED, MISPRINT, PLACES, COURSES, batheCell, batheGuide, batheTable, batheSpot, batheWorked, placeUp, courseUp,
+  upward, followerEntry, coursesHolding,
 } from '../src/taneyev/bathe.js';
+import { moveChord } from '../src/taneyev/canon.js';
 import { chart } from '../src/taneyev/rules.js';
 
 // Bathe counts 1-indexed (unison 1, 5th 5); the guide interval is zero-indexed.
@@ -65,4 +67,24 @@ test('worked cells keep exactly the leader intervals of the printed cell', () =>
     const kept = batheWorked(place, course).filter((w) => w.fits).map((w) => w.leader);
     assert.deepEqual(kept, batheCell(place, course));
   }));
+});
+
+// Bathe's numbers are 1-indexed; moveChord's steps are zero-indexed.
+test('down each column, the rows holding one leader interval are a canon move chord (Cho’s chord chart, Canons p. 1)', () => {
+  for (const { up: place } of PLACES) {
+    for (const leader of [1, 3, 5, 6]) {
+      const chord = moveChord(followerEntry(place, leader)).map(upward).sort((a, b) => a - b);
+      assert.deepEqual(coursesHolding(place, leader), chord, `place ${place}, leader ${leader}`);
+    }
+  }
+});
+
+test('a 3rd in the place-5 column: the follower a 7th above, so the plain song moves to D E G B (courses 2 3 5 7)', () => {
+  assert.equal(followerEntry(5, 3), 6);
+  assert.deepEqual(coursesHolding(5, 3), [2, 3, 5, 7]);
+});
+
+test('a unison at place 1 makes the follower an octave above: the octave chord A C E F (courses 6 1 3 4)', () => {
+  assert.equal(followerEntry(1, 1), 7);
+  assert.deepEqual(coursesHolding(1, 1), [1, 3, 4, 6]);
 });
