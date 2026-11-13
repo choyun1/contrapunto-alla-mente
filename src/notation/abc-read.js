@@ -118,14 +118,20 @@ export function voiceIds(abc) {
   return [...abc.matchAll(/^V:\s*(\S+)/gm)].map((match) => match[1]);
 }
 
+/** Every voice's music text, keyed by voice id, its lines joined: { P: 'z2 A B | c3 d/c/ |]', ... }. */
+export function voiceMusic(abc) {
+  const music = {};
+  for (const match of abc.matchAll(/^\[V:\s*([^\]\s]+)\]\s*(.*)$/gm)) {
+    music[match[1]] = music[match[1]] === undefined ? match[2] : `${music[match[1]]} ${match[2]}`;
+  }
+  return music;
+}
+
 /** Every voice's bars, keyed by voice id: { P: [[...], ...], R: [...] }. */
 export function readVoices(abc) {
   const unit = unitLength(abc);
   const key = keySignature(abc);
-  const music = {};
-  for (const match of abc.matchAll(/^\[V:\s*([^\]\s]+)\]\s*(.*)$/gm)) {
-    music[match[1]] = `${music[match[1]] ?? ''} ${match[2]}`;
-  }
+  const music = voiceMusic(abc);
   return Object.fromEntries(Object.entries(music).map(([id, text]) => [id, readBars(text, unit, key)]));
 }
 

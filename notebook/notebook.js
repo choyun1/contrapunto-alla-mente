@@ -3,11 +3,11 @@
 // cantus comes from score.js (and from there the rules core).
 
 import { SECTIONS } from './examples.js';
-import { drawnAbc, dissonancesOf } from './score.js';
+import { drawnAbc, dissonancesOf, heardAbc } from './score.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
-import { block, show, showWithSilentVoice, SOUND, TEMPO } from '../src/notation/playback.js';
+import { block, show, showWithAudio, SOUND, TEMPO } from '../src/notation/playback.js';
 
 /** The text of one example's abc file. */
 async function load(file) {
@@ -39,13 +39,18 @@ function whereText(start) {
   return `Bar ${bar}, beat ${whole}${beat - whole >= 0.5 ? '½' : ''}`;
 }
 
-/** A closed list of the example's dissonances, each with its kind (src/taneyev/florid.js). */
-function dissonanceList(abc) {
-  const list = dissonancesOf(abc);
+/**
+ * A closed list of the example's dissonances, each with its kind
+ * (src/taneyev/florid.js). `ids` and `label` limit it to some voices and
+ * say which, e.g. 'R over P'.
+ */
+function dissonanceList(abc, ids, label) {
+  const list = dissonancesOf(abc, ids);
   const checks = list.filter((d) => d.kind === KIND.CHECK).length;
   const items = list.map((d) => `<li>${whereText(d.start)}: ${d.voices.join(' over ')}, `
     + `${intervalName(d.steps)}, ${kindText(d)}</li>`).join('');
-  return `<details class="notation"><summary>Dissonances: ${list.length}, ${checks} to check</summary>`
+  const which = label ? ` (${label})` : '';
+  return `<details class="notation"><summary>Dissonances${which}: ${list.length}, ${checks} to check</summary>`
     + `<ul class="dissonances">${items}</ul></details>`;
 }
 
@@ -53,13 +58,21 @@ function dissonanceList(abc) {
 async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
   const abc = await load(example.file);
+  if (example.alternatives) {
+    // two settings of the middle voice: each pair is checked, and heard, on its own
+    const { upper, shared, lower } = example.alternatives;
+    wrap.insertAdjacentHTML('beforeend', dissonanceList(abc, [upper, shared], `${upper} over ${shared}`)
+      + dissonanceList(abc, [shared, lower], `${shared} over ${lower}`));
+    showWithAudio(wrap, abc, heardAbc(abc, example));
+    return;
+  }
   wrap.insertAdjacentHTML('beforeend', dissonanceList(abc));
   if (!example.icf) {
     show(wrap, abc, null, SOUND.FLUTE, TEMPO.NOTEBOOK);
     return;
   }
   const drawn = drawnAbc(abc, example);
-  showWithSilentVoice(wrap, drawn, abc, voiceIds(drawn).length - 1);
+  showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1);
 }
 
 /** Draws one section: its heading, its introduction and its examples in order. */

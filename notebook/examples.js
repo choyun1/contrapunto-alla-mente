@@ -15,6 +15,12 @@
 // test/notebook.test.js checks them against the notes. With
 // `icf`, the page adds the imaginary cantus (src/taneyev/imaginary-cantus.js)
 // as a gray staff that is drawn but not played, as Cho drew it on the page.
+//
+// With `alternatives: { upper, shared, lower, shift }` the outer staves are
+// two ways of setting the shared middle voice, not meant to sound together
+// (invertible counterpoint: the lower is the upper moved `shift` steps, e.g.
+// −11 at the 12th). The page plays the upper pair, a bar's rest, then the
+// lower pair, and checks each pair on its own; the test checks the shift.
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
 const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
@@ -195,6 +201,71 @@ export const SECTIONS = [
           + 'scribbled over, and are left out here.',
         canon: canon(-7, 1, [1, 3]),
         icf: false,
+      },
+      {
+        file: 'ic26a-infinite-canon-octave-g.abc',
+        title: 'Infinite canon at the octave, in G',
+        source: 'IC p. 26, middle',
+        note: '“OK!” R answers an octave below, one bar later; bars 2–8 repeat. The page’s canons '
+          + 'in F are left out for now: the first is crossed out, and the second is written too '
+          + 'densely to read reliably from the scan.',
+        canon: canon(-7, 1, [1, 7]),
+        icf: false,
+      },
+      {
+        file: 'ic21-canon-5th-and-octave.abc',
+        title: 'Canon at the 5th above or the octave below',
+        source: 'IC p. 21',
+        note: '“Canon @ 5th / 8th.” One proposta, two answers: R a 5th above (top staff) or an '
+          + 'octave below (bottom staff), which are a 12th apart, so P with R is invertible at the 12th. '
+          + 'The two answers are alternatives: the upper pair plays first, then the lower pair.',
+        canon: canon(4, 1, [1, 13]),
+        alternatives: { upper: 'R', shared: 'P', lower: 'R8', shift: -11 },
+        icf: false,
+      },
+    ],
+  },
+  {
+    id: 'invertible',
+    title: 'Invertible counterpoint over a cantus',
+    intro: 'A line over a cantus firmus (the original, top staff) and the same line moved below '
+      + 'it (the derivative, bottom staff), as in Taneyev’s Jv: the derivative is the original '
+      + 'moved Jv steps (zero-indexed: −7 an octave, −11 a 12th). The two are alternatives, '
+      + 'so the original and cantus play first, then the cantus and derivative.',
+    examples: [
+      {
+        file: 'ic23a-invertible-12th.abc',
+        title: 'Invertible counterpoint at the 12th, in D minor',
+        source: 'IC p. 23, top',
+        note: '“Invertible counterpoint @ 12th (Jv = −11).” “Consonances (5th, octave, 3rd); '
+          + '6th/7th lead to suspensions.”',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
+      },
+      {
+        file: 'ic23b-invertible-12th-second-try.abc',
+        title: 'Invertible counterpoint at the 12th, second try',
+        source: 'IC p. 23, bottom',
+        note: '“sucks!” Here to be heard again.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
+      },
+      {
+        file: 'ic29a-invertible-octave-c.abc',
+        title: 'Invertible counterpoint at the octave, in C',
+        source: 'IC p. 29, first system',
+        note: '“What if 5ths are dissonant?” Jv = −7. Cho wrote each note’s interval from the '
+          + 'cantus above it and below it; the 5ths (4) become 4ths (−3) and fall on weak beats.',
+        caption: 'The page’s Jv = −11 system is crossed out, and the last system is unfinished; '
+          + 'both are left out.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
+        file: 'ic29b-invertible-octave-dorian.abc',
+        title: 'Invertible counterpoint at the octave, in D dorian',
+        source: 'IC p. 29, third system',
+        note: '“Jv = −7 = n − m.” The same exercise over Fux’s dorian cantus, with C♯ at the cadences.',
+        caption: 'The derivative is drawn a step or so low on the bass staff in places; it is read '
+          + 'here from the interval numbers.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
     ],
   },

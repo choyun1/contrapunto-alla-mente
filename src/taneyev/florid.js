@@ -4,8 +4,9 @@
 // Strict style admits a dissonance in three shapes only (Fux, second to
 // fifth species; the rules themselves are in dissonance.js):
 //
-//   suspension  held over from a consonant preparation, dissonant on a
-//               strong beat, then a step down to a consonance;
+//   suspension  held over (tied, or struck on a weaker beat) from a consonant
+//               preparation, dissonant on a strong beat, then a step down
+//               to a consonance;
 //   passing     a step in and a step on, the same way;
 //   neighbor    a step away and back, on a weak beat only.
 //
@@ -77,10 +78,23 @@ function after(voice, index) {
   return voice[last + 1];
 }
 
-/** The conventional one-based name of an interval in steps: 9 for a 9th, otherwise 2 to 8 by its simple size. */
-function name(steps) {
-  if (steps >= 7 && simple(steps) === 1) return 9;
-  return simple(steps) === 0 && steps > 0 ? 8 : simple(steps) + 1;
+/** The conventional one-based name of an interval in steps, by its simple size: 2 to 8 (a unison is 1). */
+const simpleName = (steps) => (simple(steps) === 0 && steps > 0 ? 8 : simple(steps) + 1);
+
+/**
+ * A suspension's name from its interval and the one it resolves to, both in
+ * steps: '7–6', '4–3', '2–3'. A compound 2nd keeps its compound name, so it
+ * reads '9–8' (upper voice) or '9–10' (lower voice); all else is reduced.
+ */
+function suspensionName(steps, resolved) {
+  if (steps >= 7 && simple(steps) === 1) return `9–${resolved < steps ? 8 : 10}`;
+  return `${simpleName(steps)}–${simpleName(resolved)}`;
+}
+
+/** The weight of time t in a 4/4 bar: 2 on beat 1, 1 on beat 3, 0 anywhere else. */
+function weight(t) {
+  if (Math.abs(t - Math.round(t)) < 1e-9) return 2;
+  return isStrongBeat(t) ? 1 : 0;
 }
 
 /** Is two notes' interval consonant, given which one is the bass? */
@@ -90,15 +104,26 @@ const consonant = (a, b, bassIsLower) => {
 };
 
 /**
+ * Is a held note syncopated at time t (Fux's fourth species): tied into a
+ * note written at t, or struck on a weaker beat than t? A note struck on
+ * beat 1 and still sounding on beat 3, such as a cantus whole note, is not.
+ */
+function syncopated(line, held, first, t) {
+  const tiedIntoT = first !== line[held.index] && Math.abs(held.start - t) < 1e-9;
+  return tiedIntoT || weight(first.start) < weight(t);
+}
+
+/**
  * Is `held` (in voice `line`, at time t) a suspension against `other`: struck
- * earlier over a consonance, still sounding at t, and then a step down to a
- * consonance? Returns its label, e.g. '9–8', or null. (dissonance.js; §81)
+ * earlier over a consonance or a rest, syncopated at t, and then a step down
+ * to a consonance? Returns its label, e.g. '9–8', or null. (dissonance.js; §81)
  */
 function suspensionLabel(line, held, otherLine, t, bassBelow) {
   const first = struck(line, held.index);
   if (first.start >= t - 1e-9) return null; // struck now: not held over
+  if (!syncopated(line, held, first, t)) return null;
   const prepared = noteAt(otherLine, first.start);
-  if (!prepared || !consonant(first, prepared, bassBelow)) return null;
+  if (prepared && !consonant(first, prepared, bassBelow)) return null;
   const next = after(line, held.index);
   if (!next || next.step !== held.step - 1) return null;
   const against = noteAt(otherLine, next.start);
@@ -107,7 +132,7 @@ function suspensionLabel(line, held, otherLine, t, bassBelow) {
   const voice = held.step > now.step ? 'above' : 'below';
   const steps = Math.abs(held.step - now.step);
   if (!maySuspend(steps, 0, voice)) return null; // e.g. a 7th in the lower voice, resolving to an octave (§90)
-  return `${name(steps)}–${name(resolutionOf(steps, voice))}`;
+  return suspensionName(steps, resolutionOf(steps, voice));
 }
 
 /** How a struck dissonant note moves: 'passing', 'neighbor' or null. (Fux, second and third species) */

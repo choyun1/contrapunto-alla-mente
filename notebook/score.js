@@ -1,10 +1,11 @@
 // The notebook page's scores: an example's abc as drawn, with the imaginary
-// cantus added as its own staff. The file's own abc is what is heard. No DOM here, so
+// cantus added as its own staff. The file's own abc is what is heard, except
+// for an example of alternative staves (see heardAbc). No DOM here, so
 // the tests can use it too. The imaginary cantus itself comes from the rules
 // core, src/taneyev/imaginary-cantus.js.
 // Intervals are zero-indexed (5th 4, octave 7, 12th 11).
 
-import { readVoices, unitLength, withVoice } from '../src/notation/abc-read.js';
+import { readVoices, unitLength, voiceMusic, withVoice } from '../src/notation/abc-read.js';
 import { abcPitch } from '../src/notation/abc.js';
 import { clefsForVoice } from '../src/notation/clefs.js';
 import { imaginaryCantus } from '../src/taneyev/imaginary-cantus.js';
@@ -73,5 +74,40 @@ export function timelines(abc) {
   }));
 }
 
-/** The dissonances to list under an example: every one on a strong beat, and any to check on a weak beat. */
-export const dissonancesOf = (abc) => worthShowing(dissonances(timelines(abc)));
+/** Only the voices named in `ids`, or all of them when `ids` is not given. */
+function onlyVoices(voices, ids) {
+  if (!ids) return voices;
+  return Object.fromEntries(ids.map((id) => [id, voices[id]]));
+}
+
+/**
+ * The dissonances to list under an example: every one on a strong beat, and
+ * any to check on a weak beat. `ids` limits them to some voices, such as one
+ * pair of alternative staves.
+ */
+export const dissonancesOf = (abc, ids) => worthShowing(dissonances(onlyVoices(timelines(abc), ids)));
+
+/** A voice's music without its final bar line, so more can follow it. */
+const open = (music) => music.trim().replace(/\|\]$/, '').trim();
+
+/**
+ * What is heard for an example whose outer staves are alternatives, two ways
+ * of setting the same middle voice that are not meant to sound together
+ * (`alternatives: { upper, shared, lower }`, voice ids): the upper pair, a
+ * bar's rest, then the lower pair. Any other example is heard as written.
+ */
+export function heardAbc(abc, example) {
+  if (!example.alternatives) return abc;
+  const { upper, shared, lower } = example.alternatives;
+  const music = voiceMusic(abc);
+  const rest = `z${1 / unitLength(abc)}`;
+  const header = abc.split('\n').filter((line) => line !== '' && !/^\[?V:/.test(line));
+  return [
+    ...header,
+    `V:${upper} clef=treble`,
+    `V:${lower} clef=bass`,
+    `[V:${upper}] ${open(music[upper])} | ${rest} | ${open(music[shared])} |]`,
+    `[V:${lower}] ${open(music[shared])} | ${rest} | ${open(music[lower])} |]`,
+    '',
+  ].join('\n');
+}

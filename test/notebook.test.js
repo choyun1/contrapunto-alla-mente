@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { SECTIONS } from '../notebook/examples.js';
-import { ICF, delayAt, drawnAbc, imaginaryBars } from '../notebook/score.js';
+import { ICF, delayAt, drawnAbc, heardAbc, imaginaryBars } from '../notebook/score.js';
 
 const EXAMPLES = SECTIONS.flatMap((section) => section.examples);
 
@@ -94,4 +94,33 @@ test('the drawn score adds the imaginary cantus as the bottom staff', () => {
   const drawn = drawnAbc(load(example.file), example);
   assert.equal(voiceIds(drawn).at(-1), ICF.id);
   assert.equal(readVoices(drawn)[ICF.id].length, readVoices(load(example.file)).CF.length);
+});
+
+test('alternative staves: the lower is the upper moved by its shift, note for note (IC pp. 21, 23, 29)', () => {
+  for (const example of EXAMPLES.filter((e) => e.alternatives)) {
+    const { upper, lower, shift } = example.alternatives;
+    const voices = readVoices(load(example.file));
+    const above = timeline(voices[upper]);
+    const below = timeline(voices[lower]);
+    assert.equal(below.length, above.length, example.file);
+    above.forEach((note, i) => {
+      const moved = note.step === null ? null : note.step + shift;
+      assert.deepEqual([below[i].step, below[i].length], [moved, note.length], `${example.file}, note ${i + 1}`);
+    });
+  }
+});
+
+test('alternative staves are heard one pair after the other, with a bar of rest between', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic23a'));
+  const abc = load(example.file);
+  const heard = readVoices(heardAbc(abc, example));
+  const written = readVoices(abc);
+  assert.deepEqual(Object.keys(heard), ['O', 'D']);
+  const bars = written.CF.length;
+  assert.equal(heard.O.length, 2 * bars + 1);
+  assert.deepEqual(heard.O.slice(bars + 1), written.CF);
+  assert.deepEqual(heard.D.slice(0, bars), written.CF);
+  assert.deepEqual(heard.D.slice(bars + 1), written.D);
+  assert.equal(heard.D[bars][0].step, null);
+  assert.equal(heardAbc(abc, {}), abc);
 });

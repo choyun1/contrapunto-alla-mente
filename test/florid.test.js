@@ -56,16 +56,18 @@ test('IC p. 6 (#4), bar 4 beat 2½: R C# against P G is caught as a tritone to c
   assert.equal(found.kind, KIND.CHECK);
 });
 
-test('IC p. 10 (#7): every strong-beat dissonance is a suspension', () => {
-  const strong = dissonancesOf(load('ic10-canon-5th-below-then-free.abc')).filter((d) => isStrongBeat(d.start));
-  assert.ok(strong.length >= 4);
-  assert.ok(strong.every((d) => d.kind === KIND.SUSPENSION), strong.map((d) => d.kind).join());
+test('IC p. 10 (#7): every dissonance on beat 1 is a suspension; R’s D on bar 6 beat 3 is left by leap', () => {
+  const list = dissonancesOf(load('ic10-canon-5th-below-then-free.abc'));
+  const downbeats = list.filter((d) => Number.isInteger(d.start));
+  assert.ok(downbeats.length >= 3);
+  assert.ok(downbeats.every((d) => d.kind === KIND.SUSPENSION), downbeats.map((d) => d.kind).join());
+  assert.equal(list.find((d) => d.start === 5.5).kind, KIND.CHECK); // E–D–G over the cantus C
 });
 
 test('a 7th suspended in the lower voice, resolving to an octave, is not a suspension (§90)', () => {
-  // lower C4 prepared under E4, held while the upper moves to B4 (a 7th), then down to B3 (an octave)
-  const abc = 'L:1/4\nK:C\n[V:U] e2 B2- | B2 z2 |]\n[V:L] C4 | B,2 z2 |]\n';
-  const found = dissonances(timelines(abc)).find((d) => d.start === 0.5);
+  // lower C4 tied over the bar line under E5, the upper moves to B4 (a 7th), then the lower down to B3 (an octave)
+  const abc = 'L:1/4\nK:C\n[V:U] e2 e2 | B4 |]\n[V:L] z2 C2- | C2 B,2 |]\n';
+  const found = dissonances(timelines(abc)).find((d) => d.start === 1);
   assert.equal(found.steps, 6); // zero-indexed: 6 is a 7th
   assert.notEqual(found.kind, KIND.SUSPENSION);
 });
@@ -82,4 +84,24 @@ test('a weak-beat passing tone is not shown; a weak-beat leap into a dissonance 
   assert.equal(worthShowing(dissonances(timelines(passing))).length, 0);
   const leap = 'L:1/4\nK:C\n[V:U] E B c2 |]\n[V:L] C4 |]\n';
   assert.equal(worthShowing(dissonances(timelines(leap)))[0].kind, KIND.CHECK);
+});
+
+test('a 9th suspended in the lower voice is a 9–10, not a 9–8 (Fux, fourth species)', () => {
+  const below = 'L:1/4\nK:C\n[V:U] e2 e2 | d2 d2 |]\n[V:L] z2 C2- | C2 B,2 |]\n';
+  assert.equal(dissonances(timelines(below)).find((d) => d.start === 1).label, '9–10');
+});
+
+test('a cantus whole note against a dissonance on beat 3 is not a suspension: it was not syncopated', () => {
+  // F4 whole note; the upper passes D5 C5 B4 A4, and B4 on beat 3 is a tritone (IC p. 29, bar 3)
+  const abc = 'L:1/4\nK:C\n[V:O] d c B A |]\n[V:CF] F4 |]\n';
+  const found = dissonances(timelines(abc)).find((d) => d.start === 0.5);
+  assert.equal(found.kind, KIND.CHECK);
+  assert.equal(found.tritone, true);
+});
+
+test('a note held over from a rest in the other voice can be suspended: the canon’s entry (IC p. 21, bar 2)', () => {
+  const abc = 'L:1/4\nK:C\n[V:R] z4 | G2 c2 |]\n[V:P] C2 F2- | F E A2 |]\n';
+  const found = dissonances(timelines(abc)).find((d) => d.start === 1);
+  assert.equal(found.kind, KIND.SUSPENSION);
+  assert.equal(found.label, '2–3');
 });
