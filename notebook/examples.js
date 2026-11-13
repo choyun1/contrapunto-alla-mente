@@ -85,6 +85,26 @@ export const SECTIONS = [
         icf: false,
       },
       {
+        file: 'ic17a-canon-12th-above-g.abc',
+        title: 'Canon at the 12th above, in G, out to the dominant',
+        source: 'IC p. 17, third and fourth systems',
+        note: '“OK!” From the page “Hexachords / modulations for canon @ 5th”: P in the bass, R a 12th above a bar later. '
+          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”), and it turns to IV at bar 8 with F♮.',
+        caption: 'Read from a faint scan: bars 10–13 are a best guess (bar 10 clashes, a tritone on the downbeat), and the final bass note is G alone.',
+        canon: canon(11, 1, [1, 11]),
+        icf: false,
+      },
+      {
+        file: 'ic17b-canon-12th-below-f.abc',
+        title: 'Canon at the 12th below, in F',
+        source: 'IC p. 17, fifth and sixth systems',
+        note: '“Wrong key! Should be B♭… (uses ficta); also kinda sucks.” P on top, R a 12th below a bar later, '
+          + 'so R’s E♮ answers P’s B♭: the mi contra fa the page warns about.',
+        caption: 'Read from a faint scan: bar 12’s rhythm is a best guess.',
+        canon: canon(-11, 1, [1, 12]),
+        icf: false,
+      },
+      {
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
         source: 'IC p. 15',
