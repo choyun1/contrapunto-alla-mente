@@ -7,6 +7,7 @@ import { drawnAbc, dissonancesOf, heardAbc } from './score.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
+import { icfDiagram } from './icf-diagram.js';
 import { block, showWithAudio } from '../src/notation/playback.js';
 
 /** The text of one example's abc file. */
@@ -63,24 +64,32 @@ async function drawExample(parent, example) {
     const { upper, shared, lower } = example.alternatives;
     wrap.insertAdjacentHTML('beforeend', dissonanceList(abc, [upper, shared], `${upper} over ${shared}`)
       + dissonanceList(abc, [shared, lower], `${shared} over ${lower}`));
-    showWithAudio(wrap, abc, heardAbc(abc, example));
+    showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example));
     return;
   }
   wrap.insertAdjacentHTML('beforeend', dissonanceList(abc));
   if (!example.icf) {
-    showWithAudio(wrap, abc, abc);
+    showWithAudio(wrap, drawnAbc(abc, example), abc);
     return;
   }
   const drawn = drawnAbc(abc, example);
   showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1);
 }
 
-/** Draws one section: its heading, its introduction and its examples in order. */
+/** A section's procedure as a numbered list, with the I.C.F. diagram after it when the section asks for it. */
+function procedureHtml(section) {
+  const steps = section.procedure.map((step) => `<li>${step}</li>`).join('');
+  const diagram = section.diagram === 'icf' ? icfDiagram() : '';
+  return `<h3>Procedure</h3><ol class="procedure">${steps}</ol>${diagram}`;
+}
+
+/** Draws one section: its heading, its introduction, its procedure and its examples in order. */
 async function drawSection(main, section) {
   const card = document.createElement('section');
   card.className = 'chart';
   card.id = section.id;
-  card.innerHTML = `<header><h2>${section.title}</h2><p class="note">${section.intro}</p></header>`;
+  card.innerHTML = `<header><h2>${section.title}</h2><p class="note">${section.intro}</p>`
+    + `${procedureHtml(section)}</header>`;
   const examples = document.createElement('div');
   examples.className = 'examples';
   card.append(examples);

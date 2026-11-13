@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { SECTIONS } from '../notebook/examples.js';
-import { ICF, delayAt, drawnAbc, heardAbc, imaginaryBars } from '../notebook/score.js';
+import { ICF, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
 
 const EXAMPLES = SECTIONS.flatMap((section) => section.examples);
 
@@ -160,5 +160,31 @@ test('every example beams its eighth notes by the beat, and only within it', () 
     for (const [, music] of abc.matchAll(/^\[V:[^\]]+\]\s*(.*)$/gm)) {
       assert.equal(music, beamedByBeat(music, 1 / unit), file);
     }
+  }
+});
+
+test('IC p. 15: P leaves the canon at bar 15 and both voices cadence from bar 18', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic15'));
+  assert.deepEqual(canonMarks(load(example.file), example), { P: { 15: 'free', 18: 'cadence' }, R: { 18: 'cadence' } });
+});
+
+test('IC p. 7: the cadence between the two canons is marked, and so is the one at the end', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic07'));
+  const marks = canonMarks(load(example.file), example);
+  assert.equal(marks.R[7], 'cadence');
+  assert.equal(marks.R[16], 'cadence');
+});
+
+test('a mark is written above the first note of its bar, even across lines and repeats', () => {
+  const abc = '[V:P] C4 | D4 |\n[V:P] |: E2 F2 :| G4 |]\n';
+  assert.equal(withMarks(abc, { P: { 2: 'free', 4: 'cadence' } }),
+    '[V:P] C4 | "^free"D4 |\n[V:P] |: "^cadence"E2 F2 :| G4 |]\n');
+});
+
+test('marks change only what is drawn: the notes read the same', () => {
+  for (const example of EXAMPLES.filter((e) => e.canon)) {
+    const abc = load(example.file);
+    const drawn = readVoices(drawnAbc(abc, example));
+    for (const [id, bars] of Object.entries(readVoices(abc))) assert.deepEqual(drawn[id], bars, example.file);
   }
 });
