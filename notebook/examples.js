@@ -97,14 +97,18 @@ export const SECTIONS = [
   {
     id: 'infinite-canons',
     title: 'Infinite canons',
-    intro: 'A two-part canon that can go round for ever: P comes back to its first bar, so R’s copy lines up again.',
+    intro: 'A two-part canon that can go round for ever, and a first use of invertible counterpoint: P comes back to '
+      + 'its first bar, so that bar ends up both above and below the voice it meets.',
     procedure: [
-      step('Write a two-part canon as above, bar by bar.',
+      step('Write a two-part canon at the octave as above, bar by bar.',
         { file: 'ic25a-infinite-canon-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b']] }),
-      step('Steer P back to its own first bar, sounding against R just as it did at the start. From then on the bars between go round, and R goes round with them.',
+      step('Steer P back to its own first bar. That bar is the last one before the repeat, and from then on the bars between go round, with R going round behind them.',
         { file: 'ic25a-infinite-canon-octave.abc', bars: [1, 4], color: [['P', 1, 'a'], ['P', 4, 'a']], labels: { P: { 1: 'bar 1', 4: 'bar 1 again' } } }),
+      step('So the opening bar must be invertible counterpoint at the octave (Jv = −7). In R it sits under P’s bar 2; back in P, before the repeat, it sits over R’s copy of bar 3. Check it both ways.',
+        { file: 'ic25a-infinite-canon-octave.abc', bars: [2, 4], color: [['R', 2, 'a'], ['P', 4, 'a']], labels: { R: { 2: 'bar 1 below' }, P: { 4: 'bar 1 above' } } }),
       step('To stop, leave the loop at the end of a round and end both voices on a consonance, here whole notes on the third and the tonic.',
         { file: 'ic25a-infinite-canon-octave.abc', bars: [4, 5] }),
+      step('The next section takes the same idea further: one P with two answers at different intervals, where P and its answers must be invertible against each other.'),
     ],
     examples: [
       {
@@ -137,8 +141,8 @@ export const SECTIONS = [
   {
     id: 'two-answers',
     title: 'One proposta, two answers',
-    intro: 'One P answered two ways at once: R a 5th above and R8 an octave below. The two answers are a 12th apart, '
-      + 'so P with R is invertible counterpoint at the 12th (Jv = −11).',
+    intro: 'The infinite canon’s idea taken further: one P answered two ways, R a 5th above and R8 an octave below. '
+      + 'The two answers are a 12th apart, so P with R is invertible counterpoint at the 12th (Jv = −11).',
     procedure: [
       step('Write P so that it works as a canon at both intervals: at the 5th above and at the octave below.',
         { file: 'ic21-canon-5th-and-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['R8', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b'], ['R8', 3, 'b']], labels: { R: { 2: 'a 5th above' }, R8: { 2: 'an octave below' } } }),
