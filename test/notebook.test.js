@@ -59,7 +59,7 @@ test('every notebook example has full 4/4 bars, the same number in every voice',
   }
 });
 
-test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–7 and 10–11, WIP p. 7)', () => {
+test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–7, 10–11 and 13–26)', () => {
   for (const example of EXAMPLES.filter((e) => e.canon)) {
     const miss = firstUncopied(readVoices(load(example.file)), example.canon);
     assert.equal(miss, null, `${example.file}: not copied at ${miss?.at} whole notes`);
