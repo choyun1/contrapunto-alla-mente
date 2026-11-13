@@ -226,3 +226,20 @@ button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);borde
 .ask{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 6px 6px 0}
 .ask h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
 .ask ul{margin:0;padding-left:18px}.ask li{max-width:70ch}
+/* the imaginary-cantus diagram on the notebook page (notebook/icf-diagram.js) */
+.icf-diagram{display:block;width:100%;max-width:760px;height:auto;margin:10px 0;font:13px "Public Sans",sans-serif}
+.icf-box{fill:none;stroke:currentColor;stroke-opacity:.35}
+.icf-focus{stroke:var(--accent,currentColor);stroke-opacity:1;stroke-width:2}
+.icf-label{text-anchor:middle;fill:currentColor}
+.icf-name{text-anchor:end;font-weight:600;fill:currentColor}
+.icf-link{stroke:var(--accent,currentColor);stroke-width:1.5;stroke-dasharray:3 4}
+.icf-diagram .icf-number{fill:var(--accent,currentColor)}
+ol.procedure{margin:8px 0 4px;padding-left:22px;line-height:1.5}
+ul.icf-steps{list-style:none;margin:0 0 6px;padding:0;line-height:1.5}
+ul.icf-steps .icf-number{color:var(--accent)}
+/* the excerpts beside the notebook's procedure steps (notebook/snippets.js) */
+.snippet{overflow-x:auto;margin:2px 0 10px}
+.snip-a{color:#2563eb}
+.snip-b{color:#b45309}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .snip-a{color:#7aa7ff}:root:not([data-theme="light"]) .snip-b{color:#f2a65a}}
+:root[data-theme="dark"] .snip-a{color:#7aa7ff}:root[data-theme="dark"] .snip-b{color:#f2a65a}

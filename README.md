@@ -66,7 +66,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/notation/`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
 | `canon/` | The canon pages: `proposta.html` (proposta tables and checker), `handshapes.html` (the moves as hand shapes and chords, on the keyboard from `src/ui/keyboard.js`) and `over-cantus.html` (canon over a cantus firmus: `over-cantus.js` runs it, `over-cantus-score.js` draws the editable score, `over-cantus-entry.js` handles the entry cursor, `over-cantus-table.js` the guide table). `names.js` holds display names both use. |
-| `notebook/` | The notebook page: `examples/` holds one abc file per worked example, `examples.js` lists them with their source page and notes, `score.js` adds the imaginary cantus staff and builds what is heard for alternative staves (the upper pair, then the lower pair), and `notebook.js` draws the page. |
+| `notebook/` | The notebook page: `examples/` holds one abc file per worked example, `examples.js` lists them with their source page and notes, `score.js` adds the imaginary cantus staff and builds what is heard for alternative staves (the upper pair, then the lower pair) and marks where each canon goes free or cadences, `icf-diagram.js` draws the imaginary-cantus diagram, `snippets.js` cuts the few bars that show each procedure step, and `notebook.js` draws the page, section by section from the simplest exercise to the hardest, each with its procedure. |
 | `src/notation/abc-read.js` | Reads the small part of abc the notebook's hand-written examples use, key signature and accidentals included, for the tests, the dissonance list and adding a staff. |
 | `drills/` | The drill pages: `move-chords`, `lead` and `follow`, each an `.html` and a `.js`, with `common.js` for what they share. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
@@ -88,7 +88,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **More drills.** Counterpoint over a hymn tune (and hearing it shifted by J<sub>v</sub>), then a live canon over a hymn tune with imaginary-cantus hints, starting from standard Lutheran chorale tunes. Singing input through the microphone later.
-- **Work-in-progress page.** One page for every example from Cho's work-in-progress (WIP) notebook, starting with the unfinished canon over Leoni (WIP p. 7, `notebook/examples/wip07-canon-over-leoni.abc`), kept apart from the finished notebook examples.
+- **Work-in-progress page.** One page for every example from Cho's work-in-progress (WIP) notebook, starting with the unfinished canon over Leoni (WIP p. 7, `notebook/examples/wip07-canon-over-leoni.abc`) and the three-voice canon in C minor from IC p. 14 (`ic14-three-voice-canon-c-minor.abc`), which Cho wants to rework, kept apart from the finished notebook examples.
 - **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license

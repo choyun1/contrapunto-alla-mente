@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { SECTIONS } from '../notebook/examples.js';
-import { ICF, delayAt, drawnAbc, heardAbc, imaginaryBars } from '../notebook/score.js';
+import { ICF, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
 
 const EXAMPLES = SECTIONS.flatMap((section) => section.examples);
 
@@ -123,4 +123,91 @@ test('alternative staves are heard one pair after the other, with a bar of rest 
   assert.deepEqual(heard.D.slice(bars + 1), written.D);
   assert.equal(heard.D[bars][0].step, null);
   assert.equal(heardAbc(abc, {}), abc);
+});
+
+/** One token of a music line: a bar line, or a note or rest with its length text. */
+const TOKEN = /(\|\]|\|\||\|:|:\||\|)|([_=^]*[A-Ga-gz][,']*)([\d/]*)(-?)/y;
+
+/**
+ * A music line re-spaced so notes shorter than a quarter share a beam within
+ * each quarter beat. An eighth left over from a dotted quarter, alone in the
+ * second half of its beat, joins the eighths of the next beat (a beam of three).
+ */
+function beamedByBeat(music, unit) {
+  const out = [];
+  let at = 0;
+  let time = 0;
+  let previous = null;
+  while (at < music.length) {
+    if (/\s/.test(music[at])) { at += 1; continue; }
+    TOKEN.lastIndex = at;
+    const match = TOKEN.exec(music);
+    at = TOKEN.lastIndex;
+    if (match[1]) { out.push(' ', match[1]); time = 0; previous = null; continue; }
+    const [note] = readBars(match[0], unit);
+    const { length, step } = note[0];
+    const short = length < 0.25 - 1e-9 && step !== null;
+    const beat = Math.floor((time + 1e-9) / 0.25);
+    const midBeat = time - beat * 0.25 > 1e-9;
+    const leftOver = short && midBeat && previous?.dotted;
+    const group = leftOver ? beat + 1 : beat; // a left-over eighth belongs with the next beat
+    const joined = previous?.short && short && previous.group === group;
+    out.push(joined ? '' : ' ', match[0]);
+    const endsInBeat = Math.floor((time + length - 1e-9) / 0.25) === beat;
+    const endsOnBeat = Math.abs((time + length) / 0.25 - Math.round((time + length) / 0.25)) < 1e-9;
+    previous = { short, group: leftOver ? group : endsInBeat ? beat : -1, dotted: step !== null && length > 0.25 + 1e-9 && !endsOnBeat };
+    if (leftOver && !endsOnBeat) previous.group = -1;
+    time += length;
+  }
+  return out.join('').trim();
+}
+
+test('every example beams its eighth notes by the beat, and only within it', () => {
+  for (const file of [...EXAMPLES.map((e) => e.file), 'ic14-three-voice-canon-c-minor.abc', 'wip07-canon-over-leoni.abc']) {
+    const abc = load(file);
+    const unit = Number(/^L:\s*1\/(\d+)/m.exec(abc)[1]);
+    for (const [, music] of abc.matchAll(/^\[V:[^\]]+\]\s*(.*)$/gm)) {
+      assert.equal(music, beamedByBeat(music, 1 / unit), file);
+    }
+  }
+});
+
+test('IC p. 15: P leaves the canon at bar 15 and both voices cadence from bar 18', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic15'));
+  assert.deepEqual(canonMarks(load(example.file), example), { P: { 15: 'free', 18: 'cadence' }, R: { 18: 'cadence' } });
+});
+
+test('IC p. 7: the cadence between the two canons is marked, and so is the one at the end', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic07'));
+  const marks = canonMarks(load(example.file), example);
+  assert.equal(marks.R[7], 'cadence');
+  assert.equal(marks.R[16], 'cadence');
+});
+
+test('a mark is written above the first note of its bar, even across lines and repeats', () => {
+  const abc = '[V:P] C4 | D4 |\n[V:P] |: E2 F2 :| G4 |]\n';
+  assert.equal(withMarks(abc, { P: { 2: 'free', 4: 'cadence' } }),
+    '[V:P] C4 | "^free"D4 |\n[V:P] |: "^cadence"E2 F2 :| G4 |]\n');
+});
+
+test('marks change only what is drawn: the notes read the same', () => {
+  for (const example of EXAMPLES.filter((e) => e.canon)) {
+    const abc = load(example.file);
+    const drawn = readVoices(drawnAbc(abc, example));
+    for (const [id, bars] of Object.entries(readVoices(abc))) assert.deepEqual(drawn[id], bars, example.file);
+  }
+});
+
+test('an infinite canon is heard three times round its repeat, and stays a canon all the way (IC pp. 25, 26)', () => {
+  for (const example of EXAMPLES.filter((e) => e.rounds)) {
+    const written = readVoices(load(example.file));
+    const heard = readVoices(heardAbc(load(example.file), example));
+    const loop = written.P.length - 2; // the bars inside the repeat
+    assert.equal(heard.P.length, 2 + 3 * loop, example.file);
+    const { entry } = example.canon;
+    for (let bar = 0; bar < heard.P.length - 2; bar++) {
+      const copy = heard.R[bar + 1].map((note) => note.step);
+      assert.deepEqual(copy, heard.P[bar].map((note) => (note.step === null ? null : note.step + entry)), `${example.file}, bar ${bar + 1}`);
+    }
+  }
 });

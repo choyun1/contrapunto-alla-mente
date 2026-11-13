@@ -50,10 +50,95 @@ function wholeNotes(steps, unit) {
   return steps.map((step) => (step === null ? `z${whole}` : `${abcPitch(step)}${whole}`)).join(' | ');
 }
 
-/** The example as drawn: its abc, plus the imaginary cantus as the bottom staff when asked for. */
-export function drawnAbc(abc, example) {
+/** The voices that copy the leader: the canon's follower, and the second answer of alternative staves. */
+function followers(example) {
+  const second = example.alternatives?.lower;
+  return second && second !== example.canon.follow ? [example.canon.follow, second] : [example.canon.follow];
+}
+
+/** Is bar `bar` (counted from 1) strict canon in a voice: inside a span for the leader, or a span moved by its delay for a follower? */
+function isStrict(canon, bar, following) {
+  return canon.spans.some(([first, last, delay = canon.delay]) => {
+    const shift = following ? delay : 0;
+    return bar >= first + shift && bar <= last + shift;
+  });
+}
+
+/**
+ * Where each canonic voice leaves the strict canon: { voice: { bar: label } },
+ * bars counted from 1. A stretch where every canonic voice is free is marked
+ * 'cadence' when it is three bars or less and 'free' when longer; bars where
+ * only one voice has left the canon are marked 'free'. Only a stretch's
+ * first bar is marked, and only once the voice has entered.
+ */
+export function canonMarks(abc, example) {
+  if (!example.canon) return {};
+  const voices = readVoices(abc);
+  const ids = [example.canon.lead, ...followers(example)];
+  const bars = Math.max(...ids.map((id) => voices[id].length));
+  if (example.rounds) {
+    // an infinite canon is strict all the way round its repeat; only the ending is free
+    return Object.fromEntries(ids.map((id) => [id, { [bars]: 'cadence' }]));
+  }
+  const entry = Object.fromEntries(ids.map((id) => [id, 1 + voices[id].findIndex((bar) => firstStep(bar) !== null)]));
+  const free = (id, bar) => bar >= entry[id] && !isStrict(example.canon, bar, id !== example.canon.lead);
+  const allFree = (bar) => ids.every((id) => free(id, bar));
+  const stretch = (bar) => { // how many bars of all-free start here
+    let end = bar;
+    while (end <= bars && allFree(end)) end += 1;
+    return end - bar;
+  };
+  const marks = {};
+  for (const id of ids) {
+    marks[id] = {};
+    let previous = null;
+    for (let bar = 1; bar <= bars; bar++) {
+      let label = null;
+      if (free(id, bar)) label = allFree(bar) ? 'cadence' : 'free';
+      if (label === 'cadence' && (previous !== 'cadence' || !allFree(bar - 1))) {
+        marks[id][bar] = stretch(bar) <= 3 ? 'cadence' : 'free';
+      } else if (label === 'free' && previous !== 'free') marks[id][bar] = 'free';
+      previous = label;
+    }
+  }
+  return marks;
+}
+
+/** One token of a music line: a bar line (possibly a repeat), or anything else up to the next space or bar line. */
+const BAR_OR_WORD = /(:?\|[|\]:]?)|([^\s|:]+)|(\s+|:)/gy;
+
+/** The abc with each mark written as an annotation above the first note or rest of its bar: "^free". */
+export function withMarks(abc, marks) {
+  const barOf = {}; // the bar each voice has reached, counted from 1
+  return abc.split('\n').map((line) => {
+    const match = /^(\[V:\s*([^\]\s]+)\]\s*)(.*)$/.exec(line);
+    if (!match || !marks[match[2]]) return line;
+    const id = match[2];
+    barOf[id] ??= 1;
+    let atBarStart = true;
+    let out = '';
+    for (const [token, bar, word] of match[3].matchAll(BAR_OR_WORD)) {
+      if (bar) { barOf[id] += 1; atBarStart = true; out += token; continue; }
+      if (word && atBarStart) {
+        const label = marks[id][barOf[id]];
+        out += label ? `"^${label}"${token}` : token;
+        atBarStart = false;
+        continue;
+      }
+      out += token;
+    }
+    return match[1] + out;
+  }).join('\n');
+}
+
+/**
+ * The example as drawn: its abc, with where the canon goes free marked
+ * (canonMarks), plus the imaginary cantus as the bottom staff when asked for.
+ */
+export function drawnAbc(written, example) {
+  const abc = withMarks(written, canonMarks(written, example));
   if (!example.icf) return abc;
-  const steps = imaginaryBars(abc, example.canon);
+  const steps = imaginaryBars(written, example.canon);
   const sounding = steps.filter((step) => step !== null);
   const clef = clefsForVoice(sounding)[0] ?? 'bass';
   const header = `V:${ICF.id} clef=${clef} name="${ICF.name}"`;
@@ -87,6 +172,11 @@ function onlyVoices(voices, ids) {
  */
 export const dissonancesOf = (abc, ids) => worthShowing(dissonances(onlyVoices(timelines(abc), ids)));
 
+/** The abc with each voice's |: … :| repeat written out `times` times, for playback (abcjs plays a repeat twice). */
+export function withRounds(abc, times) {
+  return abc.replace(/\|:(.*?):\|/g, (_, inside) => `| ${Array(times).fill(inside.trim()).join(' | ')} |`);
+}
+
 /** A voice's music without its final bar line, so more can follow it. */
 const open = (music) => music.trim().replace(/\|\]$/, '').trim();
 
@@ -97,6 +187,7 @@ const open = (music) => music.trim().replace(/\|\]$/, '').trim();
  * bar's rest, then the lower pair. Any other example is heard as written.
  */
 export function heardAbc(abc, example) {
+  if (example.rounds) return withRounds(abc, example.rounds);
   if (!example.alternatives) return abc;
   const { upper, shared, lower } = example.alternatives;
   const music = voiceMusic(abc);

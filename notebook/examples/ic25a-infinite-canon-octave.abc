@@ -4,5 +4,5 @@ L:1/4
 K:F
 V:P clef=treble name="P"
 V:R clef=bass name="R"
-[V:P] F2 c3/2 D/ |: A3/2 G/ A/ B/ c- | c B A3/2 G/ | F2 c3/2 B/ :|
-[V:R] z4 |: F,2 C3/2 D,/ | A,3/2 G,/ A,/ B,/ C- | C B, A,3/2 G,/ :|
+[V:P] F2 c3/2 B/ |: A3/2 G/A/B/ c- | c B A3/2 G/ | F2 c3/2 B/ :| A4 |]
+[V:R] z4 |: F,2 C3/2 B,/ | A,3/2 G,/A,/B,/ C- | C B, A,3/2 G,/ :| F,4 |]
