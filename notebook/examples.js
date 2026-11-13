@@ -99,15 +99,6 @@ export const SECTIONS = [
         canon: canon(-4, 2, [1, 5]),
         icf: true,
       },
-      {
-        file: 'wip07-canon-over-leoni.abc',
-        title: 'Canon at the 5th above over Leoni',
-        source: 'WIP p. 7',
-        note: '“Canon over ‘Leoni’.” It stops after six bars.',
-        caption: 'The last R note (E) leaves the canon, which would have D.',
-        canon: canon(4, 1, [1, 5]),
-        icf: true,
-      },
     ],
   },
   {

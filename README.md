@@ -88,6 +88,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **More drills.** Counterpoint over a hymn tune (and hearing it shifted by J<sub>v</sub>), then a live canon over a hymn tune with imaginary-cantus hints, starting from standard Lutheran chorale tunes. Singing input through the microphone later.
+- **Work-in-progress page.** One page for every example from Cho's work-in-progress (WIP) notebook, starting with the unfinished canon over Leoni (WIP p. 7, `notebook/examples/wip07-canon-over-leoni.abc`), kept apart from the finished notebook examples.
 - **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license
