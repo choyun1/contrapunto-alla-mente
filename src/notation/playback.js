@@ -72,7 +72,7 @@ const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine
 
 /**
  * Renders abc into a block and wires the play button to `audioAbc`, which
- * may differ from what is drawn. Staff `silentVoice` (counted from 0, top
+ * may differ from what is drawn, played by a string trio (inStrings). Staff `silentVoice` (counted from 0, top
  * down), when given, is drawn in gray: the audio leaves it out, so it is seen
  * but not heard (the imaginary cantus). It plays at TEMPO.NOTEBOOK. The
  * playback tune is made at the first click, so a page of many examples draws
@@ -85,7 +85,7 @@ export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
     score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
   }
   const button = wrap.querySelector('button');
-  button.addEventListener('click', () => toggle(audioTune(audioAbc), button, SOUND.FLUTE, TEMPO.NOTEBOOK));
+  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, TEMPO.NOTEBOOK));
 }
 
 let audioBox = null; // the off-page box that playback-only tunes are drawn into
@@ -128,6 +128,30 @@ export const SOUND = {
   FLUTE: 73,
   PIANO: 0,
 };
+
+/**
+ * The string trio the notebook plays in, by staff clef: violin for the
+ * treble, viola for the alto and tenor, cello for the bass (General MIDI
+ * 40–42). The flute's wide vibrato blurred the eighth notes.
+ */
+const STRINGS = { treble: 40, alto: 41, tenor: 41, bass: 42 };
+
+/**
+ * The abc with each voice set to its string instrument: a `%%MIDI program`
+ * line ahead of the voice's first music line, chosen by the clef on its
+ * `V:` header line.
+ */
+export function inStrings(abc) {
+  const clefs = Object.fromEntries([...abc.matchAll(/^V:\s*(\S+).*?clef=(\w+)/gm)].map((m) => [m[1], m[2]]));
+  const seen = new Set();
+  return abc.split('\n').map((line) => {
+    const id = /^\[V:\s*([^\]\s]+)\]/.exec(line)?.[1];
+    if (!id || seen.has(id)) return line;
+    seen.add(id);
+    const program = STRINGS[clefs[id]] ?? STRINGS.treble;
+    return `[V:${id}]\n%%MIDI program ${program}\n${line.replace(/^\[V:[^\]]+\]\s*/, '')}`;
+  }).join('\n');
+}
 
 let current = null; // { synth, button, timer } for the tune that is playing
 let audioContext = null;

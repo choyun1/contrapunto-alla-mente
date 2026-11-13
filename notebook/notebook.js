@@ -7,7 +7,7 @@ import { drawnAbc, dissonancesOf, heardAbc } from './score.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
-import { block, show, showWithAudio, SOUND, TEMPO } from '../src/notation/playback.js';
+import { block, showWithAudio } from '../src/notation/playback.js';
 
 /** The text of one example's abc file. */
 async function load(file) {
@@ -68,7 +68,7 @@ async function drawExample(parent, example) {
   }
   wrap.insertAdjacentHTML('beforeend', dissonanceList(abc));
   if (!example.icf) {
-    show(wrap, abc, null, SOUND.FLUTE, TEMPO.NOTEBOOK);
+    showWithAudio(wrap, abc, abc);
     return;
   }
   const drawn = drawnAbc(abc, example);
