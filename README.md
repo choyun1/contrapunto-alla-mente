@@ -31,6 +31,7 @@ It starts with Sergei Taneyev's vertical-shifting counterpoint, the method of hi
 - **Three-voice shifts.** Enter the outer voices' J<sub>v</sub> and see every way a middle voice can split it, since J<sub>v</sub>(upper, lower) = J<sub>v</sub>(upper, middle) + J<sub>v</sub>(middle, lower), with all three pair charts. Splits where both inner pairs land on an easy shift (0, −7, −9 or −11) are marked, because the hardest pair rules the texture.
 
 - **Drills.** Practice at the keyboard with live feedback. **Move chords**: the site names a canon and the risposta's note, and you play every note the proposta may move to, timed, with the ones you miss coming back more often. **Lead the canon**: you improvise the proposta and the site plays it back as the risposta, marking each note as it sounds. **Follow the leader**: the site plays a fresh first-species proposta and you play (or sing) the risposta. Play on the on-screen keys, the computer keyboard (one octave per row of letters) or a MIDI keyboard, either waiting for each note or on a beat.
+- **Notebook.** Worked examples from Cho's handwritten counterpoint notebooks, notated and played back, each with its notebook page and the note written beside it. The first batch is two-voice canons over a cantus firmus, with the imaginary cantus worked out from the rules core and drawn in gray, not played.
 
 See the [Roadmap](#roadmap) for what comes next.
 
@@ -64,6 +65,8 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/notation/`, `src/common/diatonic.js` | Turn diatonic pitches into abc notation, which the pages draw and play with [abcjs](https://www.abcjs.net/) (loaded from a CDN, pinned to 6.4.4). |
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
 | `canon/` | The canon pages: `proposta.html` (proposta tables and checker), `handshapes.html` (the moves as hand shapes and chords, on the keyboard from `src/ui/keyboard.js`) and `over-cantus.html` (canon over a cantus firmus: `over-cantus.js` runs it, `over-cantus-score.js` draws the editable score, `over-cantus-entry.js` handles the entry cursor, `over-cantus-table.js` the guide table). `names.js` holds display names both use. |
+| `notebook/` | The notebook page: `examples/` holds one abc file per worked example, `examples.js` lists them with their source page and notes, `score.js` adds the imaginary cantus staff and `notebook.js` draws the page. |
+| `src/notation/abc-read.js` | Reads the small part of abc the notebook's hand-written examples use, for the tests and for adding a staff. |
 | `drills/` | The drill pages: `move-chords`, `lead` and `follow`, each an `.html` and a `.js`, with `common.js` for what they share. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
 | `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), the README banner with the name beside it (`banner-light.svg`, `banner-dark.svg`), and the browser-tab icon (`favicon.svg`). |

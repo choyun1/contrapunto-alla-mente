@@ -1,0 +1,10 @@
+X:1
+M:C
+L:1/4
+K:F
+V:P clef=treble name="P"
+V:R clef=alto name="R"
+V:CF clef=bass name="CF"
+[V:P] z2 c2- | c B/c/ d e | f4- | f d f f | e4 |]
+[V:R] z4 | z2 F2- | F E/F/ G A | B4- | B G B B |]
+[V:CF] C4 | F,4 | D,4 | D,4 | G,4 |]

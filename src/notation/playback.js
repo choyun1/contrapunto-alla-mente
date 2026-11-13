@@ -64,6 +64,27 @@ export function showEditable(wrap, abc, audioAbc, onSpot) {
   button.addEventListener('click', () => toggle(tune, button, SOUND.FLUTE, TEMPO.EXAMPLE));
 }
 
+/**
+ * Line breaks for long hand-written scores: abcjs breaks the systems itself,
+ * about five bars to a line, so busy bars of eighth notes stay readable.
+ */
+const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine: 5 };
+
+/**
+ * Renders abc into a block, drawing staff `silentVoice` (counted from 0, top
+ * down) in gray, and wires the play button to `audioAbc`: the same music
+ * without that voice, so it is seen but not heard (the imaginary cantus).
+ * The playback tune is made at the first click, so a page of many examples
+ * draws only what it shows.
+ */
+export function showWithSilentVoice(wrap, abc, audioAbc, silentVoice) {
+  const score = wrap.querySelector('.score');
+  ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
+  score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
+  const button = wrap.querySelector('button');
+  button.addEventListener('click', () => toggle(audioTune(audioAbc), button, SOUND.FLUTE, TEMPO.EXAMPLE));
+}
+
 let audioBox = null; // the off-page box that playback-only tunes are drawn into
 
 /**
