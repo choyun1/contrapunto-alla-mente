@@ -6,5 +6,5 @@ V:R clef=treble name="R"
 V:P clef=alto name="P"
 V:CF clef=bass name="CF"
 [V:R] z4 | z A c =B/A/ | G4- | G F E F | G A B G | d e f e/d/ | ^c d2 c | d4 |]
-[V:P] z D F E/D/ | C4- | C =B, A, _B, | C D E C | G2 F E | F G A F | G F E2 | F4 |]
+[V:P] z D F E/D/ | C4- | C =B, A, =B, | C D E C | G2 F E | F G A F | G F E2 | F4 |]
 [V:CF] D,4 | F,4 | E,4 | A,4 | B,4 | F,4 | E,4 | D,4 |]

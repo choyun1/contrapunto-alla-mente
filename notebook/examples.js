@@ -7,14 +7,15 @@
 //
 // Each example with a `canon` names the leading and following voice, the
 // interval of entrance in steps (zero-indexed: 5th 4, octave 7, 12th 11;
-// negative when the risposta is below) and the delay in bars. `bars` is how
-// many of the leader's bars the follower copies exactly, before the cadence
-// or free ending; test/notebook.test.js checks it against the notes. With
+// negative when the risposta is below) and the delay in bars. `spans` are the
+// leader's bars, first to last and counted from 1, that the follower copies
+// exactly; the cadences and free passages between them are left out.
+// test/notebook.test.js checks them against the notes. With
 // `icf`, the page adds the imaginary cantus (src/taneyev/imaginary-cantus.js)
 // as a gray staff that is drawn but not played, as Cho drew it on the page.
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
-const canon = (entry, delay, bars) => ({ lead: 'P', follow: 'R', entry, delay, bars });
+const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
 
 export const SECTIONS = [
   {
@@ -32,24 +33,25 @@ export const SECTIONS = [
         source: 'IC p. 5, top',
         note: '“CF + 2 part canon.” The I.C.F. is a 5th below, “since R follows 5th above.” '
           + 'Check P + CF, P + R and P + I.C.F.; P + I.C.F. never sounds but guarantees R + CF.',
-        canon: canon(4, 1, 5),
+        canon: canon(4, 1, [1, 5]),
         icf: true,
       },
       {
         file: 'ic05b-canon-5th-above-b-flat.abc',
         title: 'Canon at the 5th above, in B♭',
         source: 'IC p. 5, bottom',
-        note: '“Problematic intervals such as 7th & 9th should be dealt with in the measure before!”',
+        note: '“Problematic intervals such as 7th & 9th should be dealt with in the measure before!” '
+          + 'R’s F in bar 3 is a 9–8 suspension over the E♭.',
         caption: 'P’s last note could be E♭ rather than D.',
-        canon: canon(4, 1, 6),
+        canon: canon(4, 1, [1, 6]),
         icf: true,
       },
       {
         file: 'ic06a-canon-5th-above.abc',
         title: 'Canon at the 5th above, in D minor',
         source: 'IC p. 6, top',
-        note: '“Good cadence.”',
-        canon: canon(4, 1, 4),
+        note: '“Good cadence.” R’s G in bar 4 is a 7–6 suspension over the A.',
+        canon: canon(4, 1, [1, 4]),
         icf: true,
       },
       {
@@ -57,8 +59,7 @@ export const SECTIONS = [
         title: 'Canon at the 12th above, CF in the middle',
         source: 'IC p. 6, middle',
         note: '“Cadence.”',
-        caption: 'P’s bar 8 is faint, so its notes are a best guess.',
-        canon: canon(11, 1, 5),
+        canon: canon(11, 1, [1, 5]),
         icf: true,
       },
       {
@@ -66,44 +67,19 @@ export const SECTIONS = [
         title: 'Canon at the 12th above, CF on top',
         source: 'IC p. 6, bottom',
         note: '“Cadence.”',
-        canon: canon(11, 1, 5),
+        canon: canon(11, 1, [1, 5]),
         icf: true,
       },
       {
-        file: 'ic07a-canon-12th-cf-in-middle.abc',
-        title: 'Canon at the 12th above, CF in the middle, in A',
-        source: 'IC p. 7, top and bottom',
-        note: 'The first cadence is crossed out with “go to bottom.” Then: “This CF is not '
-          + 'suitable for upper voice leading.” Each bar on the page is labeled with its interval '
-          + 'numbers mod 7.',
-        caption: 'The ending is the one Cho wrote at the bottom of the page. On paper the CF is in the tenor clef.',
-        canon: canon(11, 1, 5),
-        icf: true,
-      },
-      {
-        file: 'ic07b-canon-12th-second-try.abc',
-        title: 'Canon at the 12th above, second try',
-        source: 'IC p. 7, middle',
-        note: '“Cadence.”',
-        canon: canon(11, 1, 5),
-        icf: true,
-      },
-      {
-        file: 'ic08a-canon-5th-below-sketch.abc',
-        title: 'Canon at the 5th below, whole-note sketch',
-        source: 'IC p. 8',
-        note: 'The same cantus with the voices reordered: “CF not suitable for canon @ 8th below.”',
-        caption: 'The second attempt on the page (“???”) breaks off and is left out.',
-        canon: canon(-4, 1, 6),
-        icf: true,
-      },
-      {
-        file: 'ic09a-canon-5th-below.abc',
-        title: 'Canon at the 5th below, I.C.F. a 5th above the CF',
-        source: 'IC p. 9',
-        note: '“P over I.C.F. equals R over CF.” Lower down: “CF still not suitable for canon @ 5th below.”',
-        caption: 'Cho wrote the I.C.F. two octaves higher, in the treble. The abandoned cadence is left out.',
-        canon: canon(-4, 1, 5),
+        file: 'ic07-canon-12th-to-dominant-and-back.abc',
+        title: 'Canon at the 12th above, to the dominant and back, in A',
+        source: 'IC p. 7',
+        note: 'One exercise in two halves: the first modulates to the dominant, the second starts '
+          + 'there and comes home. The first cadence is crossed out with “go to bottom,” and bars 6–9 '
+          + 'are the ending written at the bottom of the page. Then: “This CF is not suitable for upper '
+          + 'voice leading.” Each bar on the page is labeled with its interval numbers mod 7.',
+        caption: 'On paper the CF is in the tenor clef.',
+        canon: canon(11, 1, [1, 5], [10, 14]),
         icf: true,
       },
       {
@@ -112,26 +88,17 @@ export const SECTIONS = [
         source: 'IC p. 10, top and middle',
         note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” '
           + 'From bar 8 both voices are marked “free.”',
-        caption: 'R’s bar 9 is hard to read (D, C♯ D, C, B).',
-        canon: canon(-4, 2, 5),
+        canon: canon(-4, 2, [1, 5]),
         icf: true,
       },
       {
-        file: 'ic10b-canon-5th-below-unfinished.abc',
-        title: 'Canon at the 5th below, delay of one bar (unfinished)',
-        source: 'IC p. 10, bottom',
-        note: 'Five bars, then the page ends.',
-        canon: canon(-4, 1, 4),
-        icf: true,
-      },
-      {
-        file: 'ic11a-canon-5th-below.abc',
-        title: 'Canon at the 5th below, R starting on a held note',
-        source: 'IC p. 11',
-        note: 'R holds its first note for a bar before it starts to copy P.',
-        caption: 'Only the first eight bars are here. The free ending (bars 9–11, closing on an A major '
-          + 'chord with C♯ on top) is too faint to transcribe reliably.',
-        canon: canon(-4, 1, 6),
+        file: 'ic10b-11-canon-5th-below.abc',
+        title: 'Canon at the 5th below, delay of one bar',
+        source: 'IC pp. 10 (bottom) and 11',
+        note: 'Another try at the same exercise, running from the bottom of p. 10 to the end of p. 11. '
+          + 'From bar 13 both voices are marked “free,” ending on an A major chord.',
+        caption: 'The free bars 14–15 are faint, so their notes are a best guess.',
+        canon: canon(-4, 1, [1, 11]),
         icf: true,
       },
       {
@@ -140,7 +107,7 @@ export const SECTIONS = [
         source: 'WIP p. 7',
         note: '“Canon over ‘Leoni’.” It stops after six bars.',
         caption: 'The last R note (E) leaves the canon, which would have D.',
-        canon: canon(4, 1, 5),
+        canon: canon(4, 1, [1, 5]),
         icf: true,
       },
     ],

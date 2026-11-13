@@ -23,10 +23,13 @@ function timeline(bars) {
   return notes;
 }
 
-/** The first of the leader's notes in bars 0 to `bars` − 1 that the follower does not copy, or null. */
-function firstUncopied(voices, { lead, follow, entry, delay, bars }) {
+/** Is bar `bar` (counted from 0) inside one of a canon's spans (counted from 1, first to last)? */
+const inSpans = (spans, bar) => spans.some(([first, last]) => bar + 1 >= first && bar + 1 <= last);
+
+/** The first of the leader's notes in the canon's spans that the follower does not copy, or null. */
+function firstUncopied(voices, { lead, follow, entry, delay, spans }) {
   const follower = new Map(timeline(voices[follow]).map((note) => [note.at, note]));
-  const leader = timeline(voices[lead]).filter((note) => note.step !== null && note.at < bars);
+  const leader = timeline(voices[lead]).filter((note) => note.step !== null && inSpans(spans, Math.floor(note.at)));
   return leader.find((note) => {
     const copy = follower.get(note.at + delay);
     return !copy || copy.step !== note.step + entry || copy.length !== note.length;
@@ -55,7 +58,7 @@ test('every notebook example has full 4/4 bars, the same number in every voice',
   }
 });
 
-test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–11, WIP p. 7)', () => {
+test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5–7, 10–11, WIP p. 7)', () => {
   for (const example of EXAMPLES.filter((e) => e.canon)) {
     const miss = firstUncopied(readVoices(load(example.file)), example.canon);
     assert.equal(miss, null, `${example.file}: not copied at ${miss?.at} whole notes`);
@@ -65,9 +68,10 @@ test('each notebook canon copies the leader exactly up to its cadence (IC pp. 5�
 test('P over the imaginary cantus equals R over the cantus, one delay later (IC p. 9)', () => {
   for (const example of EXAMPLES.filter((e) => e.icf)) {
     const voices = readVoices(load(example.file));
-    const { lead, follow, delay, bars } = example.canon;
+    const { lead, follow, delay, spans } = example.canon;
     const imaginary = imaginaryBars(load(example.file), example.canon);
-    for (let bar = 0; bar + delay < bars; bar++) {
+    for (let bar = 0; bar < voices[lead].length; bar++) {
+      if (!inSpans(spans, bar)) continue;
       const p = voices[lead][bar][0].step;
       const r = voices[follow][bar + delay][0].step;
       const cantus = voices.CF[bar + delay][0].step;

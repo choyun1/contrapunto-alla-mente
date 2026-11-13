@@ -106,12 +106,12 @@ function audioTune(abc) {
  * Playback tempos, in quarter notes per minute. Music examples play a whole
  * note every 1.125 s (213); the interval demonstrations over a held note play
  * one every 0.56 s (426), since each dyad is heard on its own. The notebook's
- * hand-written examples, busy with eighth notes, play at half the example
- * tempo (107), a whole note every 2.25 s.
+ * hand-written examples, busy with eighth notes, play at a bit over half the
+ * example tempo (118), a whole note about every 2 s.
  */
 export const TEMPO = {
   EXAMPLE: 213,
-  NOTEBOOK: 107,
+  NOTEBOOK: 118,
   DEMO: 426,
 };
 
