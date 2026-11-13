@@ -175,3 +175,17 @@ export function moveChord(entry) {
     .map((span) => fold(span, low));
   return [...new Set(folded)].sort((a, b) => a - b);
 }
+
+/** A step folded into one octave, 0–6: the note name it reaches, whatever the octave. */
+const noteClass = (step) => ((step % 7) + 7) % 7;
+
+/**
+ * The proposta's moves allowed by several canons at once, when one proposta
+ * has several answers (IC p. 21, "Canon @ 5th / 8th"): the notes, folded into
+ * one octave (0–6, from the proposta's note), that every move chord contains.
+ * Zero-indexed: [0, 2, 4] is the proposta's note, a 3rd up and a 5th up.
+ */
+export function sharedMoves(entries) {
+  const chords = entries.map((entry) => new Set(moveChord(entry).map(noteClass)));
+  return [0, 1, 2, 3, 4, 5, 6].filter((note) => chords.every((chord) => chord.has(note)));
+}

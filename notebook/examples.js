@@ -29,10 +29,11 @@
 // going round the repeat that many times before the ending.
 
 /**
- * One step of a section's procedure: its text, and the excerpt that shows it
- * (notebook/snippets.js), if any.
+ * One step of a section's procedure: its text, the excerpt that shows it
+ * (notebook/snippets.js), if any, and any table of allowed moves
+ * (notebook/moves-table.js): [{ title, answers: [{ label, entry }] }].
  */
-const step = (text, snippet = null) => ({ text, snippet });
+const step = (text, snippet = null, moves = null) => ({ text, snippet, moves });
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
 const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
@@ -108,7 +109,7 @@ export const SECTIONS = [
         { file: 'ic25a-infinite-canon-octave.abc', bars: [2, 4], color: [['R', 2, 'a'], ['P', 4, 'a']], labels: { R: { 2: 'bar 1 below' }, P: { 4: 'bar 1 above' } } }),
       step('To stop, leave the loop at the end of a round and end both voices on a consonance, here whole notes on the third and the tonic.',
         { file: 'ic25a-infinite-canon-octave.abc', bars: [4, 5] }),
-      step('The next section takes the same idea further: one P with two answers at different intervals, where P and its answers must be invertible against each other.'),
+      step('The next sections take invertibility further: first two voices invertible over a cantus, then one P with two answers at different intervals, which must be invertible against each other.'),
     ],
     examples: [
       {
@@ -134,31 +135,6 @@ export const SECTIONS = [
         caption: 'Playback goes round the repeat three times before the ending.',
         canon: canon(-7, 1, [1, 7]),
         rounds: 3,
-        icf: false,
-      },
-    ],
-  },
-  {
-    id: 'two-answers',
-    title: 'One proposta, two answers',
-    intro: 'The infinite canon’s idea taken further: one P answered two ways, R a 5th above and R8 an octave below. '
-      + 'The two answers are a 12th apart, so P with R is invertible counterpoint at the 12th (Jv = −11).',
-    procedure: [
-      step('Write P so that it works as a canon at both intervals: at the 5th above and at the octave below.',
-        { file: 'ic21-canon-5th-and-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['R8', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b'], ['R8', 3, 'b']], labels: { R: { 2: 'a 5th above' }, R8: { 2: 'an octave below' } } }),
-      step('Avoid the moves that fail at either one (IC p. 21: “5/8 ⇒ no 2nd up or 3rd up”).'),
-      step('Check P with each answer on its own. The two answers are alternatives, so the page plays the upper pair, then the lower pair.'),
-    ],
-    examples: [
-      {
-        file: 'ic21-canon-5th-and-octave.abc',
-        title: 'Canon at the 5th above or the octave below',
-        source: 'IC p. 21',
-        note: '“Canon @ 5th / 8th.” One proposta, two answers: R a 5th above (top staff) or an '
-          + 'octave below (bottom staff), which are a 12th apart, so P with R is invertible at the 12th. '
-          + 'The two answers are alternatives: the upper pair plays first, then the lower pair.',
-        canon: canon(4, 1, [1, 13]),
-        alternatives: { upper: 'R', shared: 'P', lower: 'R8', shift: -11 },
         icf: false,
       },
     ],
@@ -208,6 +184,35 @@ export const SECTIONS = [
     ],
   },
   {
+    id: 'two-answers',
+    title: 'One proposta, two answers',
+    intro: 'Invertibility inside a canon: one P answered two ways, R a 5th above and R8 an octave below. '
+      + 'The two answers are a 12th apart, so P with R is invertible counterpoint at the 12th (Jv = −11).',
+    procedure: [
+      step('Write P so that it works as a canon at both intervals: at the 5th above and at the octave below.',
+        { file: 'ic21-canon-5th-and-octave.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['R8', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b'], ['R8', 3, 'b']], labels: { R: { 2: 'a 5th above' }, R8: { 2: 'an octave below' } } }),
+      step('List P’s allowed moves for each answer, side by side, and keep only the notes in both, as in the margin of IC p. 21 (“5 over 8: C → three-note chord”). Each row is the notes P may reach one delay later from C. '
+        + 'With R a 5th above and R8 an octave below, that leaves C, E and G: P may repeat its note, go a 3rd up or a 6th down, or a 5th up or a 4th down. The margin’s other chord, “8 over 5”, is the answers swapped (an octave above, a 5th below), which leaves C, A and F instead.',
+        null,
+        [{ title: '5 over 8 (this canon)', answers: [{ label: 'R a 5th above', entry: 4 }, { label: 'R8 an octave below', entry: -7 }] },
+          { title: '8 over 5', answers: [{ label: 'an octave above', entry: 7 }, { label: 'a 5th below', entry: -4 }] }]),
+      step('Check P with each answer on its own. The two answers are alternatives, so the page plays the upper pair, then the lower pair.'),
+    ],
+    examples: [
+      {
+        file: 'ic21-canon-5th-and-octave.abc',
+        title: 'Canon at the 5th above or the octave below',
+        source: 'IC p. 21',
+        note: '“Canon @ 5th / 8th.” One proposta, two answers: R a 5th above (top staff) or an '
+          + 'octave below (bottom staff), which are a 12th apart, so P with R is invertible at the 12th. '
+          + 'The two answers are alternatives: the upper pair plays first, then the lower pair.',
+        canon: canon(4, 1, [1, 13]),
+        alternatives: { upper: 'R', shared: 'P', lower: 'R8', shift: -11 },
+        icf: false,
+      },
+    ],
+  },
+  {
     id: 'canon-over-cantus',
     title: 'Canons over a cantus firmus, with the imaginary cantus',
     intro: 'The hardest here: a two-part canon over a cantus firmus, written with the imaginary cantus (I.C.F.) of the '
@@ -221,6 +226,10 @@ export const SECTIONS = [
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the I.C.F.…' }, R: { 3: '…is R against the CF' } } }),
       step('Copy P into R as in a two-part canon, and check P against R.',
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], voices: ['R', 'P'], color: [['P', 2, 'a'], ['R', 3, 'a']] }),
+      step('With the cantus below both voices, Bathe’s table (c. 1596) gives P’s choices for each bar at once: the column is the canon’s interval (the “place”) and the row is the cantus’s next move (the “course”). '
+        + 'The labels here are Bathe’s cells, counted from 1 as he prints them, and each of P’s downbeats is in its cell. <a href="../canon/bathe.html">Bathe’s table</a> has every cell, in his numbers and as Taneyev’s J<sub>v</sub>. '
+        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the I.C.F. does the same work.',
+        { file: 'ic05a-canon-5th-above.abc', bars: [4, 6], voices: ['R', 'P', 'CF'], labels: { P: { 4: 'Bathe: 3 5', 5: '1 3 5', 6: '6' } } }),
       step('Bellermann’s rule: every two-voice pair must work. With the I.C.F. there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + I.C.F. '
         + 'Those three guarantee the other three. R + CF is P + I.C.F. again, a bar later and a 5th up, so it is already right; R + I.C.F. and CF + I.C.F. are never heard, since the I.C.F. is silent. '
         + 'The diagram below shows it bar by bar. WIP p. 11 makes the same point for a canon with three risposte, one of them imaginary: “Check: P + R1, P + R2, P + R3 … ⇒ R1 + R2 is guaranteed!”'),

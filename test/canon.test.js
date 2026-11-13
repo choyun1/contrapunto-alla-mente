@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   canonInterval, canonMarks, spanVerdict, consonantSpans, consecutivePerfects, checkProposta, moveChord,
   keepsSide, crossesVoices,
+  sharedMoves,
 } from '../src/taneyev/canon.js';
 import { parsePitch, pitchName } from '../src/common/diatonic.js';
 
@@ -110,4 +111,12 @@ test('sides: the risposta a 5th above may not cross below, and only keepsSide ru
   assert.ok(!crossesVoices(0, 4));
   assert.ok(crossesVoices(-2, 4));
   assert.ok(keepsSide(-2, 0)); // at the unison canon either voice may be on top
+});
+
+test('IC p. 21 margin, “5 over 8”: answers a 5th above and an octave below leave C → C E G', () => {
+  assert.deepEqual(sharedMoves([4, -7]), [0, 2, 4]);
+});
+
+test('IC p. 21 margin, “8 over 5”: answers an octave above and a 5th below leave C → C F A (3rd down, 4th up, unison)', () => {
+  assert.deepEqual(sharedMoves([7, -4]), [0, 3, 5]);
 });
