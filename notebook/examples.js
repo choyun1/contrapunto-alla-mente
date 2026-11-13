@@ -105,6 +105,16 @@ export const SECTIONS = [
         icf: false,
       },
       {
+        file: 'ic31-canon-10th-above-d-minor.abc',
+        title: 'Canon at the 10th above, in D minor',
+        source: 'IC p. 31',
+        note: '“2-part canon @ 10th.” P in the bass, R a 10th above a bar later, strict to the end of bar 10, '
+          + 'then both hold the final D. P’s C♯s, the leading tone, come out as plain E in R.',
+        caption: 'Read from a faint scan and checked against the canon: where the two voices disagreed I trusted the clearer one, so bars 2–4 and 8 are best guesses.',
+        canon: canon(9, 1, [1, 9]),
+        icf: false,
+      },
+      {
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
         source: 'IC p. 15',
