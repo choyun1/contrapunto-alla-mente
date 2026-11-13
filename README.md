@@ -56,6 +56,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/canon-voices.js` | Where the cantus, proposta and risposta sit (the six orders), and the setup that follows from an order, interval size and delay. |
 | `src/taneyev/canon-check.js` | Checks a canon over a cantus bar by bar and says what is wrong in words. |
 | `src/taneyev/canon-over-cantus.js` | Finds a whole-note canon framework over a cantus by the imaginary-cantus method, and lists the setups that have one. |
+| `src/taneyev/florid.js` | Finds every dissonance between two voices of florid counterpoint and names it: a suspension (9–8, 7–6, 4–3 ...), a passing or neighbor tone, or "check" (a leap in or out, or a tritone). The notebook lists them under each example. |
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
 | `src/taneyev/first-species.js` | Finds a four-bar first-species phrase for a shift that is correct both before and after it. |
@@ -66,7 +67,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `taneyev/` | The consonance charts page and the three-voice shifts page. `chart-card.js` draws one chart card for both. |
 | `canon/` | The canon pages: `proposta.html` (proposta tables and checker), `handshapes.html` (the moves as hand shapes and chords, on the keyboard from `src/ui/keyboard.js`) and `over-cantus.html` (canon over a cantus firmus: `over-cantus.js` runs it, `over-cantus-score.js` draws the editable score, `over-cantus-entry.js` handles the entry cursor, `over-cantus-table.js` the guide table). `names.js` holds display names both use. |
 | `notebook/` | The notebook page: `examples/` holds one abc file per worked example, `examples.js` lists them with their source page and notes, `score.js` adds the imaginary cantus staff and `notebook.js` draws the page. |
-| `src/notation/abc-read.js` | Reads the small part of abc the notebook's hand-written examples use, for the tests and for adding a staff. |
+| `src/notation/abc-read.js` | Reads the small part of abc the notebook's hand-written examples use, key signature and accidentals included, for the tests, the dissonance list and adding a staff. |
 | `drills/` | The drill pages: `move-chords`, `lead` and `follow`, each an `.html` and a `.js`, with `common.js` for what they share. |
 | `scores/` | LilyPond sources for fixed music examples. CI compiles each `.ly` file to SVG under `scores/` on the site. |
 | `assets/` | Shared styles (`site.css`), the logo (`logo.svg`, a short canon in noteheads), the same canon on a staff for large sizes (`logo-staff.svg`), the README banner with the name beside it (`banner-light.svg`, `banner-dark.svg`), and the browser-tab icon (`favicon.svg`). |

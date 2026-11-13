@@ -8,6 +8,7 @@ import { readVoices, unitLength, withVoice } from '../src/notation/abc-read.js';
 import { abcPitch } from '../src/notation/abc.js';
 import { clefsForVoice } from '../src/notation/clefs.js';
 import { imaginaryCantus } from '../src/taneyev/imaginary-cantus.js';
+import { dissonances, worthShowing } from '../src/taneyev/florid.js';
 
 /** The id and staff name of the imaginary cantus voice. */
 export const ICF = { id: 'ICF', name: 'I.C.F.' };
@@ -57,3 +58,20 @@ export function drawnAbc(abc, example) {
   const header = `V:${ICF.id} clef=${clef} name="${ICF.name}"`;
   return withVoice(abc, header, `[V:${ICF.id}] ${wholeNotes(steps, unitLength(abc))} |]`);
 }
+
+/** Each voice of an abc tune as one list of notes with start times, as florid.js reads them. */
+export function timelines(abc) {
+  const voices = readVoices(abc);
+  return Object.fromEntries(Object.entries(voices).map(([id, bars]) => {
+    let start = 0;
+    const notes = bars.flat().map((note) => {
+      const timed = { ...note, start };
+      start += note.length;
+      return timed;
+    });
+    return [id, notes];
+  }));
+}
+
+/** The dissonances to list under an example: every one on a strong beat, and any to check on a weak beat. */
+export const dissonancesOf = (abc) => worthShowing(dissonances(timelines(abc)));

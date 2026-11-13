@@ -3,7 +3,9 @@
 // cantus comes from score.js (and from there the rules core).
 
 import { SECTIONS } from './examples.js';
-import { drawnAbc } from './score.js';
+import { drawnAbc, dissonancesOf } from './score.js';
+import { KIND } from '../src/taneyev/florid.js';
+import { intervalName } from '../src/taneyev/rules.js';
 import { voiceIds } from '../src/notation/abc-read.js';
 import { block, show, showWithSilentVoice, SOUND, TEMPO } from '../src/notation/playback.js';
 
@@ -21,10 +23,37 @@ function captionOf(example) {
   return parts.join(' ');
 }
 
+/** What a dissonance is, in words: '9–8 suspension', 'passing tone', 'check: tritone'. */
+function kindText(d) {
+  if (d.kind === KIND.SUSPENSION) return `${d.label} suspension`;
+  if (d.kind === KIND.PASSING) return 'passing tone';
+  if (d.kind === KIND.NEIGHBOR) return 'neighbor tone';
+  return d.tritone ? '<b>check:</b> tritone' : '<b>check:</b> approached or left by leap';
+}
+
+/** Where a dissonance falls: 'Bar 3, beat 1', or 'beat 2½' for an eighth between beats. */
+function whereText(start) {
+  const bar = Math.floor(start) + 1;
+  const beat = (start - Math.floor(start)) * 4 + 1;
+  const whole = Math.floor(beat);
+  return `Bar ${bar}, beat ${whole}${beat - whole >= 0.5 ? '½' : ''}`;
+}
+
+/** A closed list of the example's dissonances, each with its kind (src/taneyev/florid.js). */
+function dissonanceList(abc) {
+  const list = dissonancesOf(abc);
+  const checks = list.filter((d) => d.kind === KIND.CHECK).length;
+  const items = list.map((d) => `<li>${whereText(d.start)}: ${d.voices.join(' over ')}, `
+    + `${intervalName(d.steps)}, ${kindText(d)}</li>`).join('');
+  return `<details class="notation"><summary>Dissonances: ${list.length}, ${checks} to check</summary>`
+    + `<ul class="dissonances">${items}</ul></details>`;
+}
+
 /** Draws one example into `parent`, gray imaginary cantus and all. */
 async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
   const abc = await load(example.file);
+  wrap.insertAdjacentHTML('beforeend', dissonanceList(abc));
   if (!example.icf) {
     show(wrap, abc, null, SOUND.FLUTE, TEMPO.NOTEBOOK);
     return;
