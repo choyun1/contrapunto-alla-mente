@@ -57,15 +57,6 @@ export const SECTIONS = [
     ],
     examples: [
       {
-        file: 'ic15-canon-12th-below-g-minor.abc',
-        title: 'Canon at the 12th below, delay of three bars, in G minor',
-        source: 'IC p. 15',
-        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence. At the '
-          + 'end: “garbage!”',
-        canon: canon(-11, 3, [1, 14]),
-        icf: false,
-      },
-      {
         file: 'ic19a-canon-5th-below-b-flat.abc',
         title: 'Two-part canon at the 5th (a 12th below), in B♭',
         source: 'IC p. 19, top',
@@ -90,6 +81,15 @@ export const SECTIONS = [
         note: '“w/ ficta.” R follows to bar 14; its bar 15 is free, with a C♯ into the close.',
         caption: 'R’s last note is drawn on C; it is read here as D, after the C♯.',
         canon: canon(-4, 1, [1, 13]),
+        icf: false,
+      },
+      {
+        file: 'ic15-canon-12th-below-g-minor.abc',
+        title: 'Canon at the 12th below, delay of three bars, in G minor',
+        source: 'IC p. 15',
+        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence. At the '
+          + 'end: “garbage!”',
+        canon: canon(-11, 3, [1, 14]),
         icf: false,
       },
     ],
