@@ -9,6 +9,8 @@ import { orderName } from '../src/taneyev/canon-voices.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { pitchName } from '../src/common/diatonic.js';
 import { sign } from './names.js';
+import { batheSpot } from '../src/taneyev/bathe.js';
+import { SIDE } from '../src/taneyev/imaginary-cantus.js';
 
 /** How each kind of guide interval is shown in the table. */
 const GUIDE_CELL = {
@@ -29,18 +31,31 @@ export function setupName({ order, size, delay }) {
   return `${orderName(order)}, ${intervalName(size)}, ${bars} later`;
 }
 
+/** Does Bathe's table (bathe.html) cover this setup? Only with the cantus below both canon voices. */
+const batheFits = (setup) => setup.side === SIDE.ABOVE && setup.rispostaSide === SIDE.ABOVE;
+
+/** The Bathe cell for a bar, "place 5, course 2" linked to its Jv row, or '' when the table does not apply. */
+function batheCell(setup, row) {
+  if (!batheFits(setup)) return '';
+  if (row.guide === null) return '<td>—</td>';
+  const later = setup.cantus[row.bar + setup.delay];
+  const { place, course } = batheSpot(setup.entry, later - row.cantus);
+  const jv = (((row.guide % 7) + 7) % 7);
+  return `<td><a href="bathe.html#bathe-jv${jv}">place ${place}, course ${course}</a></td>`;
+}
+
 /** One table row for a bar with no imaginary cantus (its proposta note is never copied). */
-function freeRow(row, choices) {
+function freeRow(row, choices, bathe) {
   return `<tr><td class="c">${row.bar + 1}</td><td>${pitchName(row.cantus)}</td><td>—</td>
-    <td colspan="3">not imitated: free, against the cantus only</td><td>${choices}</td></tr>`;
+    <td colspan="3">not imitated: free, against the cantus only</td><td>${choices}</td>${bathe}</tr>`;
 }
 
 /** One table row: the guide interval, Jv, how hard it is, and the notes that fit. */
-function guideRow(row, choices) {
+function guideRow(row, choices, bathe) {
   const fits = choices || '<span class="no">none: needs a suspension or a 4th</span>';
   return `<tr><td class="c">${row.bar + 1}</td><td>${pitchName(row.cantus)}</td><td>${pitchName(row.imaginary)}</td>
     <td>${guideName(row.guide)}</td><td class="c">${sign(row.jv)}</td><td class="c">${GUIDE_CELL[row.kind]}</td>
-    <td>${fits}</td></tr>`;
+    <td>${fits}</td>${bathe}</tr>`;
 }
 
 /** A warning when the guide intervals run in parallel 2nds or 7ths, or ''. */
@@ -56,10 +71,12 @@ export function guideTableHtml(setup) {
   const rows = guideTable(setup);
   const body = rows.map((row) => {
     const choices = propostaChoices(setup, row.bar).map(pitchName).join(' ');
-    return row.guide === null ? freeRow(row, choices) : guideRow(row, choices);
+    const bathe = batheCell(setup, row);
+    return row.guide === null ? freeRow(row, choices, bathe) : guideRow(row, choices, bathe);
   });
+  const batheHead = batheFits(setup) ? '<th><a href="bathe.html">Bathe’s table</a></th>' : '';
   return `${stuckWarning(rows)}<div class="scroll"><table class="spans"><thead><tr><th>Bar</th><th>Cantus</th>
-    <th>Imaginary</th><th>Guide interval</th><th>J<sub>v</sub></th><th>Guide</th><th>Proposta may sing</th></tr></thead>
+    <th>Imaginary</th><th>Guide interval</th><th>J<sub>v</sub></th><th>Guide</th><th>Proposta may sing</th>${batheHead}</tr></thead>
     <tbody>${body.join('')}</tbody></table></div>`;
 }
 

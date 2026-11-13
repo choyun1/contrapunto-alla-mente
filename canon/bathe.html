@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bathe’s canon table</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<main class="wrap">
+<header>
+<!-- site navigation: the same on every page, in site order; aria-current marks this page -->
+<nav class="site" aria-label="Site">
+<a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
+<a href="../taneyev/charts.html">J<sub>v</sub> charts</a>
+<a href="../canon/proposta.html">Canon proposta</a>
+<a href="../canon/over-cantus.html" aria-current="page">Canon over a c.f.</a>
+<a href="../taneyev/three-voices.html">Three voices</a>
+<a class="nav-drills" href="../drills/move-chords.html">Drills</a>
+<a href="../notebook/">Notebook</a>
+</nav>
+<nav class="sub" aria-label="Canon over a c.f.">
+<a href="over-cantus.html">Write a canon</a>
+<a href="bathe.html" aria-current="page">Bathe’s table (c. 1596)</a>
+</nav>
+<h1>Bathe’s canon table (c. 1596)</h1>
+<p class="lead">William Bathe’s “generall Table comprehending two parts in one, of all kindes vpon all plaine Songs” (<i>A Briefe Introduction to the Skill of Song</i>, London, c. 1596) is a lookup for a two-part canon over a plain song (a cantus firmus) sung beneath both parts, the follower entering one plain-song note after the leader. It is the imaginary-cantus method of the <a href="over-cantus.html">Write a canon</a> page, done for every case at once, over three centuries before Taneyev.</p>
+<p class="note see-notebook">In the notebook: <a href="../notebook/#canon-over-cantus">canons over a cantus firmus</a>, where IC p. 5’s canon at the 5th above keeps to Bathe’s cells.</p>
+</header>
+<section class="chart" aria-labelledby="read-h">
+<h2 id="read-h">How to read it</h2>
+<p class="note">Bathe counts from 1, as musicians name intervals: 1 is a unison, 5 a 5th, 8 an octave. Octaves are ignored, so a 12th counts as a 5th.</p>
+<dl class="terms">
+<dt>Place (the columns)</dt><dd>The interval of the canon: where the follower sings, measured from the leader. Place 5 up is a canon at the 5th above. A place down shares the column of its complement, so 4 down sits with 5 up (a 4th below and a 5th above name the same note).</dd>
+<dt>Course (the rows)</dt><dd>How the plain song moves to its next note. Course 1 repeats the note, 2 up is a step up, 3 down is a 3rd down, 8 is an octave. A course down shares the row of its complement, so 2 down sits with 7 up.</dd>
+<dt>The cell</dt><dd>The intervals the leader may sing above the plain song’s current note, so that the follower, copying it a note later, is consonant with the plain song’s next note.</dd>
+</dl>
+<p class="note">For example, a canon at the 5th above (place 5) over a plain song going C to D (course 2): the cell is 3 5. If the leader sings E (a 3rd above C), the follower answers B over D, a 6th. If it sings G (a 5th), the follower answers D, an octave. A unison would answer G over D, a 4th, and a 6th would answer a 9th, so those are left out.</p>
+</section>
+<section class="chart" aria-labelledby="table-h">
+<h2 id="table-h">The table, as Bathe printed it</h2>
+<div id="bathe-table"></div>
+<p class="note">* Course 5, place 2 is printed 3 6. It is a known misprint; the editors correct it to 1 6, which is also what the rule below gives. The other 55 cells match the rule as printed.</p>
+</section>
+<section class="chart" aria-labelledby="taneyev-h">
+<h2 id="taneyev-h">The same table in Taneyev’s terms</h2>
+<p class="note">Taneyev counts from 0 (unison 0, 3rd 2, 5th 4, octave 7) and calls a shift J<sub>v</sub>. The follower’s note against the next plain-song note is the leader’s note against that next note moved down by the place: the imaginary cantus. So each bar is a shift of the leader’s interval above the plain song, <i>m</i>, to its interval above the imaginary cantus, <i>n</i> = <i>m</i> + J<sub>v</sub>, with</p>
+<p class="lead c">J<sub>v</sub> = (place − 1) − (course − 1) = the canon’s interval − the plain song’s move</p>
+<p class="note">which is the guide interval of the <a href="over-cantus.html">Write a canon</a> page. Within the octave it is one of seven numbers, so the 56 cells are only seven rows, one per shift. Both parts stay above the plain song, so J<sub>v</sub> is a direct shift, 0 to +6 (or the same plus an octave).</p>
+<h3>Which J<sub>v</sub> each cell is</h3>
+<div id="bathe-grid"></div>
+<h3>Each J<sub>v</sub> as a chart row</h3>
+<p class="note">Each entry is <i>m</i> → <i>n</i>, colored as on the <a href="../taneyev/charts.html">J<sub>v</sub> charts</a>. Bathe’s cell is the green entries, the fixed consonances, counted from 1 again. Click a J<sub>v</sub> for its full chart, with the suspension marks Bathe leaves out.</p>
+<div id="bathe-taneyev"></div>
+</section>
+<p class="foot">Source: Early Music Sources handout, Elam Rotem and Alon Schab (2024), p. 5, from Cho’s scanned Canons pp. 5–9. The rule and its check are in <code>src/taneyev/bathe.js</code> and <code>test/bathe.test.js</code>.</p>
+<footer class="foot">
+  <a class="github" href="https://github.com/choyun1/contrapunto-alla-mente" aria-label="Source on GitHub" title="Source on GitHub">
+    <!-- GitHub mark, from Primer Octicons (MIT) -->
+    <svg viewBox="0 0 16 16" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+  </a>
+</footer>
+</main>
+<style>.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}.lead.c{text-align:center}</style>
+<script type="module" src="bathe.js"></script>
+</body>
+</html>

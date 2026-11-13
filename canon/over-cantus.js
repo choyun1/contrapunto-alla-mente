@@ -16,7 +16,6 @@ import { keyCommand } from '../src/notation/note-entry.js';
 import { renderScore } from './over-cantus-score.js';
 import { placeNote, runCommand, cursorName } from './over-cantus-entry.js';
 import { guideTableHtml, setupButtonsHtml, setupName } from './over-cantus-table.js';
-import { batheTableHtml } from './over-cantus-bathe.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -117,7 +116,6 @@ function render({ focus = false } = {}) {
   const none = state.generated && state.proposta.every((note) => note === null);
   $('cf-none').hidden = !none;
   $('cf-table').innerHTML = guideTableHtml(setup);
-  $('cf-bathe').innerHTML = batheTableHtml(setup);
 }
 
 /** Reads the setup controls into the state, refilling the framework if it was untouched. */
