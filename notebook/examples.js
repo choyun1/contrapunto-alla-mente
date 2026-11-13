@@ -186,6 +186,16 @@ export const SECTIONS = [
         canon: canon(11, 1, [1, 3], [6, 14]),
         icf: false,
       },
+      {
+        file: 'ic25a-infinite-canon-octave.abc',
+        title: 'Infinite canon at the octave, in F',
+        source: 'IC p. 25, top',
+        note: '“2-part ∞ canon @ Jv = 7.” Bars 2–4 repeat: P’s bar 4 leads back into its bar 2, '
+          + 'so R can go round with it. The page’s other drafts (in F and in G) are crossed out and '
+          + 'scribbled over, and are left out here.',
+        canon: canon(-7, 1, [1, 3]),
+        icf: false,
+      },
     ],
   },
 ];
