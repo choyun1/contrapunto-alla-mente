@@ -32,7 +32,7 @@ jobs:
       - name: Build the site
         run: |
           mkdir -p _site/scores
-          cp -r index.html assets src taneyev canon drills notebook data _site/
+          cp -r index.html assets src taneyev canon drills notebook wip data _site/
           for f in scores/*.ly; do
             [ -e "$f" ] || continue
             lilypond -dbackend=svg -dno-point-and-click -o "_site/scores/$(basename "$f" .ly)" "$f"
