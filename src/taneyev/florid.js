@@ -185,14 +185,15 @@ function classify(voices, a, b, t, bassId) {
     const label = suspensionLabel(voices[id], note, voices[other], t, lowerId === bassId);
     if (label) return { ...found, kind: KIND.SUSPENSION, label, suspended: id };
   }
-  // a struck note explains the dissonance if it passes or neighbors; when both
-  // voices are struck together, either one may be the one that does
+  // a struck note explains the dissonance if it passes or neighbors. When both
+  // voices are struck together, both must move so: a note that leaps or
+  // repeats into the dissonance is not covered by the other voice's step
+  // (Fux, third species: the dissonance is a note on its way by step, against
+  // a note that holds; struck against a fresh leap or repeat it is heard as one)
   const struckNow = [[a, x], [b, y]].filter(([, note]) => note.start >= t - 1e-9);
-  for (const [id, note] of struckNow) {
-    const kind = motionKind(voices[id], note);
-    const allowed = kind === KIND.PASSING || (kind === KIND.NEIGHBOR && !isStrongBeat(t));
-    if (allowed && !found.tritone) return { ...found, kind, moving: id };
-  }
+  const moves = struckNow.map(([id, note]) => ({ id, kind: motionKind(voices[id], note) }));
+  const isAllowed = ({ kind }) => kind === KIND.PASSING || (kind === KIND.NEIGHBOR && !isStrongBeat(t));
+  if (!found.tritone && moves.every(isAllowed)) return { ...found, kind: moves[0].kind, moving: moves[0].id };
   return { ...found, kind: KIND.CHECK };
 }
 

@@ -1,12 +1,12 @@
 // Renders the Continue the proposta drill: the opening of one of Cho's own
-// canons is given, and you write the rest of the proposta note by note, in the
-// notebook's rhythm or your own, while the risposta copies what you write. Every check
+// canons is given, and you write the rest of the proposta note by note, in a
+// rhythm you choose, while the risposta copies what you write. Every check
 // comes from src/taneyev/canon-continue.js; this file runs the drill and draws it.
 // Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic
 // steps, with semitones from C0 for how they sound (ficta included).
 
 import {
-  checkAll, countWrite, canonVoices, isComplete, writeWindow, writtenNotes, worstOf, SLOT, VOICE,
+  checkAll, canonVoices, isComplete, writeWindow, writtenNotes, worstOf, SLOT, VOICE,
 } from '../src/taneyev/canon-continue.js';
 import { isStrongBeat } from '../src/taneyev/florid.js';
 import { drillFrom, givenChoices, inOwnRhythm, reached, roomLeft } from '../src/drills/continue-drill.js';
@@ -33,21 +33,20 @@ const SHORTEST = 0.4;
 const LOW = parsePitch('C3');
 const HIGH = parsePitch('C6');
 
-// base: the drill in the notebook's rhythm; entries: what you wrote, [{ length, played }];
-// drill and steps: what the checks take, in whichever rhythm is in use (refresh)
-let state = null; // { example, abc, base, own, entries, drill, steps, results, octaves }
+// base: the drill as the notebook has it; entries: what you wrote, [{ length, played }];
+// drill and steps: what the checks take, in your rhythm (refresh)
+let state = null; // { example, abc, base, entries, drill, steps, results, octaves }
 
 /** Works out the drill, your notes and their checks after an entry is added or taken back. */
 function refresh() {
-  const { base, own, entries } = state;
-  const view = own ? inOwnRhythm(base, entries) : { drill: base, steps: entries.map((entry) => entry.played) };
+  const { base, entries } = state;
+  const view = inOwnRhythm(base, entries);
   Object.assign(state, view, { results: checkAll(view.drill, view.steps) });
 }
 
 /** Where the next note you write starts. */
 function nextStart() {
-  const { base, own, entries, drill, steps } = state;
-  return own ? reached(base, entries) : writeWindow(drill, steps.length).start;
+  return reached(state.base, state.entries);
 }
 
 /** The text of an example's abc file. */
@@ -73,31 +72,20 @@ const sound = (note, options) => tone(note.step, { ...options, alter: note.semit
 /** A voice's note sounding at time t, or null. */
 const soundingAt = (voice, t) => voice?.find((note) => note.step !== null && t >= note.start - 1e-9 && t < note.start + note.length - 1e-9) ?? null;
 
-/** The length of the next note: the one picked, in your own rhythm; the notebook's, with any tied notes, in its rhythm. */
-function nextLength() {
-  const { drill, steps, own } = state;
-  if (own) return { length: pickedLength(), held: false };
-  const window = writeWindow(drill, steps.length);
-  const note = drill.slots.find((slot) => Math.abs(slot.start - window.start) < 1e-9);
-  return { length: note.length, held: window.end - window.start > note.length + 1e-9 };
-}
-
 /** The prompt for the next note you write, with what it sounds against. */
 function promptFor(k) {
-  const { drill, steps, own } = state;
+  const { drill, steps } = state;
   if (isComplete(drill, steps)) return 'Done: the canon is complete as far as the notebook keeps it strict.';
   const start = nextStart();
   const voices = canonVoices(drill, steps);
   const against = [VOICE.R, VOICE.CF].map((id) => [id, soundingAt(voices[id], start)])
     .filter(([, sounding]) => sounding).map(([id, sounding]) => `${id} ${spelledName(sounding)}`);
   const beat = isStrongBeat(start) ? 'a strong beat: be consonant' : 'a weak beat: a dissonance must pass or turn by step';
-  const { length, held } = nextLength();
-  const value = valueName(length);
+  const value = valueName(pickedLength());
   const article = /^e/.test(value) ? 'an' : 'a';
-  const which = own ? `Note ${k + 1}` : `Note ${k + 1} of ${countWrite(drill)}`;
-  const left = own ? ` ${roomName(roomLeft(state.base, state.entries))} left to fill.` : '';
-  return `${which}: ${whereName(start)}, ${article} ${value}${held ? ', held over' : ''}. `
-    + `Against ${against.join(' and ') || 'nothing'}; ${beat}.${left}`;
+  const left = roomName(roomLeft(state.base, state.entries));
+  return `Note ${k + 1}: ${whereName(start)}, ${article} ${value} (pick another length below). `
+    + `Against ${against.join(' and ') || 'nothing'}; ${beat}. ${left} left to fill.`;
 }
 
 /** Draws the keyboard: R and CF on their notes now, and P on your last note. */
@@ -167,7 +155,7 @@ function redraw() {
   drawScore(document.getElementById('score'), abc, drill, steps, kinds);
   document.getElementById('undo').disabled = state.entries.length === 0;
   const lengths = document.getElementById('lengths');
-  lengths.hidden = !state.own || isComplete(drill, steps);
+  lengths.hidden = isComplete(drill, steps);
   if (!lengths.hidden) drawLengths(lengths, roomLeft(state.base, state.entries));
   if (isComplete(drill, steps)) showResult();
   else document.getElementById('result').hidden = true;
@@ -236,13 +224,13 @@ function onStep(played) {
 
 /** Adds what you played (null for a rest) at the next note's length. */
 function write(played) {
-  state.entries.push({ length: nextLength().length, played });
+  state.entries.push({ length: pickedLength(), played });
   refresh();
 }
 
-/** A rest from the length picker, in your own rhythm. */
+/** A rest from the length picker. */
 function onRest() {
-  if (!state?.own || isComplete(state.drill, state.steps)) return;
+  if (!state || isComplete(state.drill, state.steps)) return;
   write(null);
   redraw();
 }
@@ -270,8 +258,7 @@ async function start() {
   const example = EXAMPLES[Number(document.getElementById('example').value)];
   const abc = await load(example.file);
   const base = drillFrom(abc, example.canon, Number(document.getElementById('given').value));
-  const own = document.getElementById('rhythm').value === 'own';
-  state = { example, abc, base, own, entries: [], octaves: octavesFor(base) };
+  state = { example, abc, base, entries: [], octaves: octavesFor(base) };
   refresh();
   document.getElementById('start').textContent = 'Start again';
   redraw();
@@ -287,7 +274,7 @@ document.getElementById('undo').addEventListener('click', undo);
 listenForLengths(document.getElementById('lengths'), {
   onChange: () => { if (state) redraw(); },
   onRest,
-  isOn: () => Boolean(state?.own),
+  isOn: () => state !== null,
 });
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Backspace' && !event.target.closest?.('input, select, textarea')) {

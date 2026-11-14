@@ -160,3 +160,10 @@ test('your own rhythm: a rest takes time but is not a note to check', () => {
   assert.deepEqual(own.drill.slots.map((note) => note.slot), [SLOT.REST, SLOT.WRITE]);
   assert.equal(checkAll(own.drill, own.steps).length, 1);
 });
+
+test('IC p. 27: a repeated G struck against R’s neighbor F makes a 7th the neighbor does not cover (Fux, third species)', () => {
+  const { canon, file } = example('ic27a');
+  const drill = drillFrom(load(file), canon, 2);
+  const steps = ['B3', 'B3', 'G3', 'F3', 'G3', 'G3', 'A3'].map(p);
+  assert.ok(checkNote(drill, steps, 5).checks.includes('7th between R and P, not passing or resolving'));
+});

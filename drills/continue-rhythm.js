@@ -1,4 +1,4 @@
-// The note-length picker for Continue the proposta in your own rhythm: buttons
+// The note-length picker for Continue the proposta: buttons
 // for whole to 16th, a dot, and a rest, also on the computer's number keys
 // (1 whole, 2 half, 3 quarter, 4 eighth, 5 16th, period for the dot, 0 for a
 // rest), and times and lengths in words. Display and input only; lengths are
@@ -60,7 +60,7 @@ function choose({ length, dot }) {
 /**
  * Listens for the picker's buttons in `box` and the number keys. `onChange()`
  * runs after a new length is picked, `onRest()` when a rest is asked for;
- * `isOn()` says whether your own rhythm is in use.
+ * `isOn()` says whether a drill is going.
  */
 export function listenForLengths(box, { onChange, onRest, isOn }) {
   box.addEventListener('click', (event) => {
