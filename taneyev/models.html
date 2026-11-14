@@ -16,12 +16,16 @@
 <!-- site navigation: the same on every page, in site order; aria-current marks this page -->
 <nav class="site" aria-label="Site">
 <a class="brand" href="../"><img src="../assets/logo.svg" alt="">Contrapunto alla mente</a>
-<a href="../taneyev/charts.html">J<sub>v</sub> charts</a>
+<a href="../taneyev/charts.html" aria-current="page">J<sub>v</sub> charts</a>
 <a href="../canon/proposta.html">Canon proposta</a>
 <a href="../canon/over-cantus.html">Canon over a c.f.</a>
 <a href="../taneyev/three-voices.html">Three voices</a>
 <a class="nav-drills" href="../drills/move-chords.html">Drills</a>
 <a href="../notebook/">Notebook</a>
+</nav>
+<nav class="sub" aria-label="J<sub>v</sub> charts">
+<a href="charts.html">Charts</a>
+<a href="models.html" aria-current="page">How to read the 3D models</a>
 </nav>
 <h1>How to read the 3D models</h1>
 <p class="lead">On the <a href="charts.html">consonance charts</a> page, a model in the corner of the screen follows the chart you are reading. This page explains its three views: the coin, the helix and the Cayley graph. They show the same facts as the charts, drawn as motions, so you can see why a chart looks the way it does. Intervals are zero-indexed, as on the charts: unison 0, 3rd 2, octave 7, 10th 9, 12th 11.</p>
@@ -106,5 +110,6 @@
 
 
 <script type="module" src="models.js"></script>
+<script type="module" src="../src/ui/sub-nav.js"></script>
 </body>
 </html>
