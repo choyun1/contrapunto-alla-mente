@@ -1,7 +1,7 @@
 // The page contents: a numbered list of a long page's sections (its h2 headings) and, under
 // each, the examples in it (the h3 of each .example). On wide screens it is a panel on the left
 // edge that marks the section you are reading and folds to a thin strip of section numbers (the
-// current one still marked); on narrow ones it is a folded "On this page" box under the header.
+// current one still marked; pointing at a number shows its title); on narrow ones it is a folded "On this page" box under the header.
 // Each section's list of examples folds too.
 // Styles: assets/site.css. A page opts in with <script type="module" src="../src/ui/page-contents.js">.
 // Pages that draw their sections after loading (the notebook) are picked up as they appear.
@@ -43,7 +43,7 @@ function listHtml(sections) {
     const sublist = subs
       ? `<button class="sub-toggle" type="button" aria-expanded="false" aria-label="Examples in ${section.title}"></button><ol>${subs}</ol>`
       : '';
-    return `<li data-for="${section.id}"><a href="#${section.id}" title="${section.title.replace(/"/g, '&quot;')}"><span class="n">${i + 1}</span><span class="t">${section.title}</span></a>${sublist}</li>`;
+    return `<li data-for="${section.id}"><a href="#${section.id}"><span class="n">${i + 1}</span><span class="t">${section.title}</span></a>${sublist}</li>`;
   }).join('');
 }
 

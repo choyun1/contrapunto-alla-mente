@@ -359,9 +359,16 @@ h2[data-n]::before{content:attr(data-n);margin-right:.5em;color:var(--muted);fon
   .contents.open .contents-arrow::before{transform:rotate(180deg)}
   .contents nav{display:block;width:calc(14rem - 20px)} /* fixed, so titles don't rewrap as it slides */
   /* folded: no scrollbar, and only the section numbers show, the current one still marked */
-  .contents:not(.open){width:2.75rem;overflow:hidden;padding-right:0}
+  .contents:not(.open){width:2.75rem;overflow:visible;padding-right:0}
+  .contents:not(.open) nav{width:auto}
+  .contents:not(.open) li{width:calc(2.75rem - 8px)} /* the strip, less its left padding */
+  .contents:not(.open) a{grid-template-columns:auto}
   .contents:not(.open) .contents-label{opacity:0;visibility:hidden;width:0;overflow:hidden}
   .contents:not(.open) .t,.contents:not(.open) .sub-toggle,.contents:not(.open) ol ol{display:none}
+  /* folded: pointing at a number shows that section's title in a label beside the strip */
+  .contents:not(.open) a:is(:hover,:focus-visible) .t{display:block;position:absolute;left:calc(100% + 10px);top:50%;
+    transform:translateY(-50%);white-space:nowrap;padding:3px 10px;border-radius:6px;background:var(--ink);color:var(--bg);
+    font-weight:600;box-shadow:0 4px 12px rgb(0 0 0 / .15);pointer-events:none}
 }
 /* Prose pages (intro/): paragraphs in full ink at a reading width, and a plain sources list. */
 .prose p,.prose ol,.prose ul{max-width:68ch;margin:0}
