@@ -207,6 +207,16 @@ export const SECTIONS = [
           + 'here from the interval numbers.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
+      {
+        file: 'ic29c-invertible-12th-crossed-out.abc',
+        title: 'Invertible counterpoint at the 12th, crossed out',
+        source: 'IC p. 29, second system',
+        note: '“Jv = −11.” A failed attempt, kept to learn from. The original leans on 6ths (5), and at the 12th '
+          + 'a 6th becomes a 7th (5 − 11 = −6): bars 4, 5, 6 and 9 put a 7th on the beat in the derivative. '
+          + 'The page’s row of derivative numbers stops after two bars.',
+        caption: 'The last note of the original looks like E, but its number (4) and the derivative’s C say G.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
+      },
     ],
   },
   {
