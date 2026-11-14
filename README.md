@@ -94,7 +94,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 - **Notebook, batch 3.** IC pp. 17, 20, 27, 28, 30 and 31, and the parts skipped so far (p. 26's F-major canons, p. 25's drafts, p. 29's last two systems), once the scans can be read.
 - **Continue the proposta.** A drill built from the notebook canons: the site plays a few bars, you continue the proposta, and Cho's own continuation is the answer to compare with.
 - **Ficta in the move chords.** Flag the two B–F tritones Cho's paper chart marks (F♯ at the 2nd with the proposta on top, B♭ at the 4th with it below); the move chords are purely diatonic for now.
-- **Bathe's observations.** His six observations around the table (perfect intervals not to repeat, leader leaps to avoid) as checks on the canon over a c.f. page.
+- **Bathe's observations.** His six observations around the table (perfect intervals not to repeat, leader leaps to avoid) as checks on the canon over a CF page.
 - **Partimento.** Realizing unfigured and figured basses with the rule of the octave and the common schemata, as a section of its own beside Taneyev.
 
 ## Sources, credits and license

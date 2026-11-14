@@ -94,7 +94,7 @@ async function drawSnippet(item, section, snippet) {
   }
 }
 
-/** Draws a section's procedure as a numbered list, each step with its excerpt, then the I.C.F. diagram if asked for. */
+/** Draws a section's procedure as a numbered list, each step with its excerpt, then the ICF diagram if asked for. */
 async function drawProcedure(header, section) {
   header.insertAdjacentHTML('beforeend', '<h3>Procedure</h3>');
   const list = document.createElement('ol');

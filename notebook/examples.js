@@ -233,23 +233,23 @@ export const SECTIONS = [
   {
     id: 'canon-over-cantus',
     title: 'Canons over a cantus firmus, with the imaginary cantus',
-    intro: 'The hardest here: a two-part canon over a cantus firmus, written with the imaginary cantus (I.C.F.) of the '
-      + '<a href="../canon/over-cantus.html">Canon over a c.f.</a> page. The gray I.C.F. staff is drawn but not played. '
+    intro: 'The hardest here: a two-part canon over a cantus firmus, written with the imaginary cantus (ICF) of the '
+      + '<a href="../canon/over-cantus.html">Canon over a CF</a> page. The gray ICF staff is drawn but not played. '
       + 'It is worked out from the cantus here, so it can sit an octave or two away from where it is on paper.',
     diagram: 'icf',
     procedure: [
-      step('Choose the interval of entry and the delay. The I.C.F. is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “I.C.F. is a 5th below, since R follows 5th above”).',
+      step('Choose the interval of entry and the delay. The ICF is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “ICF is a 5th below, since R follows 5th above”).',
         { file: 'ic05a-canon-5th-above.abc', bars: [1, 3], voices: ['CF', 'ICF'], color: [['CF', 2, 'a'], ['ICF', 1, 'a'], ['CF', 3, 'b'], ['ICF', 2, 'b']], labels: { ICF: { 1: 'CF bar 2, a 5th down' } } }),
-      step('Write P against both the CF and the I.C.F. What P forms against the I.C.F. now, R will form against the CF one delay later (IC p. 10: “Check P + I.C.F. ⇒ R + CF”).',
-        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the I.C.F.…' }, R: { 3: '…is R against the CF' } } }),
+      step('Write P against both the CF and the ICF What P forms against the ICF now, R will form against the CF one delay later (IC p. 10: “Check P + ICF ⇒ R + CF”).',
+        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the ICF…' }, R: { 3: '…is R against the CF' } } }),
       step('Copy P into R as in a two-part canon, and check P against R.',
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], voices: ['R', 'P'], color: [['P', 2, 'a'], ['R', 3, 'a']] }),
       step('With the cantus below both voices, Bathe’s table (c. 1596) gives P’s choices for each bar at once: the column is the canon’s interval (the “place”) and the row is the cantus’s next move (the “course”). '
         + 'The labels here are Bathe’s cells, counted from 1 as he prints them, and each of P’s downbeats is in its cell. <a href="../canon/bathe.html">Bathe’s table</a> has every cell, in his numbers and as Taneyev’s J<sub>v</sub>. '
-        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the I.C.F. does the same work.',
+        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the ICF does the same work.',
         { file: 'ic05a-canon-5th-above.abc', bars: [4, 6], voices: ['R', 'P', 'CF'], labels: { P: { 4: 'Bathe: 3 5', 5: '1 3 5', 6: '6' } } }),
-      step('Bellermann’s rule: every two-voice pair must work. With the I.C.F. there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + I.C.F. '
-        + 'Those three guarantee the other three. R + CF is P + I.C.F. again, a bar later and a 5th up, so it is already right; R + I.C.F. and CF + I.C.F. are never heard, since the I.C.F. is silent. '
+      step('Bellermann’s rule: every two-voice pair must work. With the ICF there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + ICF '
+        + 'Those three guarantee the other three. R + CF is P + ICF again, a bar later and a 5th up, so it is already right; R + ICF and CF + ICF are never heard, since the ICF is silent. '
         + 'The diagram below shows it bar by bar. WIP p. 11 makes the same point for a canon with three risposte, one of them imaginary: “Check: P + R1, P + R2, P + R3 … ⇒ R1 + R2 is guaranteed!”'),
       step('When the cantus ends, or the canon can go no further, leave it for a free cadence.',
         { file: 'ic05a-canon-5th-above.abc', bars: [6, 8], voices: ['R', 'P', 'CF'] }),
@@ -259,8 +259,8 @@ export const SECTIONS = [
         file: 'ic05a-canon-5th-above.abc',
         title: 'Canon at the 5th above, delay of one bar',
         source: 'IC p. 5, top',
-        note: '“CF + 2 part canon.” The I.C.F. is a 5th below, “since R follows 5th above.” '
-          + 'Check P + CF, P + R and P + I.C.F.; P + I.C.F. never sounds but guarantees R + CF.',
+        note: '“CF + 2 part canon.” The ICF is a 5th below, “since R follows 5th above.” '
+          + 'Check P + CF, P + R and P + ICF; P + ICF never sounds but guarantees R + CF.',
         canon: canon(4, 1, [1, 5]),
         icf: true,
       },
@@ -314,7 +314,7 @@ export const SECTIONS = [
         file: 'ic10-canon-5th-below-then-free.abc',
         title: 'Canon at the 5th below, delay of two bars, then free',
         source: 'IC p. 10, top and middle',
-        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” '
+        note: '“ICF is very important! Write w/ CF.” and “Check P + ICF ⇒ R + CF.” '
           + 'From bar 8 both voices are marked “free,” stopping on the dominant.',
         canon: canon(-4, 2, [1, 5]),
         icf: true,

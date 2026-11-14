@@ -12,7 +12,7 @@ import { imaginaryCantus } from '../src/taneyev/imaginary-cantus.js';
 import { dissonances, worthShowing } from '../src/taneyev/florid.js';
 
 /** The id and staff name of the imaginary cantus voice. */
-export const ICF = { id: 'ICF', name: 'I.C.F.' };
+export const ICF = { id: 'ICF', name: 'ICF' };
 
 /** The first pitch a bar sounds, or null for a bar of rests. */
 const firstStep = (bar) => bar.find((note) => note.step !== null)?.step ?? null;

@@ -1,5 +1,5 @@
 // The canon over a cantus firmus page: the editable score. One staff per voice
-// in the chosen order, plus the imaginary cantus (I.C.F.) in gray at the
+// in the chosen order, plus the imaginary cantus (ICF) in gray at the
 // bottom, which is drawn but not played. Bars with a problem are drawn red,
 // and the note under the entry cursor in the accent color.
 // Display only: the risposta and imaginary cantus come from
@@ -15,7 +15,7 @@ import { block, showEditable } from '../src/notation/playback.js';
 import { fmt } from './names.js';
 
 /** The key and label of the imaginary cantus staff. */
-const IMAGINARY = { id: 'I', key: 'imaginary', name: '(I.C.F.)' };
+const IMAGINARY = { id: 'I', key: 'imaginary', name: '(ICF)' };
 
 /** The sounding staves in the chosen order, top to bottom. Jv is written over the proposta. */
 const soundingVoices = (order) => order.map((key) => ({

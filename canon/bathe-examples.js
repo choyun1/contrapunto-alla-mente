@@ -31,7 +31,7 @@ function placeAbc(place, move) {
   const leader = fits.map((w) => CANTUS + 7 + (w.leader - 1));
   const follower = leader.map((step) => step + place);
   return ['X:1', 'M:none', 'L:1', 'K:C',
-    'V:F clef=treble name="R"', 'V:L clef=treble name="P"', 'V:CF clef=bass name="CF"', 'V:ICF clef=bass name="I.C.F."',
+    'V:F clef=treble name="R"', 'V:L clef=treble name="P"', 'V:CF clef=bass name="CF"', 'V:ICF clef=bass name="ICF"',
     `[V:F] z | ${chord(follower)} |]`, `[V:L] ${chord(leader)} | z |]`,
     `[V:CF] ${abcPitch(CANTUS)} | ${abcPitch(next)} |]`, `[V:ICF] ${abcPitch(next - place)} | z |]`].join('\n');
 }

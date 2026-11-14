@@ -95,7 +95,7 @@ let audioBox = null; // the box that playback-only tunes are drawn into, inside 
  * play, but this one is never seen. Each call reuses the box. abcjs makes the
  * box it draws into position: relative, so the box sits inside a holder that is
  * the one taken out of the page; drawing straight into the holder left a tall
- * empty space below the page (canon over a c.f.).
+ * empty space below the page (canon over a CF).
  */
 function audioTune(abc) {
   if (!audioBox) {
