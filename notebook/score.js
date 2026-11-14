@@ -132,11 +132,34 @@ export function withMarks(abc, marks) {
 }
 
 /**
+ * Where a voice takes a new role, as marks: { voice: { bar: 'now P' } }, from
+ * an example's `roles` ({ R: { 12: 'P' } }: the staff named R leads, as P, from bar 12).
+ */
+export function roleMarks(example) {
+  const roles = example.roles ?? {};
+  return Object.fromEntries(Object.entries(roles).map(([id, bars]) => [id,
+    Object.fromEntries(Object.entries(bars).map(([bar, role]) => [bar, `now ${role}`]))]));
+}
+
+/** Two sets of marks as one; where both mark the same bar, the labels are joined: 'now P, free'. */
+export function joinMarks(first, second) {
+  const out = {};
+  for (const id of new Set([...Object.keys(first), ...Object.keys(second)])) {
+    out[id] = { ...first[id] };
+    for (const [bar, label] of Object.entries(second[id] ?? {})) {
+      out[id][bar] = out[id][bar] ? `${out[id][bar]}, ${label}` : label;
+    }
+  }
+  return out;
+}
+
+/**
  * The example as drawn: its abc, with where the canon goes free marked
- * (canonMarks), plus the imaginary cantus as the bottom staff when asked for.
+ * (canonMarks) and any change of role (roleMarks), plus the imaginary cantus
+ * as the bottom staff when asked for.
  */
 export function drawnAbc(written, example) {
-  const abc = withMarks(written, canonMarks(written, example));
+  const abc = withMarks(written, joinMarks(roleMarks(example), canonMarks(written, example)));
   if (!example.icf) return abc;
   const steps = imaginaryBars(written, example.canon);
   const sounding = steps.filter((step) => step !== null);

@@ -160,6 +160,13 @@ test('IC p. 20: P leads a canon at the 12th to bar 10, then R leads one at the 1
   assert.equal(firstUncopied(voices, second), null);
 });
 
+test('IC p. 20: the trade of names is marked above both staves at bar 12', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic20'));
+  const drawn = drawnAbc(load(example.file), example);
+  assert.match(drawn, /\| "\^now P"e c a3\/2 g\/ \|/);
+  assert.match(drawn, /\| "\^now R"z4 \|/);
+});
+
 test('IC p. 7: the cadence between the two canons is marked, and so is the one at the end', () => {
   const example = EXAMPLES.find((e) => e.file.startsWith('ic07'));
   const marks = canonMarks(load(example.file), example);

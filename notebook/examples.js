@@ -25,6 +25,10 @@
 // −11 at the 12th). The page plays the upper pair, a bar's rest, then the
 // lower pair, and checks each pair on its own; the test checks the shift.
 //
+// With `roles: { R: { 12: 'P' } }`, the staff named R takes the name P from
+// bar 12 on, for a canon whose voices trade the lead; the page marks it
+// "now P" there.
+//
 // With `rounds`, an infinite canon is drawn with its repeat signs and heard
 // going round the repeat that many times before the ending.
 
@@ -124,10 +128,11 @@ export const SECTIONS = [
         title: 'Canon at the 12th in C minor, the voices trading the lead',
         source: 'IC p. 20',
         note: '“Needs editing.” P leads in the bass and R answers a 12th above, a bar later, to the half cadence on G in bar 11. '
-          + 'From bar 12 R leads and P answers a 12th below, to the close on C. R’s B♮ in bar 10 and P’s B♮ in bar 20 are ficta; '
-          + 'P’s A♮ in bar 2 is answered by E♭.',
-        caption: 'R’s bar 13 is read as quarters, F E♭, where P answers with a dotted rhythm. '
+          + 'From bar 12 the voices trade names: the treble leads as P and the bass answers as R, a 12th below, to the close on C. The treble’s B♮ in bar 10 and the bass’s B♮ in bar 20 are ficta, '
+          + 'and the bass’s A♮ in bar 2 is answered by E♭.',
+        caption: 'The treble’s bar 13 is read as quarters, F E♭, where the bass answers with a dotted rhythm. '
           + 'The page marks no free bars or cadences, so none are drawn here.',
+        roles: { R: { 12: 'P' }, P: { 12: 'R' } },
       },
     ],
   },
