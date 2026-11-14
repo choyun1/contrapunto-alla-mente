@@ -88,18 +88,23 @@ export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
   button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, TEMPO.NOTEBOOK));
 }
 
-let audioBox = null; // the off-page box that playback-only tunes are drawn into
+let audioBox = null; // the box that playback-only tunes are drawn into, inside an off-page holder
 
 /**
- * A tune for playback only, drawn into a box off the page: abcjs needs a
- * drawn tune to play, but this one is never seen. Each call reuses the box.
+ * A tune for playback only, drawn off the page: abcjs needs a drawn tune to
+ * play, but this one is never seen. Each call reuses the box. abcjs makes the
+ * box it draws into position: relative, so the box sits inside a holder that is
+ * the one taken out of the page; drawing straight into the holder left a tall
+ * empty space below the page (canon over a c.f.).
  */
 function audioTune(abc) {
   if (!audioBox) {
+    const holder = document.createElement('div');
+    holder.style.cssText = 'position:absolute;left:-10000px;top:0;width:800px;height:0;overflow:hidden';
+    holder.setAttribute('aria-hidden', 'true');
     audioBox = document.createElement('div');
-    audioBox.style.cssText = 'position:absolute;left:-10000px;top:0;width:800px';
-    audioBox.setAttribute('aria-hidden', 'true');
-    document.body.append(audioBox);
+    holder.append(audioBox);
+    document.body.append(holder);
   }
   const [tune] = ABCJS.renderAbc(audioBox, abc, RENDER_OPTIONS);
   return tune;

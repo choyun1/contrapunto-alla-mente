@@ -23,6 +23,10 @@
 <a class="nav-drills" href="../drills/move-chords.html">Drills</a>
 <a href="../notebook/">Notebook</a>
 </nav>
+<nav class="sub" aria-label="J<sub>v</sub> charts">
+<a href="charts.html" aria-current="page">Charts</a>
+<a href="models.html">How to read the 3D models</a>
+</nav>
 <h1>Taneyev consonance charts</h1>
 <p class="lead">Each chart shows what every interval of the original becomes when the voices shift by J<sub>v</sub>, and the suspension rules that follow. Intervals are zero-indexed (unison 0, octave 7, 12th 11). Pick any shift from −21 to +21; the common ones are starred. The charts are generated from the same rules code the checker will use. The J<sub>v</sub> = −11 chart matches Movable Counterpoint 2 (frame 0071).</p>
 <p class="note see-notebook">William Bathe’s canon table of c. 1596 is these charts used as a lookup: each of its cells is a chart’s fixed consonances. See <a href="../canon/bathe.html#taneyev-h">Bathe’s table in J<sub>v</sub> terms</a>.</p>
@@ -64,5 +68,6 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
 <script type="module" src="charts.js"></script>
+<script type="module" src="../src/ui/sub-nav.js"></script>
 </body>
 </html>

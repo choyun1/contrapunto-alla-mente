@@ -9,6 +9,7 @@ import { chart, intervalName } from '../src/taneyev/rules.js';
 import { slug, sign } from '../taneyev/chart-card.js';
 import { MOVES, drawMove } from './bathe-examples.js';
 import { mountFold } from './bathe-fold.js';
+import { mountChords } from './bathe-chords.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -18,11 +19,16 @@ const placeHead = () => PLACES.map(({ up, down }) => `<th class="c">${up}<br><sm
 /** A row head: course up, with the course down beside it. */
 const courseHead = ({ up, down }) => `<th class="c">${up} <small>(${down} down)</small></th>`;
 
+/** One number in a printed cell, as a button that shows its move chord (bathe-chords.js). */
+const numberButton = (leader, place) =>
+  `<button type="button" class="bn" data-place="${place}" data-leader="${leader}">${leader}</button>`;
+
 /** One printed cell, with the misprint starred. */
 function printedCell(numbers, course, place) {
   const misprint = course === MISPRINT.course && place === MISPRINT.place;
   const star = misprint ? '<sup title="Printed 3 6; the editors’ correction">*</sup>' : '';
-  return `<td class="c">${numbers.join(' ')}${star}</td>`;
+  const buttons = numbers.map((leader) => numberButton(leader, place)).join(' ');
+  return `<td class="c" data-place="${place}" data-cell="${numbers.join(' ')}">${buttons}${star}</td>`;
 }
 
 /** Bathe's table as he printed it (with the misprint corrected): 1-indexed. */
@@ -74,6 +80,7 @@ function taneyevHtml() {
 $('bathe-table').innerHTML = batheHtml();
 $('bathe-grid').innerHTML = jvGridHtml();
 $('bathe-taneyev').innerHTML = taneyevHtml();
+mountChords($('bathe-table'), $('bathe-chord'));
 
 /** Fills the move picker, a 3rd up first, and draws the cards for the chosen move. */
 function mountExamples() {

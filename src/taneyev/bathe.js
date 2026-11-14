@@ -100,3 +100,29 @@ export function batheWorked(place, course) {
     fits: isConsonant(leader + guide),
   }));
 }
+
+// How the table holds the canon move chords (canon.js, moveChord; Cho's paper
+// chord chart, Canons p. 1). Once the leader sings interval `leader` above the
+// plain song's current note, the follower's note is fixed: `leader` + place
+// above that same note, one plain-song note later. So for that one bar the
+// plain song and the follower are a two-voice canon, the plain song the
+// proposta below and the follower the risposta above, and the plain song's
+// next note must be in that canon's move chord. Read down one place's column:
+// the rows whose cell holds `leader` are exactly that chord.
+
+/**
+ * The canon between plain song and follower that a leader interval sets up:
+ * the follower's interval above the plain song's current note, zero-indexed,
+ * 1–7. Octaves are ignored, as Bathe ignores them, and a unison counts as an
+ * octave because the follower stays above the plain song.
+ */
+export function followerEntry(place, leader) {
+  const steps = ((place - 1) + (leader - 1)) % 7;
+  return steps === 0 ? 7 : steps;
+}
+
+/** The courses up, 1-indexed (1–7), whose cell in one place's column holds the leader interval `leader` (1-indexed). */
+export function coursesHolding(place, leader) {
+  const courses = [1, 2, 3, 4, 5, 6, 7];
+  return courses.filter((course) => batheCell(place, course).includes(leader));
+}

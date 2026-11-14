@@ -45,6 +45,10 @@
 <h2 id="table-h">The table, as Bathe printed it</h2>
 <div id="bathe-table"></div>
 <p class="note">* Course 5, place 2 is printed 3 6. It is a known misprint; the editors correct it to 1 6, which is also what the rule below gives. The other 55 cells match the rule as printed.</p>
+<h3>The canon move chords in the table</h3>
+<p class="note">Bathe’s columns hold the move chords of the <a href="proposta.html">Canon proposta</a> page, exactly. Once the leader sings a note, the follower’s note one plain-song note later is fixed, so for that bar the plain song and the follower are a two-voice canon, with the plain song as the proposta below. The plain song’s next note must be in that canon’s move chord, the same four note names the <a href="handshapes.html">left hand</a> finds. Click any number in the table: the cells in its column holding the same number are that chord.</p>
+<div class="bathe-chord-note" id="bathe-chord" aria-live="polite"></div>
+<p class="note">Read across a cell instead and it is the leader’s side: the consonance chord over the plain song (A C E G over C, the right hand’s shape) with only the notes that also fit the imaginary cantus kept. So every cell is a run of that chord in thirds: 1 3 5 6 is all of it, 1 3 5 or 1 3 6 three notes, 3 5 or 1 6 two, and 5 or 6 just one.</p>
 </section>
 <section class="chart" aria-labelledby="ex-h">
 <h2 id="ex-h">One row of the table, notated</h2>
@@ -78,5 +82,6 @@
 <style>.wrap>*{min-width:0}.chart{grid-template-columns:minmax(0,1fr)}.lead.c{text-align:center}</style>
 <script src="https://cdn.jsdelivr.net/npm/abcjs@6.4.4/dist/abcjs-basic-min.js"></script>
 <script type="module" src="bathe.js"></script>
+<script type="module" src="../src/ui/sub-nav.js"></script>
 </body>
 </html>
