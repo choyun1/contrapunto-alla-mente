@@ -6,7 +6,8 @@
 // This runs only in the browser; it holds no music theory.
 
 import { staffSpotAt } from './staff-click.js';
-import { holdFinalNotes } from './final-chord.js';
+import { holdFinalNotes, ringOn } from './final-chord.js';
+import { fadeOut, RING_SECONDS } from './fade-out.js';
 import { breathTimes, breatheAt } from './breaths.js';
 import { voiceIds } from './abc-read.js';
 import { ritardandoInBar, stretchNotes } from './ritardando.js';
@@ -194,6 +195,15 @@ function stop() {
   current = null;
 }
 
+/** Fades the last `seconds` of a primed synth's sound to silence, in place. */
+function fadeTail(synth, seconds) {
+  for (const buffer of synth.audioBuffers ?? []) {
+    const channels = [];
+    for (let c = 0; c < buffer.numberOfChannels; c += 1) channels.push(buffer.getChannelData(c));
+    fadeOut(channels, buffer.sampleRate, seconds);
+  }
+}
+
 /** Play button handler: stops this tune if it is playing, otherwise plays it. */
 function toggle(tune, button, sound, tempo, timing) {
   const wasThisOne = current?.button === button;
@@ -217,16 +227,20 @@ function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
   // timing.shape changes the notes just before they sound: by default, voices
-  // that end early hold their last note to the end (final-chord.js).
-  const options = { qpm, program, sequenceCallback: timing.shape };
+  // that end early hold their last note to the end (final-chord.js). Then the
+  // final chord rings on for RING_SECONDS, to be faded out (fade-out.js).
+  const ring = (RING_SECONDS * qpm) / 240; // in whole notes: a whole note lasts 240 / qpm seconds
+  const options = { qpm, program, sequenceCallback: (voices) => ringOn(timing.shape(voices), ring) };
   synth.init({ visualObj: tune, audioContext, options })
     .then(() => {
-      // abcjs sizes the sound from the written length, so a stretched piece needs it lengthened first
-      synth.flattened.totalDuration = timing.playedTime(synth.flattened.totalDuration);
+      // abcjs sizes the sound from the written length, so it is lengthened
+      // first for a ritardando's stretch and for the ring at the end
+      synth.flattened.totalDuration = timing.playedTime(synth.flattened.totalDuration) + ring;
       return synth.prime();
     })
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
+      fadeTail(synth, RING_SECONDS + synth.fadeLength / 1000);
       synth.start();
       playing.timer = setTimeout(stop, duration * 1000);
     })

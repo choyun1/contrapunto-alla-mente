@@ -103,7 +103,8 @@ export const SECTIONS = [
         canon: canon(4, 1, [1, 8]),
         icf: false,
         tempo: 90, // slower than the Notebook's 118 (Cho, 2026-11-14)
-        breaths: { P: [[4, 1]], R: [[5, 1]] }, // after beat 1, heard but not drawn
+        // after beat 1 of P's bars 4, 5 and 7 and of the same places in R a bar later; heard, not drawn
+        breaths: { P: [[4, 1], [5, 1], [7, 1]], R: [[5, 1], [6, 1], [8, 1]] },
         ritardando: 8, // the bar before the last
       },
       {
