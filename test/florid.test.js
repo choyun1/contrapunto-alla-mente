@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { keySignature, readBars } from '../src/notation/abc-read.js';
-import { KIND, dissonances, isAltered, isStrongBeat, worthShowing } from '../src/taneyev/florid.js';
+import { KIND, alteredName, dissonances, isAltered, isStrongBeat, worthShowing } from '../src/taneyev/florid.js';
 import { dissonancesOf, timelines } from '../notebook/score.js';
 
 /** The text of a notebook example's abc file. */
@@ -32,6 +32,16 @@ test('altered intervals: C#–G is a diminished 5th, C–G a perfect one, F–B 
   assert.equal(isAltered(note(28, 49), note(32, 55)), true);
   assert.equal(isAltered(note(28, 48), note(32, 55)), false);
   assert.equal(isAltered(note(31, 53), note(34, 59)), true);
+});
+
+test('altered intervals by name: only the augmented 4th and diminished 5th are called a tritone', () => {
+  // steps from C4 = 28, semitones from C0 (C4 = 48)
+  assert.equal(alteredName(note(31, 53), note(34, 59)), 'tritone'); // F–B
+  assert.equal(alteredName(note(28, 49), note(32, 55)), 'tritone'); // C♯–G
+  assert.equal(alteredName(note(28, 49), note(31, 53)), 'diminished 4th'); // C♯–F
+  assert.equal(alteredName(note(28, 48), note(28, 49)), 'augmented unison'); // C–C♯
+  assert.equal(alteredName(note(27, 46), note(28, 49)), 'augmented 2nd'); // B♭–C♯
+  assert.equal(alteredName(note(28, 49), note(34, 58)), 'diminished 7th'); // C♯–B♭
 });
 
 test('strong beats in 4/4: beats 1 and 3 only', () => {

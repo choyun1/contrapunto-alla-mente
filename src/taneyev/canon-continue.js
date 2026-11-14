@@ -27,7 +27,7 @@
 
 import { semitonesInKey } from '../common/diatonic.js';
 import { intervalName, simple } from './rules.js';
-import { dissonances, isAltered, isStrongBeat, KIND } from './florid.js';
+import { alteredName, dissonances, isAltered, isStrongBeat, KIND } from './florid.js';
 import { parallels } from './parallels.js';
 
 const EPS = 1e-9;
@@ -193,7 +193,7 @@ const pairName = ([a, b]) => `${a} and ${b}`;
 
 /** The problem in words for one dissonance that is not passing, neighbor or suspension. */
 function dissonanceText(found) {
-  if (found.tritone) return `tritone between ${pairName(found.voices)}`;
+  if (found.tritone) return `${found.altered} between ${pairName(found.voices)}`;
   return `${intervalName(simple(found.steps))} between ${pairName(found.voices)}, not passing or resolving`;
 }
 
@@ -203,13 +203,16 @@ function perfectName(steps) {
   return simple(steps) === 0 ? 'octave' : '5th';
 }
 
+/** "a" or "an" before a word. */
+const articleFor = (word) => (/^[aeiou]/.test(word) ? 'an' : 'a');
+
 /** The leap from the proposta's note before to this one, as a problem in words, or null. (ALLOWED_LEAPS) */
 export function leapProblem(before, note) {
   if (!before || before.step === null) return null;
   const [lower, upper] = before.step <= note.step ? [before, note] : [note, before];
   const leap = upper.step - lower.step;
   if (leap > 7 || !ALLOWED_LEAPS.includes(leap)) return `P leaps a ${intervalName(leap)}`;
-  if (leap > 0 && isAltered(lower, upper)) return leap === 3 || leap === 4 ? 'P leaps a tritone' : `P leaps an altered ${intervalName(leap)}`;
+  if (leap > 0 && isAltered(lower, upper)) return `P leaps ${articleFor(alteredName(lower, upper))} ${alteredName(lower, upper)}`;
   return null;
 }
 
