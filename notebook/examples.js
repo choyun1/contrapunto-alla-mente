@@ -106,8 +106,7 @@ export const SECTIONS = [
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
         source: 'IC p. 15',
-        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence. At the '
-          + 'end: “garbage!”',
+        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence.',
         canon: canon(-11, 3, [1, 14]),
         icf: false,
       },
