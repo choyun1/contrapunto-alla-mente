@@ -54,7 +54,7 @@ function drawChords(box, from, entry) {
 function movesTable(from, entry) {
   const rows = handMoves(from, entry).map((m) => `<tr><td>${pitchName(m.step)}</td><td>${spanName(m.span)}</td>
     <td>${intervalName(Math.abs(m.n))}</td><td>${m.finger}</td>
-    <td><span class="sw ${m.perfect ? 'k-variable-consonance' : 'k-fixed-consonance'}">${m.perfect ? 'perfect' : 'free'}</span></td></tr>`);
+    <td><span class="sw k-fixed-consonance">${m.perfect ? '<b>perfect</b>' : 'free'}</span></td></tr>`);
   return `<table class="spans"><thead><tr><th>Note</th><th>Proposta moves</th><th>Between the voices</th>
     <th>Finger</th><th>Verdict</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
 }
