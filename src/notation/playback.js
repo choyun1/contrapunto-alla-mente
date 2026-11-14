@@ -6,6 +6,7 @@
 // This runs only in the browser; it holds no music theory.
 
 import { staffSpotAt } from './staff-click.js';
+import { holdFinalNotes } from './final-chord.js';
 
 const RENDER_OPTIONS = {
   add_classes: true,
@@ -196,7 +197,9 @@ function play(tune, button, program, qpm) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  synth.init({ visualObj: tune, audioContext, options: { qpm, program } })
+  // Voices that end early hold their last note to the end (final-chord.js).
+  const options = { qpm, program, sequenceCallback: holdFinalNotes };
+  synth.init({ visualObj: tune, audioContext, options })
     .then(() => synth.prime())
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading

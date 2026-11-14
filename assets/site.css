@@ -314,29 +314,42 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 @media (prefers-reduced-motion: reduce){.wheel .wh-ring{transition:none}}
 .wh-key-in{color:var(--accent)}.wh-key-out{color:var(--vd-ink);font-weight:700}.wh-key-both{background:var(--fc);color:var(--fc-ink);padding:0 4px;border-radius:4px}
 
-/* The page contents (src/ui/page-contents.js): a list of the page's sections, beside the page on wide
-   screens and following your place, or a "Contents" box under the header on narrow ones. */
-.with-contents{display:grid;gap:28px;min-width:0}
-.page-body{display:grid;gap:28px;min-width:0}
-.contents{font-size:.88rem;min-width:0}
-.contents summary{cursor:pointer;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+/* The page contents (src/ui/page-contents.js). Wide screens: a panel on the left edge of the window
+   that slides to a thin strip; the page moves over with it. Narrow: a folded box under the header.
+   Its one button, top left, opens and folds it in both. */
+.contents{font-size:.86rem;min-width:0}
+.contents-toggle{display:flex;align-items:center;gap:8px;font:inherit;font-size:.72rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);background:none;border:0;padding:4px 8px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.contents-toggle:hover{color:var(--accent);background:var(--bg)}
+.contents-arrow::before{content:"\25B8";display:inline-block;font-size:1rem;letter-spacing:0;transition:transform .2s}
+.contents.open .contents-arrow::before{transform:rotate(90deg)}
+.contents nav{display:none}
+.contents.open nav{display:block}
 .contents ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:1px}
-.contents ol ol{margin:0 0 4px 1.2em}
-.contents a{display:block;padding:2px 8px;border-left:2px solid transparent;color:var(--muted);text-decoration:none}
+.contents ol ol{margin:0 0 4px 1.4em}
+/* each entry: the number in its own column, the title wrapping after it */
+.contents a{display:grid;grid-template-columns:1.8em 1fr;gap:0 .3em;padding:2px 8px;border-left:2px solid transparent;color:var(--muted);text-decoration:none}
+.contents ol ol a{grid-template-columns:2.2em 1fr}
 .contents a:hover{color:var(--accent)}
-.contents .n{display:inline-block;min-width:1.8em;margin-right:.3em;font-variant-numeric:tabular-nums}
-.contents ol ol .n{min-width:2.2em}
+.contents .n{font-variant-numeric:tabular-nums}
 .contents li.current > a{color:var(--ink);font-weight:600;border-left-color:var(--accent)}
 .contents li.on > a{color:var(--accent);font-weight:600}
 @media (max-width:1099px){
-  .contents{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 12px;max-width:32rem}
+  .contents{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 8px;max-width:32rem}
 }
 @media (min-width:1100px){
-  main.wrap:has(.with-contents){max-width:1220px}
-  .with-contents{grid-template-columns:15rem minmax(0,1fr);gap:40px;align-items:start}
-  .contents{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding-top:20px}
-  .contents summary{pointer-events:none;list-style:none}
-  .contents summary::-webkit-details-marker{display:none}
+  .contents{position:fixed;z-index:15;left:0;top:0;bottom:0;width:14rem;overflow:hidden auto;
+    padding:20px 12px 24px max(8px,env(safe-area-inset-left,0px));background:var(--panel);border-right:1px solid var(--line);
+    transition:width .25s ease}
+  body{transition:padding-left .25s ease}
+  body:has(.contents.open){padding-left:14rem}
+  body:has(.contents:not(.open)){padding-left:2.75rem}
+  .contents-arrow::before{content:"\00BB"} /* » show, turning to « hide */
+  .contents.open .contents-arrow::before{transform:rotate(180deg)}
+  .contents nav{display:block;transition:opacity .2s ease}
+  .contents:not(.open){width:2.75rem}
+  .contents:not(.open) nav,.contents:not(.open) .contents-label{opacity:0;visibility:hidden}
+  .contents:not(.open) .contents-label{width:0;overflow:hidden}
   .contents ol ol{display:none}
   .contents li.current > ol{display:grid}
 }
@@ -347,3 +360,4 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .prose ol{padding-left:1.4em;display:grid;gap:4px}
 .refs ul{list-style:none;padding:0;display:grid;gap:6px;font-size:.92rem}
 .refs li{padding-left:1.2em;text-indent:-1.2em}
+@media (prefers-reduced-motion:reduce){.contents,.contents nav,.contents-arrow::before,body{transition:none}}

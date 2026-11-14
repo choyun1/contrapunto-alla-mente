@@ -1,6 +1,7 @@
 // The page contents: a numbered list of a long page's sections (its h2 headings) and, under
-// each, the examples in it (the h3 of each .example). On wide screens it sits beside the page
-// and marks the section you are reading; on narrow ones it is a "Contents" box under the header.
+// each, the examples in it (the h3 of each .example). On wide screens it is a panel on the left
+// edge that marks the section you are reading and folds to a thin strip; on narrow ones it is a
+// folded "On this page" box under the header.
 // Styles: assets/site.css. A page opts in with <script type="module" src="../src/ui/page-contents.js">.
 // Pages that draw their sections after loading (the notebook) are picked up as they appear.
 
@@ -42,22 +43,54 @@ function listHtml(sections) {
   }).join('');
 }
 
-// Wraps everything after the page's header in a two-column grid, with the contents first.
-function buildFrame(main) {
-  const header = main.querySelector(':scope > header');
-  const frame = document.createElement('div');
-  frame.className = 'with-contents';
-  const contents = document.createElement('details');
+const SAVED = 'contents-open'; // remembers, per browser, whether the side panel was left open
+
+// Returns whether the side panel should start open: as last left, or open the first time.
+function startsOpen() {
+  try {
+    return localStorage.getItem(SAVED) !== 'no';
+  } catch {
+    return true;
+  }
+}
+
+// Remembers whether the side panel is open, when it is the side panel (wide screens).
+function rememberOpen(open) {
+  if (!WIDE.matches) return;
+  try {
+    localStorage.setItem(SAVED, open ? 'yes' : 'no');
+  } catch {
+    // storage blocked: the panel just starts open next time
+  }
+}
+
+// Opens or folds the contents, and says so on its button.
+function setOpen(contents, open) {
+  contents.classList.toggle('open', open);
+  const button = contents.querySelector('.contents-toggle');
+  button.setAttribute('aria-expanded', String(open));
+  button.title = open ? 'Hide the contents' : 'Show the contents';
+}
+
+// Adds the contents after the page's header: a panel on the left edge that folds to a strip on
+// wide screens, a folded box under the header on narrow ones. The one button that opens and folds
+// it stays in the same place, top left, either way.
+function buildContents(main) {
+  const contents = document.createElement('aside');
   contents.className = 'contents';
-  contents.open = WIDE.matches; // open beside the page; folded under the header on a phone
-  contents.setAttribute('aria-label', 'On this page');
-  contents.innerHTML = '<summary>On this page</summary><ol></ol>';
-  const body = document.createElement('div');
-  body.className = 'page-body';
-  for (const child of [...main.children]) if (child !== header && child.tagName !== 'SCRIPT') body.append(child);
-  frame.append(contents, body);
-  main.append(frame);
-  return { contents, body };
+  contents.innerHTML = `<button class="contents-toggle" type="button" aria-controls="contents-list">
+    <span class="contents-arrow" aria-hidden="true"></span><span class="contents-label">On this page</span></button>
+    <nav id="contents-list" aria-label="On this page"><ol></ol></nav>`;
+  setOpen(contents, WIDE.matches && startsOpen());
+  contents.querySelector('.contents-toggle').addEventListener('click', () => {
+    const open = !contents.classList.contains('open');
+    setOpen(contents, open);
+    rememberOpen(open);
+  });
+  const header = main.querySelector(':scope > header');
+  if (header) header.after(contents);
+  else main.prepend(contents);
+  return contents;
 }
 
 // Marks the section (and example) at the top of the screen as current in the list.
@@ -68,7 +101,7 @@ function followPlace(contents, sections) {
       if (!entry.isIntersecting) continue;
       const item = items.get(entry.target.id);
       if (!item) continue;
-      const isSection = item.parentElement.parentElement === contents;
+      const isSection = !item.parentElement.closest('li');
       const mark = isSection ? 'current' : 'on';
       contents.querySelectorAll(`li.${mark}`).forEach((li) => li.classList.remove(mark));
       item.classList.add(mark);
@@ -86,22 +119,24 @@ function followPlace(contents, sections) {
 }
 
 const main = document.querySelector('main.wrap');
-let frame = null;
+let contents = null;
 let watcher = null;
 
 // Builds or rebuilds the list from the headings now on the page.
 function refresh() {
-  const sections = readSections(frame ? frame.body : main);
+  const sections = readSections(main);
   if (sections.length < MIN_SECTIONS) return;
-  if (!frame) frame = buildFrame(main);
-  frame.contents.querySelector('ol').innerHTML = listHtml(sections);
+  if (!contents) contents = buildContents(main);
+  contents.querySelector('ol').innerHTML = listHtml(sections);
   watcher?.disconnect();
-  watcher = followPlace(frame.contents, sections);
+  watcher = followPlace(contents, sections);
 }
 
 refresh();
-// The list is always open beside the page, and starts folded when it moves under the header.
-WIDE.addEventListener('change', () => { if (frame) frame.contents.open = WIDE.matches; });
+// Moving between wide and narrow: the side panel opens as last left, the box under the header folds.
+WIDE.addEventListener('change', () => {
+  if (contents) setOpen(contents, WIDE.matches && startsOpen());
+});
 // Rebuild when a page adds its sections later; wait for a quiet moment so it happens once.
 let pending = 0;
 new MutationObserver((changes) => {
