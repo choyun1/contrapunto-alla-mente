@@ -99,7 +99,11 @@ export const SECTIONS = [
         title: 'Canon at the 5th above, with ficta',
         source: 'IC p. 19, second system',
         note: '“w/ ficta.” P leads in the alto clef and R answers a 5th above; the B♭s are the ficta. '
-          + 'P drops to the low C for the last bar while R answers it.',
+          + 'P drops to the low C for the last bar while R answers it. '
+          + 'R copies in key by default (<a href="../canon/ficta.html#spiral-h">the spiral, and two ways out</a>): '
+          + 'P’s B♮ comes back as F♮, not F♯, so in bar 2 R’s F is a diminished 5th against P’s B, a passing liberty; '
+          + 'an F♯ there would pull R toward G just before bar 4. Bar 4 is a deliberate turn to the flat side: both voices take B♭ (a C7 sound) and land in F. '
+          + 'P’s leap to B♭ on beat 2, against R’s held E, is a liberty in strict style, though the B♭ falls to A as a 7th would.',
         canon: canon(4, 1, [1, 8]),
         icf: false,
         tempo: 90, // slower than the Notebook's 118 (Cho, 2026-11-14)
