@@ -1,8 +1,0 @@
-X:1
-M:C
-L:1/4
-K:G
-V:P clef=treble name="P"
-V:R clef=bass name="R"
-[V:P] G3 A | B G g2- | g3 =f/e/ | d e d c | B c/B/ A G/F/ | G4- | G4 |]
-[V:R] z4 | G,3 A, | B, G, G2- | G3 =F/E/ | D E D C | B, C/B,/ A, G,/F,/ | G,4 |]
