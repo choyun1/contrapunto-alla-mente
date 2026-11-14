@@ -126,3 +126,16 @@ export function coursesHolding(place, leader) {
   const courses = [1, 2, 3, 4, 5, 6, 7];
   return courses.filter((course) => batheCell(place, course).includes(leader));
 }
+
+/**
+ * Cho's 0–6 wheel (IC p. 27, an early cyclic notation): the seven steps
+ * counted around a circle, mod 7, zero-indexed. For one shift `jv`, each
+ * corner m says whether m is a consonance above the plain song (`above`) and
+ * whether m + jv is one above the imaginary cantus (`shifted`). The consonance
+ * set {0, 2, 4, 5} turned back by jv lands on the `shifted` corners, and the
+ * corners with both are one cell of Bathe's table. Returns [{ m, above, shifted }].
+ */
+export function wheel(jv) {
+  const corners = [0, 1, 2, 3, 4, 5, 6];
+  return corners.map((m) => ({ m, above: isConsonant(m), shifted: isConsonant(m + jv) }));
+}

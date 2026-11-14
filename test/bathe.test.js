@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   PRINTED, MISPRINT, PLACES, COURSES, batheCell, batheGuide, batheTable, batheSpot, batheWorked, placeUp, courseUp,
-  upward, followerEntry, coursesHolding,
+  upward, followerEntry, coursesHolding, wheel,
 } from '../src/taneyev/bathe.js';
 import { moveChord } from '../src/taneyev/canon.js';
 import { chart } from '../src/taneyev/rules.js';
@@ -87,4 +87,17 @@ test('a 3rd in the place-5 column: the follower a 7th above, so the plain song m
 test('a unison at place 1 makes the follower an octave above: the octave chord A C E F (courses 6 1 3 4)', () => {
   assert.equal(followerEntry(1, 1), 7);
   assert.deepEqual(coursesHolding(1, 1), [1, 3, 4, 6]);
+});
+
+// The wheel counts zero-indexed, mod 7; Bathe's cells are 1-indexed.
+test('Cho’s 0–6 wheel (IC p. 27): the consonances are 0 2 4 5, and the corners kept by both rings are Bathe’s cell', () => {
+  assert.deepEqual(wheel(0).filter((c) => c.above).map((c) => c.m), [0, 2, 4, 5]);
+  for (const jv of [0, 1, 2, 3, 4, 5, 6]) {
+    const both = wheel(jv).filter((c) => c.above && c.shifted).map((c) => c.m + 1);
+    assert.deepEqual(both, batheCell(jv + 1, 1), `Jv ${jv}`);
+  }
+});
+
+test('the wheel’s outer ring is the consonance set turned back by Jv: at +3 it holds 1 2 4 6', () => {
+  assert.deepEqual(wheel(3).filter((c) => c.shifted).map((c) => c.m), [1, 2, 4, 6]);
 });
