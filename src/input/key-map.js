@@ -1,8 +1,10 @@
 // Which note each input means: computer keys and MIDI note numbers, turned
-// into diatonic steps (C4 = 28; see src/common/diatonic.js). Pure functions,
-// no DOM and no theory, so they run in Node for the tests.
+// into diatonic steps (C4 = 28; see src/common/diatonic.js) or pitches in
+// semitones from C0 (C4 = 48). Pure functions, no DOM and no theory, so they
+// run in Node for the tests.
 //
-// The drills are in C major for now, so only white keys count.
+// Computer keys are letters (white keys only): a drill plays each in its key
+// signature. MIDI keys are pitches, black keys included.
 
 import { parsePitch, semitonesOf } from '../common/diatonic.js';
 
@@ -36,10 +38,10 @@ const MIDI_MIDDLE_C = 60;
 /** MIDI note number of a step, e.g. 60 for C4. */
 export const midiOfStep = (step) => semitonesOf(step) - semitonesOf(parsePitch('C4')) + MIDI_MIDDLE_C;
 
-/**
- * The step of a MIDI note number, or null for a black key. White keys only,
- * since the drills are in C major.
- */
+/** The pitch of a MIDI note number, in semitones from C0: 60 (middle C) → 48. */
+export const semitonesOfMidi = (note) => note - MIDI_MIDDLE_C + semitonesOf(parsePitch('C4'));
+
+/** The step of a MIDI note number, or null for a black key. */
 export function stepOfMidi(note) {
   const fromC4 = note - MIDI_MIDDLE_C;
   const octave = Math.floor(fromC4 / 12);

@@ -70,14 +70,27 @@ export function continuationSlots(notes) {
   });
 }
 
-/** The proposta's continuation with your notes in it, up to the last one you wrote. */
+/**
+ * A note you wrote, in place of the notebook's `note`: `played` is a step
+ * (a letter, spelled in the key or as the notebook spells it, see pitched) or
+ * { step, semitones } for a pitch played on a key, ficta included.
+ */
+function writtenAs(note, played, key) {
+  if (typeof played === 'number') return pitched(note, played, key);
+  return { ...note, step: played.step, semitones: played.semitones };
+}
+
+/**
+ * The proposta's continuation with your notes in it, up to the last one you
+ * wrote. `steps` holds what you played for each note (writtenAs).
+ */
 export function writtenNotes(drill, steps) {
   const notes = [];
   let written = 0;
   for (const note of drill.slots) {
     if (note.slot === SLOT.WRITE) {
       if (written >= steps.length) break;
-      notes.push(pitched(note, steps[written], drill.key));
+      notes.push(writtenAs(note, steps[written], drill.key));
       written += 1;
     } else if (note.slot === SLOT.HELD) {
       const tiedFrom = notes.at(-1);
@@ -97,16 +110,24 @@ function noteStartingAt(voice, t, length) {
   return voice.find((note) => Math.abs(note.start - t) < EPS) ?? { start: t, length, step: null, semitones: null, tie: false };
 }
 
+/** How far a note is raised (+) or lowered (−) from its letter in the key: 1 for F♯ in C major. */
+const inflection = (note, key) => note.semitones - semitonesInKey(note.step, key);
+
 /**
  * The risposta's copy of proposta notes: `delay` whole notes later, `entry`
- * steps away, spelled in the key, or as the notebook's R spells it where the
- * copy lands on the note written there (`rispostaGiven`).
+ * steps away. Where the copy lands on the note the notebook's R wrote there
+ * (`rispostaGiven`), it is spelled as the notebook spells it; otherwise in
+ * the key, raised or lowered as the proposta's note was (an F♯ in P is
+ * answered by a raised note in R).
  */
 export function rispostaCopy(notes, { entry, delay, key, rispostaGiven = [] }) {
   return notes.map((note) => {
     const start = note.start + delay;
     const written = { ...noteStartingAt(rispostaGiven, start, note.length), length: note.length, tie: note.tie };
-    return pitched(written, note.step === null ? null : note.step + entry, key);
+    if (note.step === null) return pitched(written, null, key);
+    const step = note.step + entry;
+    if (step === written.step) return pitched(written, step, key);
+    return { ...written, step, semitones: semitonesInKey(step, key) + inflection(note, key) };
   });
 }
 

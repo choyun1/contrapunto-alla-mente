@@ -52,3 +52,37 @@ export const letterInKey = (step, key = {}) => `${letterOf(step)}${SIGNS[key[let
 
 /** A step's scientific name in a key, e.g. 'B♭4' in F major. */
 export const nameInKey = (step, key = {}) => `${letterInKey(step, key)}${octaveOf(step)}`;
+
+/** The pitch class (0–11) of a semitone count. */
+const pitchClass = (semitones) => ((semitones % 12) + 12) % 12;
+
+/**
+ * Black keys outside the key, as raised (+1) or lowered (−1) letters: the
+ * usual ficta, C♯ E♭ F♯ G♯ B♭ (raised leading tones, lowered B and E).
+ */
+const FICTA = { 1: 1, 3: -1, 6: 1, 8: 1, 10: -1 };
+
+/**
+ * A played pitch (semitones from C0) spelled in a key: { step, semitones }.
+ * A note of the key takes its own letter (B♭ in F major); a white key outside
+ * the key is a natural (B♮ in F major); a black key outside it is spelled as
+ * FICTA says (C♯ in D minor).
+ */
+export function spellInKey(semitones, key = {}) {
+  const octaveBase = Math.floor(semitones / 12) * 7;
+  for (let step = octaveBase - 1; step <= octaveBase + 7; step += 1) {
+    if (semitonesInKey(step, key) === semitones) return { step, semitones };
+  }
+  for (let step = octaveBase; step < octaveBase + 7; step += 1) {
+    if (semitonesOf(step) === semitones) return { step, semitones };
+  }
+  const alter = FICTA[pitchClass(semitones)];
+  const step = octaveBase + [0, 1, 2, 3, 4, 5, 6].find((k) => semitonesOf(octaveBase + k) === semitones - alter);
+  return { step, semitones };
+}
+
+/** A spelled note's name, e.g. 'F♯4' for { step: F4, semitones: 54 }. */
+export function spelledName({ step, semitones }) {
+  const alter = semitones - semitonesOf(step);
+  return `${letterOf(step)}${SIGNS[alter] ?? ''}${octaveOf(step)}`;
+}

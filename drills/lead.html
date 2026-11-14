@@ -37,12 +37,13 @@
 <section class="chart" aria-label="Settings">
 <form class="drill-controls" id="settings">
 <label>Canon at the <select id="entry"></select></label>
+<label>Key signature <select id="signature"></select></label>
 <label>Delay <select id="delay"></select></label>
 <label>Tempo <select id="tempo"></select></label>
 <label>Length <select id="length"></select></label>
 <button type="button" class="go" id="start">Start</button>
 </form>
-<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. On a beat, a bar of clicks counts you in; play on each click. <span id="midi"></span></p>
+<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. Black keys count on the screen and on MIDI; the letter keys follow the key signature, so with one flat J plays B♭. On a beat, a bar of clicks counts you in; play on each click. <span id="midi"></span></p>
 </section>
 <section class="chart" aria-live="polite">
 <p class="prompt" id="prompt">Press Start, then play your first note.</p>

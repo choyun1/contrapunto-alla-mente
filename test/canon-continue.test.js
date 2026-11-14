@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { checkAll, checkNote, continuationSlots, leapProblem, SLOT, worstOf } from '../src/taneyev/canon-continue.js';
+import { canonVoices, checkAll, checkNote, continuationSlots, leapProblem, SLOT, worstOf } from '../src/taneyev/canon-continue.js';
 import { drillFrom, givenChoices, timeline } from '../src/drills/continue-drill.js';
 import { drillExamples } from '../drills/continue-examples.js';
 import { readBars, readVoices, keySignature, unitLength } from '../src/notation/abc-read.js';
@@ -126,4 +126,15 @@ test('every notebook voice is written back to abc note for note, accidentals inc
 
 test('every drilled example has room to write: at least one choice of given bars', () => {
   for (const { file, canon } of drillExamples()) assert.ok(givenChoices(canon).length > 0, file);
+});
+
+test('a pitch played on a black key is written as played, and R answers it raised too (ficta)', () => {
+  const drill = octaveDrill();
+  const fSharp = { step: p('F4'), semitones: semitonesInKey(p('F4')) + 1 };
+  const result = checkNote(drill, [p('E4'), fSharp], 1);
+  assert.ok(result.misses.includes('P leaps an altered 2nd') === false);
+  const voices = canonVoices(drill, [p('E4'), fSharp]);
+  assert.equal(voices.P.at(-1).semitones, fSharp.semitones);
+  const copy = voices.R.find((note) => note.start === 2.25);
+  assert.equal(copy.semitones, semitonesInKey(p('F5')) + 1);
 });

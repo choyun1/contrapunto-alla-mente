@@ -2,12 +2,15 @@
 // canons is given, and you write the rest of the proposta note by note in the
 // notebook's rhythm, while the risposta copies what you write. Every check
 // comes from src/taneyev/canon-continue.js; this file runs the drill and draws it.
-// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic steps.
+// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic
+// steps, with semitones from C0 for how they sound (ficta included).
 
-import { checkAll, countWrite, canonVoices, writeWindow, worstOf, VOICE } from '../src/taneyev/canon-continue.js';
+import {
+  checkAll, countWrite, canonVoices, writeWindow, writtenNotes, worstOf, SLOT, VOICE,
+} from '../src/taneyev/canon-continue.js';
 import { isStrongBeat } from '../src/taneyev/florid.js';
 import { drillFrom, givenChoices } from '../src/drills/continue-drill.js';
-import { nameInKey, semitonesInKey, semitonesOf, parsePitch } from '../src/common/diatonic.js';
+import { spellInKey, spelledName, semitonesOf, parsePitch } from '../src/common/diatonic.js';
 import { keyLabels } from '../src/input/key-map.js';
 import { listenForNotes, connectMidi } from '../src/input/listen.js';
 import { tone, VOICE as SOUND_VOICE } from '../src/audio/tone.js';
@@ -64,6 +67,12 @@ const VALUES = new Map([[1, 'whole note'], [0.75, 'dotted half'], [0.5, 'half no
 /** The note value of a length in words, e.g. "dotted quarter", or the length in whole notes. */
 const valueName = (length) => VALUES.get(length) ?? `${length} of a bar`;
 
+/** The notes you wrote so far, as they sound: [{ step, semitones, ... }], one per note. */
+const writtenPitches = () => writtenNotes(state.drill, state.steps).filter((note) => note.slot === SLOT.WRITE);
+
+/** Plays a note given as { step, semitones }; options as for tone(). */
+const sound = (note, options) => tone(note.step, { ...options, alter: note.semitones - semitonesOf(note.step) });
+
 /** A voice's note sounding at time t, or null. */
 const soundingAt = (voice, t) => voice?.find((note) => note.step !== null && t >= note.start - 1e-9 && t < note.start + note.length - 1e-9) ?? null;
 
@@ -76,7 +85,7 @@ function promptFor(k) {
   const note = drill.slots.find((slot) => Math.abs(slot.start - window.start) < 1e-9);
   const voices = canonVoices(drill, steps);
   const against = [VOICE.R, VOICE.CF].map((id) => [id, soundingAt(voices[id], window.start)])
-    .filter(([, sounding]) => sounding).map(([id, sounding]) => `${id} ${nameInKey(sounding.step, drill.key)}`);
+    .filter(([, sounding]) => sounding).map(([id, sounding]) => `${id} ${spelledName(sounding)}`);
   const held = window.end - window.start > note.length + 1e-9 ? ', held over' : '';
   const beat = isStrongBeat(window.start) ? 'a strong beat: be consonant' : 'a weak beat: a dissonance must pass or turn by step';
   const value = valueName(note.length);
@@ -95,11 +104,11 @@ function drawKeys() {
     const t = writeWindow(drill, k).start;
     const risposta = soundingAt(voices.R, t);
     const cantus = soundingAt(voices.CF, t);
-    if (risposta) tags.push({ step: risposta.step, text: 'R', kind: 'r' });
-    if (cantus) tags.push({ step: cantus.step, text: 'CF', kind: 'p' });
+    if (risposta) tags.push({ semitones: risposta.semitones, text: 'R', kind: 'r' });
+    if (cantus) tags.push({ semitones: cantus.semitones, text: 'CF', kind: 'p' });
   }
   const last = voices.P.findLast((note) => note.step !== null);
-  if (last && !tags.some((tag) => tag.step === last.step)) tags.push({ step: last.step, text: 'P', kind: 'p' });
+  if (last && !tags.some((tag) => tag.semitones === last.semitones)) tags.push({ semitones: last.semitones, text: 'P', kind: 'p' });
   const labels = new Map([...keyLabels()].map(([step, label]) => [step + 7 * octaves, label]));
   const low = LOW + 7 * octaves;
   const high = HIGH + 7 * octaves;
@@ -115,11 +124,11 @@ const KIND_OF = { miss: 'miss', check: 'check', pending: 'pending' };
 
 /** The strip of your notes so far, each with where it falls and its verdict. */
 function drawStrip() {
-  const { drill, steps, results } = state;
-  const cells = steps.map((step, k) => {
+  const { drill, results } = state;
+  const cells = writtenPitches().map((note, k) => {
     const worst = worstOf(results[k]);
     return stripCell({
-      top: nameInKey(step, drill.key),
+      top: spelledName(note),
       middle: whereName(writeWindow(drill, k).start).replace(/bar (\d+), beat /, '$1.'),
       bottom: worst ?? 'ok',
       kind: KIND_OF[worst] ?? 'free',
@@ -130,10 +139,11 @@ function drawStrip() {
 
 /** The list of every problem so far, newest first, each with where it is. */
 function drawProblems() {
-  const { drill, steps, results } = state;
+  const { drill, results } = state;
+  const notes = writtenPitches();
   const items = [];
   results.forEach((result, k) => {
-    const where = `${whereName(writeWindow(drill, k).start)} (${nameInKey(steps[k], drill.key)})`;
+    const where = `${whereName(writeWindow(drill, k).start)} (${spelledName(notes[k])})`;
     for (const text of result.misses) items.push(`<li class="miss">${where}: ${text}.</li>`);
     for (const text of result.checks) items.push(`<li class="check">${where}: check ${text}.</li>`);
     for (const text of result.pending) items.push(`<li class="pending">${where}: ${text} yet; it depends on the next note.</li>`);
@@ -161,20 +171,20 @@ function hear(k) {
   const window = writeWindow(drill, k);
   const seconds = Math.max(SHORTEST, (window.end - window.start) * WHOLE_SECONDS);
   const voices = canonVoices(drill, steps);
-  const step = steps[k];
-  tone(step, { seconds, alter: semitonesInKey(step, drill.key) - semitonesOf(step) });
+  sound(writtenPitches()[k], { seconds });
   for (const id of [VOICE.R, VOICE.CF]) {
     const other = soundingAt(voices[id], window.start);
-    if (other) tone(other.step, { seconds, voice: SOUND_VOICE.SITE, alter: other.semitones - semitonesOf(other.step) });
+    if (other) sound(other, { seconds, voice: SOUND_VOICE.SITE });
   }
 }
 
 /** The summary under the finished canon: clean notes, problems, and how many notes match the notebook. */
 function summaryText() {
   const { drill, steps, results, example } = state;
+  const notes = writtenPitches();
   const count = (kind) => results.filter((result) => worstOf(result) === kind).length;
   const clean = results.filter((result) => worstOf(result) === null).length;
-  const same = steps.filter((step, k) => step === drill.original[k]).length;
+  const same = notes.filter((note, k) => note.step === drill.original[k]).length;
   return `${example.title}: ${clean} of ${steps.length} notes clean, `
     + `${count('miss')} against the rules, ${count('check')} to check. `
     + `${same} of ${steps.length} notes are the notebook’s own.`;
@@ -192,13 +202,24 @@ function showResult() {
   document.getElementById('result').hidden = false;
 }
 
+/**
+ * What you played, as the drill writes it: a computer key is a letter (a
+ * step, spelled in the key); a pressed key is a pitch, spelled in the key or
+ * as ficta (spellInKey): { step, semitones }.
+ */
+function asWritten(played) {
+  if (played.semitones === undefined) return played.step;
+  return spellInKey(played.semitones, state?.drill.key ?? {});
+}
+
 /** A note from the keys: written into the drill if one is going, else just played. */
-function onStep(step) {
+function onStep(played) {
   if (!state || state.steps.length >= countWrite(state.drill)) {
-    tone(step, { seconds: 0.6 });
+    const written = asWritten(played);
+    sound(typeof written === 'number' ? { step: written, semitones: semitonesOf(written) } : written, { seconds: 0.6 });
     return;
   }
-  state.steps.push(step);
+  state.steps.push(asWritten(played));
   state.results = checkAll(state.drill, state.steps);
   hear(state.steps.length - 1);
   redraw();

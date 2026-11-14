@@ -8,6 +8,7 @@ import { keyLabels } from '../src/input/key-map.js';
 import { intervalName } from '../src/taneyev/rules.js';
 import { VERDICT } from '../src/taneyev/canon.js';
 import { parsePitch } from '../src/common/diatonic.js';
+import { keyOf } from './signature.js';
 import { entryName } from '../canon/names.js';
 
 /** The on-screen keyboard's range: the three rows of computer keys, C3 to C6. */
@@ -51,11 +52,15 @@ export const numberIn = (id) => Number(document.getElementById(id).value);
 
 /**
  * Draws the on-screen keyboard into `box`, with the computer key for each
- * white key printed on it. tags as in src/ui/keyboard.js; lit maps a
- * step to 'kb-good', 'kb-bad' or 'kb-on'.
+ * white key printed on it. Tags and lit keys are given as drill steps, and
+ * are drawn where they sound in the key signature (signature.js):
+ * tags [{ step, text, kind }]; lit maps a step to 'kb-good', 'kb-bad' or 'kb-on'.
+ * `extraLit` maps a pitch (semitones) to a class, for a key outside the signature.
  */
-export function drawKeys(box, { tags = [], lit = new Map() } = {}) {
-  box.innerHTML = keyboard(LOW, HIGH, tags, { lit, labels: keyLabels() });
+export function drawKeys(box, { tags = [], lit = new Map(), extraLit = new Map() } = {}) {
+  const keyTags = tags.map((tag) => ({ ...tag, semitones: keyOf(tag.step) }));
+  const keyLit = new Map([...[...lit].map(([step, kind]) => [keyOf(step), kind]), ...extraLit]);
+  box.innerHTML = keyboard(LOW, HIGH, keyTags, { lit: keyLit, labels: keyLabels() });
 }
 
 /**

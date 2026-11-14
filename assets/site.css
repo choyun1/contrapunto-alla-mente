@@ -222,14 +222,14 @@ nav.sub .notch{position:absolute;top:-8px;left:var(--notch);width:0;height:0;
 /* piano keyboard (src/ui/keyboard.js); dots use the verdict colors */
 .keyboard{display:block}
 .kb-white{fill:#fdfdfb;stroke:#222826;stroke-width:1}
-.kb-black{fill:#222826}
+.kb-black{fill:#222826}.kb-black.kb-on{fill:#5866b8}.kb-black.kb-good{fill:#2f8f7a}.kb-black.kb-bad{fill:#b04545}
 .kb-name{font-size:11px;text-anchor:middle;fill:var(--muted)}
 .kb-tag{font-size:13px;font-weight:700;text-anchor:middle}
 .kb-tag.r{fill:#233a8a}.kb-tag.p{fill:#5b6474}
 /* on-screen keyboard in the drills: the computer key on each key, and keys lit by your answer */
 .kb-label{font-size:10px;text-anchor:middle;fill:#8a919c;pointer-events:none}
 .kb-white.kb-on{fill:#d6dbf7}.kb-white.kb-good{fill:#bfe6d6}.kb-white.kb-bad{fill:#f3c4c4}
-.drill-keys .kb-white{cursor:pointer}
+.drill-keys .kb-white,.drill-keys .kb-black{cursor:pointer}
 /* drill pages: settings, the prompt, the strip of beats; a hidden section stays hidden though .chart is a grid */
 .chart[hidden]{display:none}
 .legend .sw{flex:none}
