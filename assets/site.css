@@ -340,3 +340,10 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
   .contents ol ol{display:none}
   .contents li.current > ol{display:grid}
 }
+/* Prose pages (intro/): paragraphs in full ink at a reading width, and a plain sources list. */
+.prose p,.prose ol,.prose ul{max-width:68ch;margin:0}
+.prose p + p{margin-top:6px}
+.prose h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
+.prose ol{padding-left:1.4em;display:grid;gap:4px}
+.refs ul{list-style:none;padding:0;display:grid;gap:6px;font-size:.92rem}
+.refs li{padding-left:1.2em;text-indent:-1.2em}
