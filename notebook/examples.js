@@ -55,7 +55,7 @@ export const SECTIONS = [
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b']] }),
       step('Write P’s next bar against the R already written under it. Each new P bar also fixes an R bar to come, so check the melodic step it makes in R too (IC p. 13: “the melodic interval must follow the rules @ distance of two measures”).',
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [2, 3], color: [['P', 2, 'a'], ['R', 2, 'a'], ['R', 3, 'b']], labels: { P: { 2: 'new bar of P' }, R: { 2: 'checked against this', 3: 'and copied here' } } }),
-      step('Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”).',
+      step('Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”). <a href="../canon/ficta.html#copy-h">Ficta</a> explains when an exact copy is needed and when an in-key one is fine.',
         { file: 'ic19b-canon-5th-above-with-ficta.abc', bars: [4, 5], color: [['P', 4, 'a'], ['R', 5, 'a']], labels: { P: { 4: 'B♭ in P' }, R: { 5: 'answered by F' } } }),
       step('When the canon can go no further, let both voices go free into a cadence. The scores mark where the strict canon stops.',
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [6, 8] }),
