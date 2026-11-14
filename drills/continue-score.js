@@ -7,7 +7,7 @@ import { readVoices, unitLength, voiceIds } from '../src/notation/abc-read.js';
 import { timelineAbc } from '../src/notation/abc-timeline.js';
 import { beamedAbc } from '../src/notation/beams.js';
 import { block, showWithAudio } from '../src/notation/playback.js';
-import { canonVoices, writtenNotes, SLOT, VOICE } from '../src/taneyev/canon-continue.js';
+import { canonVoices, isComplete, writtenNotes, SLOT, VOICE } from '../src/taneyev/canon-continue.js';
 
 /** How many bars the score shows: to the end of R's copy of the canon, or the notebook's last bar. */
 export function barsShown(abc, drill) {
@@ -27,14 +27,29 @@ function headerOf(abc, ids) {
 /** The drill's voices in the notebook's staff order: P, R and the CF when there is one. */
 export const staffOrder = (abc) => voiceIds(abc).filter((id) => Object.values(VOICE).includes(id));
 
+/** A voice's notes cut off at time `until`: later notes dropped, a note sounding across it shortened. */
+function cutAt(notes, until) {
+  return notes.filter((note) => note.start < until - 1e-9)
+    .map((note) => (note.start + note.length > until + 1e-9 ? { ...note, length: until - note.start, tie: false } : note));
+}
+
+/** Where your notes reach so far: the end of the last one you wrote, or where you start. */
+export function writtenEnd(drill) {
+  const last = drill.slots.at(-1);
+  return last ? last.start + last.length : drill.start;
+}
+
 /**
  * The abc for the score with `steps` written: the notes still to write are
- * invisible rests, so the bars keep their width.
+ * invisible rests, so the bars keep their width. With `until`, every voice
+ * stops there and the tune ends at that bar: what is played while you write,
+ * so you hear the canon up to your newest note and no further.
  */
-export function drillAbc(abc, drill, steps) {
+export function drillAbc(abc, drill, steps, until) {
   const ids = staffOrder(abc);
-  const voices = canonVoices(drill, steps);
-  const bars = barsShown(abc, drill);
+  const all = canonVoices(drill, steps);
+  const voices = until === undefined ? all : Object.fromEntries(Object.entries(all).map(([id, notes]) => [id, cutAt(notes, until)]));
+  const bars = until === undefined ? barsShown(abc, drill) : Math.ceil(until - 1e-9);
   const unit = unitLength(abc);
   const music = ids.map((id) => `[V:${id}] ${timelineAbc(voices[id], { unit, key: drill.key, bars, gaps: 'hidden' })}`);
   return beamedAbc(`${[...headerOf(abc, ids), ...music].join('\n')}\n`);
@@ -71,9 +86,12 @@ const mark = (element, name) => element.abselem?.elemset.forEach((piece) => piec
  */
 export function drawScore(parent, abc, drill, steps, kinds) {
   parent.innerHTML = '';
-  const wrap = block(parent, 'The canon so far', 'Black: the notebook’s opening. Colored: your notes. R copies them a delay later.');
+  const caption = 'Black: the notebook’s opening. Colored: your notes. R copies them a delay later. '
+    + 'Until the canon is done, Play stops at your newest note.';
+  const wrap = block(parent, 'The canon so far', caption);
   const drawn = drillAbc(abc, drill, steps);
-  const tune = showWithAudio(wrap, drawn, drawn);
+  const heard = isComplete(drill, steps) ? drawn : drillAbc(abc, drill, steps, writtenEnd(drill));
+  const tune = showWithAudio(wrap, drawn, heard);
   const ids = staffOrder(abc);
   const owners = propostaOwners(drill, steps);
   staffNotes(tune, ids.indexOf(VOICE.P)).forEach((element, k) => {
