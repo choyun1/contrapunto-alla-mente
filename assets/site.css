@@ -326,7 +326,16 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .contents nav{display:none}
 .contents.open nav{display:block}
 .contents ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:1px}
-.contents ol ol{margin:0 0 4px 1.4em}
+.contents ol ol{margin:0 0 4px 1.4em;display:none}
+.contents li{position:relative}
+.contents li.expanded > ol{display:grid}
+/* the button that folds a section's examples, at the right end of its entry */
+.sub-toggle{position:absolute;right:0;top:0;width:22px;height:22px;padding:0;border:0;border-radius:4px;background:none;
+  color:var(--muted);font:inherit;cursor:pointer}
+.sub-toggle::before{content:"\25B8";display:inline-block;transition:transform .2s}
+.sub-toggle[aria-expanded="true"]::before{transform:rotate(90deg)}
+.sub-toggle:hover{color:var(--accent);background:var(--bg)}
+.contents li:has(> .sub-toggle) > a{padding-right:24px}
 /* each entry: the number in its own column, the title wrapping after it */
 .contents a{display:grid;grid-template-columns:1.8em 1fr;gap:0 .3em;padding:2px 8px;border-left:2px solid transparent;color:var(--muted);text-decoration:none}
 .contents ol ol a{grid-template-columns:2.2em 1fr}
@@ -346,12 +355,11 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
   body:has(.contents:not(.open)){padding-left:2.75rem}
   .contents-arrow::before{content:"\00BB"} /* » show, turning to « hide */
   .contents.open .contents-arrow::before{transform:rotate(180deg)}
-  .contents nav{display:block;transition:opacity .2s ease}
-  .contents:not(.open){width:2.75rem}
-  .contents:not(.open) nav,.contents:not(.open) .contents-label{opacity:0;visibility:hidden}
-  .contents:not(.open) .contents-label{width:0;overflow:hidden}
-  .contents ol ol{display:none}
-  .contents li.current > ol{display:grid}
+  .contents nav{display:block;width:calc(14rem - 20px)} /* fixed, so titles don't rewrap as it slides */
+  /* folded: no scrollbar, and only the section numbers show, the current one still marked */
+  .contents:not(.open){width:2.75rem;overflow:hidden;padding-right:0}
+  .contents:not(.open) .contents-label{opacity:0;visibility:hidden;width:0;overflow:hidden}
+  .contents:not(.open) .t,.contents:not(.open) .sub-toggle,.contents:not(.open) ol ol{display:none}
 }
 /* Prose pages (intro/): paragraphs in full ink at a reading width, and a plain sources list. */
 .prose p,.prose ol,.prose ul{max-width:68ch;margin:0}
@@ -360,4 +368,4 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .prose ol{padding-left:1.4em;display:grid;gap:4px}
 .refs ul{list-style:none;padding:0;display:grid;gap:6px;font-size:.92rem}
 .refs li{padding-left:1.2em;text-indent:-1.2em}
-@media (prefers-reduced-motion:reduce){.contents,.contents nav,.contents-arrow::before,body{transition:none}}
+@media (prefers-reduced-motion:reduce){.contents,.contents-arrow::before,.sub-toggle::before,body{transition:none}}
