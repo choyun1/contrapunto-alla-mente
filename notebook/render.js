@@ -3,7 +3,7 @@
 // the notes are in examples/*.abc, and the imaginary cantus comes from score.js
 // (and from there the rules core).
 
-import { ICF, drawnAbc, dissonancesOf, heardAbc, parallelsOf } from './score.js';
+import { ICF, drawnAbc, dissonancesOf, heardAbc, parallelsOf, roleAt, systemFirstBars } from './score.js';
 import { snippetAbc } from './snippets.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
@@ -75,6 +75,22 @@ function parallelList(abc, ids, label) {
 /** The checks under a score: dissonances, then parallels, for the voices `ids` (all when not given). */
 const checksHtml = (abc, ids, label) => dissonanceList(abc, ids, label) + parallelList(abc, ids, label);
 
+/**
+ * Renames the staves of each system from where the voices trade names
+ * (`roles`): a system that starts at or after the change shows the new names.
+ */
+function relabelSystems(wrap, tune, drawn, example) {
+  if (!example.roles) return;
+  const barsPerLine = tune.lines.map((line) => line.staff?.[0].voices[0].filter((el) => el.el_type === 'bar').length ?? 0);
+  const ids = voiceIds(drawn);
+  systemFirstBars(barsPerLine).forEach((first, line) => {
+    ids.forEach((id, voice) => {
+      const label = wrap.querySelector(`.abcjs-voice-name.abcjs-l${line}.abcjs-v${voice}`);
+      if (label) label.textContent = roleAt(example, id, first);
+    });
+  });
+}
+
 /** Draws one example into `parent`, gray imaginary cantus and all. */
 async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
@@ -90,7 +106,8 @@ async function drawExample(parent, example) {
   }
   wrap.insertAdjacentHTML('beforeend', checksHtml(abc));
   if (!example.icf) {
-    showWithAudio(wrap, drawnAbc(abc, example), abc);
+    const drawn = drawnAbc(abc, example);
+    relabelSystems(wrap, showWithAudio(wrap, drawn, abc), drawn, example);
     return;
   }
   const drawn = drawnAbc(abc, example);

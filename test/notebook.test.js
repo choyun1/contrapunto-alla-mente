@@ -5,7 +5,7 @@ import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { beamedAbc } from '../src/notation/beams.js';
 import { SECTIONS } from '../notebook/examples.js';
 import { WIP_SECTIONS } from '../wip/examples.js';
-import { ICF, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
+import { ICF, roleAt, systemFirstBars, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
 
 // the WIP page's examples are checked the same way as the Notebook's
 const EXAMPLES = [...SECTIONS, ...WIP_SECTIONS].flatMap((section) => section.examples);
@@ -168,6 +168,13 @@ test('IC p. 20: the trade of names is marked above both staves at bar 12', () =>
   const drawn = drawnAbc(load(example.file), example);
   assert.match(drawn, /\| "\^now P"e c a3\/2 g\/ \|/);
   assert.match(drawn, /\| "\^now R"z4 \|/);
+});
+
+test('IC p. 20: staves are named by their role on each system, R and P swapping from bar 12', () => {
+  const example = EXAMPLES.find((e) => e.file.startsWith('ic20-'));
+  assert.deepEqual([1, 11, 12, 20].map((bar) => roleAt(example, 'R', bar)), ['R', 'R', 'P', 'P']);
+  assert.deepEqual([1, 12].map((bar) => roleAt(example, 'P', bar)), ['P', 'R']);
+  assert.deepEqual(systemFirstBars([4, 4, 5]), [1, 5, 9]);
 });
 
 test('IC p. 7: the cadence between the two canons is marked, and so is the one at the end', () => {

@@ -80,12 +80,13 @@ const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine
  */
 export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
   const score = wrap.querySelector('.score');
-  ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
+  const [tune] = ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
   if (silentVoice !== undefined) {
     score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
   }
   const button = wrap.querySelector('button');
   button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, TEMPO.NOTEBOOK));
+  return tune;
 }
 
 let audioBox = null; // the box that playback-only tunes are drawn into, inside an off-page holder

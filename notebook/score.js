@@ -142,6 +142,23 @@ export function roleMarks(example) {
     Object.fromEntries(Object.entries(bars).map(([bar, role]) => [bar, `now ${role}`]))]));
 }
 
+/** The name a staff goes by at bar `bar` (counted from 1): its id, or the last role it took by then (`roles`). */
+export function roleAt(example, id, bar) {
+  const changes = Object.entries(example.roles?.[id] ?? {}).filter(([from]) => Number(from) <= bar);
+  return changes.length ? changes.sort(([a], [b]) => a - b).at(-1)[1] : id;
+}
+
+/** The first bar (counted from 1) of each system of a drawn tune, from how many bar lines each line holds. */
+export function systemFirstBars(barsPerLine) {
+  const firsts = [];
+  let next = 1;
+  for (const count of barsPerLine) {
+    firsts.push(next);
+    next += count;
+  }
+  return firsts;
+}
+
 /** Two sets of marks as one; where both mark the same bar, the labels are joined: 'now P, free'. */
 export function joinMarks(first, second) {
   const out = {};
