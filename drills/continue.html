@@ -31,20 +31,22 @@
 <a href="continue.html" aria-current="page">Continue the proposta</a>
 </nav>
 <h1>Continue the proposta</h1>
-<p class="lead">The opening of one of your own canons from the Notebook and WIP pages is given. Write the rest of the proposta, one note at a time, in the notebook’s own rhythm, while the risposta copies what you write a delay later. Each note is checked twice: against the risposta and CF already sounding under it, and, one delay on, its copy in the risposta against the CF there.</p>
+<p class="lead">The opening of one of your own canons from the Notebook and WIP pages is given. Write the rest of the proposta, one note at a time, in the notebook’s own rhythm or in one you choose, while the risposta copies what you write a delay later. Each note is checked twice: against the risposta and CF already sounding under it, and, one delay on, its copy in the risposta against the CF there.</p>
 <p class="see">Background: <a href="../notebook/">Notebook</a>, <a href="../wip/">WIP</a>, <a href="../canon/handshapes.html">Canon handshapes</a>.</p>
 </header>
 <section class="chart" aria-label="Settings">
 <form class="drill-controls" id="settings">
 <label>Canon <select id="example"></select></label>
 <label>Given <select id="given"></select></label>
+<label>Rhythm <select id="rhythm"><option value="notebook">The notebook’s</option><option value="own">Your own</option></select></label>
 <button type="button" class="go" id="start">Start</button>
 </form>
-<p class="note">Play on the keys below, or on your computer keyboard: the three rows of letters (Z to M, A to J, Q to I) are three octaves, moved to wherever the proposta sits. The letter keys follow the key signature, so in F major the J key plays B♭. The keys on the screen and on a MIDI keyboard are what they are, black keys included, so a B♮ or C♯ (ficta) is played there. Backspace takes back your last note. <span id="midi"></span></p>
+<p class="note">Play on the keys below, or on your computer keyboard: the three rows of letters (Z to M, A to J, Q to I) are three octaves, moved to wherever the proposta sits. The letter keys follow the key signature, so in F major the J key plays B♭. The keys on the screen and on a MIDI keyboard are what they are, black keys included, so a B♮ or C♯ (ficta) is played there. In your own rhythm, pick each note’s length first, with the buttons or the number keys (1 whole, 2 half, 3 quarter, 4 eighth, 5 16th, period for a dot, 0 for a rest); a note that runs over the bar line is tied across it. Backspace takes back your last note. <span id="midi"></span></p>
 </section>
 <section class="chart" aria-live="polite">
 <p class="prompt" id="prompt">Pick a canon and press Start.</p>
 <ol class="strip" id="strip" aria-label="Your notes so far"></ol>
+<div class="drill-buttons lengths" id="lengths" role="group" aria-label="Length of the next note" hidden></div>
 <div class="scroll drill-keys" id="keys"></div>
 <div class="drill-buttons"><button type="button" class="plain" id="undo" disabled>Take back</button></div>
 <ul class="problems" id="problems" aria-label="Problems so far"></ul>

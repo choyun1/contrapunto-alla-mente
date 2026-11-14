@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
-import { canonVoices, checkAll, checkNote, continuationSlots, leapProblem, SLOT, worstOf } from '../src/taneyev/canon-continue.js';
-import { drillFrom, givenChoices, timeline } from '../src/drills/continue-drill.js';
+import { canonVoices, checkAll, isComplete, checkNote, continuationSlots, leapProblem, SLOT, worstOf } from '../src/taneyev/canon-continue.js';
+import { drillFrom, givenChoices, inOwnRhythm, roomLeft, timeline } from '../src/drills/continue-drill.js';
 import { drillExamples } from '../drills/continue-examples.js';
 import { readBars, readVoices, keySignature, unitLength } from '../src/notation/abc-read.js';
 import { timelineAbc, lengthText } from '../src/notation/abc-timeline.js';
@@ -137,4 +137,26 @@ test('a pitch played on a black key is written as played, and R answers it raise
   assert.equal(voices.P.at(-1).semitones, fSharp.semitones);
   const copy = voices.R.find((note) => note.start === 2.25);
   assert.equal(copy.semitones, semitonesInKey(p('F5')) + 1);
+});
+
+test('your own rhythm: a note over the bar line is tied across it, and the canon is done only when the bars are full', () => {
+  const drill = octaveDrill();
+  const entries = [{ length: 0.75, played: p('E4') }, { length: 0.5, played: p('D4') }];
+  const own = inOwnRhythm(drill, entries);
+  assert.deepEqual(own.drill.slots.map((note) => [note.start, note.slot, note.tie]),
+    [[1, SLOT.WRITE, false], [1.75, SLOT.WRITE, true], [2, SLOT.HELD, false]]);
+  assert.equal(isComplete(own.drill, own.steps), false);
+  const voices = canonVoices(own.drill, own.steps);
+  assert.equal(voices.R.find((note) => note.start === 2.75).step, p('D5')); // R copies the tied D a bar later
+  const full = [...entries, { length: roomLeft(drill, entries), played: p('C4') }];
+  const done = inOwnRhythm(drill, full);
+  assert.equal(isComplete(done.drill, done.steps), true);
+  assert.equal(checkAll(done.drill, done.steps).length, 3);
+});
+
+test('your own rhythm: a rest takes time but is not a note to check', () => {
+  const drill = octaveDrill();
+  const own = inOwnRhythm(drill, [{ length: 0.25, played: null }, { length: 0.25, played: p('E4') }]);
+  assert.deepEqual(own.drill.slots.map((note) => note.slot), [SLOT.REST, SLOT.WRITE]);
+  assert.equal(checkAll(own.drill, own.steps).length, 1);
 });

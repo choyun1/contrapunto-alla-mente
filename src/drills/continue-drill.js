@@ -8,7 +8,7 @@
 // canon stops. Times are in whole notes, one bar of 4/4 each.
 
 import { readVoices, keySignature } from '../notation/abc-read.js';
-import { continuationSlots } from '../taneyev/canon-continue.js';
+import { continuationSlots, SLOT } from '../taneyev/canon-continue.js';
 
 const EPS = 1e-9;
 
@@ -87,4 +87,50 @@ export function drillFrom(abc, canon, given) {
     sides: sidesOf(proposta, cantus, canon.entry, begin, end),
     original: slots.filter((note) => note.slot === 'write').map((note) => note.step),
   };
+}
+
+/** Note lengths you may choose in your own rhythm, in whole notes: whole to 16th, plain and dotted. */
+export const LENGTHS = [1, 0.75, 0.5, 0.375, 0.25, 0.1875, 0.125, 0.0625];
+
+/** Where your own rhythm has got to: the end of the last entry, from the drill's start. */
+export const reached = (drill, entries) => entries.reduce((at, entry) => at + entry.length, drill.start);
+
+/** Whole notes left to fill before the strict canon ends. */
+export const roomLeft = (drill, entries) => drill.end - reached(drill, entries);
+
+/**
+ * One entry of your own rhythm as continuation notes from `start`: a rest,
+ * or a note you write, cut at each bar line into a written note and held
+ * (tied) notes, as the notebook would write it.
+ */
+function entrySlots(entry, start) {
+  const slots = [];
+  let at = start;
+  const end = start + entry.length;
+  while (at < end - EPS) {
+    const until = Math.min(end, Math.floor(at + EPS) + 1);
+    const first = slots.length === 0;
+    const slot = entry.played === null ? SLOT.REST : (first ? SLOT.WRITE : SLOT.HELD);
+    slots.push({ start: at, length: until - at, step: null, semitones: null, tie: entry.played !== null && until < end - EPS, slot });
+    at = until;
+  }
+  return slots;
+}
+
+/**
+ * The drill in your own rhythm: `entries` are what you wrote, each
+ * { length, played } (played null for a rest; otherwise as writtenNotes takes
+ * it). Returns { drill, steps }: the drill with its slots replaced by your
+ * rhythm, open while bars are left to fill, and the played notes in order,
+ * ready for the checks in canon-continue.js.
+ */
+export function inOwnRhythm(drill, entries) {
+  const slots = [];
+  let at = drill.start;
+  for (const entry of entries) {
+    slots.push(...entrySlots(entry, at));
+    at += entry.length;
+  }
+  const steps = entries.filter((entry) => entry.played !== null).map((entry) => entry.played);
+  return { drill: { ...drill, slots, open: at < drill.end - EPS }, steps };
 }

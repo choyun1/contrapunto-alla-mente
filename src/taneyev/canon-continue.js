@@ -105,6 +105,13 @@ export function writtenNotes(drill, steps) {
 /** How many notes of the continuation are yours to write. */
 export const countWrite = (drill) => drill.slots.filter((note) => note.slot === SLOT.WRITE).length;
 
+/**
+ * Is every note written? In the notebook's rhythm, when each of its notes is;
+ * in your own rhythm (drill.open while bars are left to fill), only once the
+ * notes reach the end of the canon.
+ */
+export const isComplete = (drill, steps) => !drill.open && steps.length >= countWrite(drill);
+
 /** The note of `voice` that starts at time t, or a rest of `length` there when it has none. */
 function noteStartingAt(voice, t, length) {
   return voice.find((note) => Math.abs(note.start - t) < EPS) ?? { start: t, length, step: null, semitones: null, tie: false };
@@ -154,7 +161,7 @@ export function canonVoices(drill, steps) {
  */
 export function voicesWith(drill, steps) {
   const voices = canonVoices(drill, steps);
-  if (steps.length < countWrite(drill)) return voices;
+  if (!isComplete(drill, steps)) return voices;
   return { ...voices, [VOICE.P]: [...voices.P, ...drill.after.P], [VOICE.R]: [...voices.R, ...drill.after.R] };
 }
 
@@ -254,7 +261,7 @@ export function checkNote(drill, steps, k) {
   const index = proposta.findIndex((note) => Math.abs(note.start - window.start) < EPS);
   const note = proposta[index];
   const before = proposta.slice(0, index).findLast((other) => other.step !== null);
-  const isNewest = k === steps.length - 1 && k < countWrite(drill) - 1;
+  const isNewest = k === steps.length - 1 && !isComplete(drill, steps);
   const result = { misses: [], checks: sideProblems(drill, voices, note, window), pending: [] };
   const leap = leapProblem(before, note);
   if (leap) result.misses.push(leap);
