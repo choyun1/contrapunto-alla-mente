@@ -10,6 +10,7 @@ import { slug, sign } from '../taneyev/chart-card.js';
 import { MOVES, drawMove } from './bathe-examples.js';
 import { mountFold } from './bathe-fold.js';
 import { mountChords } from './bathe-chords.js';
+import { mountWheel } from './bathe-wheel.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -94,3 +95,4 @@ function mountExamples() {
 
 mountExamples();
 mountFold($('bathe-fold'));
+mountWheel($('bathe-wheel'));
