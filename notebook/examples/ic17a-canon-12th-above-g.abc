@@ -1,0 +1,8 @@
+X:1
+M:C
+L:1/4
+K:G
+V:R clef=treble name="R"
+V:P clef=bass name="P"
+[V:R] z4 | d2 F3/2 G/ | A D E3/2 F/ | G3/2 F/ E G/A/ | B/d/B/A/ G F/G/ | A/^c/A/G/ F2 | E2 F ^C | D B, E2 | F3/2 E/ D C/D/ | E2 F E/F/ | G E A2 | B g/f/ e A | d4 |]
+[V:P] G,2 B,,3/2 C,/ | D, G,, A,,3/2 B,,/ | C,3/2 B,,/ A,, C,/D,/ | E,/G,/E,/D,/ C, B,,/C,/ | D,/F,/D,/C,/ B,,2 | A,,2 B,, F,, | G,, E,, A,,2 | B,,3/2 A,,/ G,, =F,,/G,,/ | A,,2 B,, A,,/B,,/ | C, A,, D,2 | E, C/B,/ A, D, | G,4 | G,,4 |]

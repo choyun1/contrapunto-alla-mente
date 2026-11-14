@@ -35,7 +35,7 @@ function write(state, voice, bar, pitch, hooks) {
   }
 }
 
-/** Puts a note where the score was clicked, and the cursor on it. Ignores R and I.C.F. */
+/** Puts a note where the score was clicked, and the cursor on it. Ignores R and ICF */
 export function placeNote(state, bar, voice, pitch, hooks) {
   if (!EDITABLE.includes(voice)) return false;
   state.cursor = { voice, bar };

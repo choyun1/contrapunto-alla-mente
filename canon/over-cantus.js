@@ -90,7 +90,7 @@ function scoreText(setup) {
   const caption = `${who}Click a line or space on the CF or P staff to put a note there, or type: `
     + 'A–G writes that note in the nearest octave and moves on, ↑/↓ moves it a step, Ctrl+↑/↓ (⌘ on a Mac) an octave, '
     + '←/→ moves the cursor, Alt+↑/↓ switches between P and CF, Backspace empties a P bar or removes a CF bar. '
-    + 'R follows from P, and the gray I.C.F. staff is drawn but not played. '
+    + 'R follows from P, and the gray ICF staff is drawn but not played. '
     + 'The number over each P bar is the J<sub>v</sub> it is written in. Red bars break a rule.';
   return { title, caption: setup.cantus.length ? caption : '' };
 }

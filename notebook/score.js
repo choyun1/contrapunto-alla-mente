@@ -10,9 +10,10 @@ import { abcPitch } from '../src/notation/abc.js';
 import { clefsForVoice } from '../src/notation/clefs.js';
 import { imaginaryCantus } from '../src/taneyev/imaginary-cantus.js';
 import { dissonances, worthShowing } from '../src/taneyev/florid.js';
+import { parallels } from '../src/taneyev/parallels.js';
 
 /** The id and staff name of the imaginary cantus voice. */
-export const ICF = { id: 'ICF', name: 'I.C.F.' };
+export const ICF = { id: 'ICF', name: 'ICF' };
 
 /** The first pitch a bar sounds, or null for a bar of rests. */
 const firstStep = (bar) => bar.find((note) => note.step !== null)?.step ?? null;
@@ -132,11 +133,51 @@ export function withMarks(abc, marks) {
 }
 
 /**
+ * Where a voice takes a new role, as marks: { voice: { bar: 'now P' } }, from
+ * an example's `roles` ({ R: { 12: 'P' } }: the staff named R leads, as P, from bar 12).
+ */
+export function roleMarks(example) {
+  const roles = example.roles ?? {};
+  return Object.fromEntries(Object.entries(roles).map(([id, bars]) => [id,
+    Object.fromEntries(Object.entries(bars).map(([bar, role]) => [bar, `now ${role}`]))]));
+}
+
+/** The name a staff goes by at bar `bar` (counted from 1): its id, or the last role it took by then (`roles`). */
+export function roleAt(example, id, bar) {
+  const changes = Object.entries(example.roles?.[id] ?? {}).filter(([from]) => Number(from) <= bar);
+  return changes.length ? changes.sort(([a], [b]) => a - b).at(-1)[1] : id;
+}
+
+/** The first bar (counted from 1) of each system of a drawn tune, from how many bar lines each line holds. */
+export function systemFirstBars(barsPerLine) {
+  const firsts = [];
+  let next = 1;
+  for (const count of barsPerLine) {
+    firsts.push(next);
+    next += count;
+  }
+  return firsts;
+}
+
+/** Two sets of marks as one; where both mark the same bar, the labels are joined: 'now P, free'. */
+export function joinMarks(first, second) {
+  const out = {};
+  for (const id of new Set([...Object.keys(first), ...Object.keys(second)])) {
+    out[id] = { ...first[id] };
+    for (const [bar, label] of Object.entries(second[id] ?? {})) {
+      out[id][bar] = out[id][bar] ? `${out[id][bar]}, ${label}` : label;
+    }
+  }
+  return out;
+}
+
+/**
  * The example as drawn: its abc, with where the canon goes free marked
- * (canonMarks), plus the imaginary cantus as the bottom staff when asked for.
+ * (canonMarks) and any change of role (roleMarks), plus the imaginary cantus
+ * as the bottom staff when asked for.
  */
 export function drawnAbc(written, example) {
-  const abc = withMarks(written, canonMarks(written, example));
+  const abc = withMarks(written, joinMarks(roleMarks(example), canonMarks(written, example)));
   if (!example.icf) return abc;
   const steps = imaginaryBars(written, example.canon);
   const sounding = steps.filter((step) => step !== null);
@@ -171,6 +212,9 @@ function onlyVoices(voices, ids) {
  * pair of alternative staves.
  */
 export const dissonancesOf = (abc, ids) => worthShowing(dissonances(onlyVoices(timelines(abc), ids)));
+
+/** The parallel unisons, octaves and 5ths to list under an example (src/taneyev/parallels.js); `ids` as for dissonancesOf. */
+export const parallelsOf = (abc, ids) => parallels(onlyVoices(timelines(abc), ids));
 
 /** The abc with each voice's |: … :| repeat written out `times` times, for playback (abcjs plays a repeat twice). */
 export function withRounds(abc, times) {

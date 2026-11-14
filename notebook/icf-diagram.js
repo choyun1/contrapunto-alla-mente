@@ -1,7 +1,7 @@
 // The imaginary-cantus diagram at the head of the canon-over-a-cantus section:
 // four rows of bars for a canon at the 5th above with a delay of one bar, and
 // dotted lines for how one bar of P is checked. The rows are set so that the
-// pairs checked together sit next to each other: R over CF, P over I.C.F.
+// pairs checked together sit next to each other: R over CF, P over ICF
 // Display only: it draws boxes and lines, and holds no rule. The method is
 // the one on IC pp. 5 and 10 and in src/taneyev/imaginary-cantus.js.
 
@@ -17,15 +17,15 @@ const ROWS = [
   { name: 'R', bars: (bar) => (bar === 1 ? null : `P${bar - 1} +5th`) },
   { name: 'CF', bars: (bar) => `CF${bar}` },
   { name: 'P', bars: (bar) => `P${bar}` },
-  { name: 'I.C.F.', bars: (bar) => (bar === BARS ? null : `CF${bar + 1} −5th`) },
+  { name: 'ICF', bars: (bar) => (bar === BARS ? null : `CF${bar + 1} −5th`) },
 ];
 
 /** The steps the dotted lines show, numbered as on the diagram. */
 export const ICF_STEPS = [
-  'Check P against the I.C.F. under it, now.',
+  'Check P against the ICF under it, now.',
   'R copies P a bar later, a 5th up.',
   'So R against the CF was checked already, in step 1.',
-  'That is because the I.C.F. is the CF a bar early, a 5th down.',
+  'That is because the ICF is the CF a bar early, a 5th down.',
 ];
 
 const NUMBERS = '①②③④';
@@ -62,7 +62,7 @@ const bottomOf = (row) => yOf(row) + 15;
 /** Is a row's bar one of the four the lines join? */
 function isFocus(row, bar) {
   const name = ROWS[row].name;
-  if (name === 'P' || name === 'I.C.F.') return bar === FOCUS;
+  if (name === 'P' || name === 'ICF') return bar === FOCUS;
   return bar === FOCUS + 1;
 }
 
@@ -85,7 +85,7 @@ export function icfDiagram() {
   parts.push(link([middleOf(FOCUS + 1), bottomOf(R), middleOf(FOCUS + 1), topOf(CF)], 3, [middleOf(FOCUS + 1) + 6, yOf(R) + 28]));
   parts.push(link([gap + 6, bottomOf(CF), gap - 6, topOf(ICF)], 4, [gap + 8, yOf(P) + 26]));
   const svg = `<svg class="icf-diagram" viewBox="0 0 ${width} ${height}" role="img" `
-    + 'aria-label="Rows R, CF, P and I.C.F. by bar, with dotted lines for the four steps listed below">'
+    + 'aria-label="Rows R, CF, P and ICF by bar, with dotted lines for the four steps listed below">'
     + `${parts.join('')}</svg>`;
   const steps = ICF_STEPS.map((step, i) => `<li><span class="icf-number">${NUMBERS[i]}</span> ${step}</li>`).join('');
   return `${svg}<ul class="icf-steps">${steps}</ul>`;

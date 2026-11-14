@@ -25,6 +25,10 @@
 // −11 at the 12th). The page plays the upper pair, a bar's rest, then the
 // lower pair, and checks each pair on its own; the test checks the shift.
 //
+// With `roles: { R: { 12: 'P' } }`, the staff named R takes the name P from
+// bar 12 on, for a canon whose voices trade the lead; the page marks it
+// "now P" there.
+//
 // With `rounds`, an infinite canon is drawn with its repeat signs and heard
 // going round the repeat that many times before the ending.
 
@@ -36,7 +40,7 @@
 const step = (text, snippet = null, moves = null) => ({ text, snippet, moves });
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
-const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
+export const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
 
 export const SECTIONS = [
   {
@@ -57,6 +61,23 @@ export const SECTIONS = [
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [6, 8] }),
     ],
     examples: [
+      {
+        file: 'ic27a-canon-octave-f.abc',
+        title: 'Canon at the octave, in F',
+        source: 'IC p. 27, fourth system',
+        note: '“Canon @ octave.” P in the bass, R an octave above a bar later, strict to the end. '
+          + 'The page numbers every interval between the voices, zero-indexed, with a tick for one octave more (2′ is a 10th).',
+        canon: canon(7, 1, [1, 7]),
+        icf: false,
+      },
+      {
+        file: 'ic28b-canon-octave-d-minor.abc',
+        title: 'Canon at the octave above, in D minor',
+        source: 'IC p. 28, second system',
+        note: 'P in the bass, R an octave above a bar later; the C♯ leading tone is copied too. The page numbers every interval.',
+        canon: canon(7, 1, [1, 6]),
+        icf: false,
+      },
       {
         file: 'ic19a-canon-5th-below-b-flat.abc',
         title: 'Two-part canon at the 5th (a 12th below), in B♭',
@@ -79,19 +100,39 @@ export const SECTIONS = [
         file: 'ic19c-canon-5th-below-f-with-ficta.abc',
         title: 'Canon at the 5th below, in F, with ficta',
         source: 'IC p. 19, third and fourth systems',
-        note: '“w/ ficta.” R follows to bar 14; its bar 15 is free, with a C♯ into the close.',
+        note: '“w/ ficta.” R follows to bar 14; its bar 15 is free, with a C♯ into the close. '
+          + 'Still to be fixed: octaves on the eighth going into bar 6, and unisons at the end of bar 14.',
         caption: 'R’s last note is drawn on C; it is read here as D, after the C♯.',
         canon: canon(-4, 1, [1, 13]),
+        icf: false,
+      },
+      {
+        file: 'ic17a-canon-12th-above-g.abc',
+        title: 'Canon at the 12th above, in G, out to the dominant',
+        source: 'IC p. 17, third and fourth systems',
+        note: '“OK!” From the page “Hexachords / modulations for canon @ 5th”: P in the bass, R a 12th above a bar later. '
+          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”), and it turns to IV at bar 8 with F♮.',
+        canon: canon(11, 1, [1, 12]),
         icf: false,
       },
       {
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
         source: 'IC p. 15',
-        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence. At the '
-          + 'end: “garbage!”',
+        note: 'The canon holds to bar 17; the last three bars of R are free, to the cadence.',
         canon: canon(-11, 3, [1, 14]),
         icf: false,
+      },
+      {
+        file: 'ic20-canon-12th-c-minor.abc',
+        title: 'Canon at the 12th in C minor, the voices trading the lead',
+        source: 'IC p. 20',
+        note: '“Needs editing.” P leads in the bass and R answers a 12th above, a bar later, to the half cadence on G in bar 11. '
+          + 'From bar 12 the voices trade names: the treble leads as P and the bass answers as R, a 12th below, to the close on C. The treble’s B♮ in bar 10 and the bass’s B♮ in bar 20 are ficta, '
+          + 'and the bass’s A♮ in bar 2 is answered by E♭.',
+        caption: 'The treble’s bar 13 is read as quarters, F E♭, where the bass answers with a dotted rhythm. '
+          + 'The page marks no free bars or cadences, so none are drawn here.',
+        roles: { R: { 12: 'P' }, P: { 12: 'R' } },
       },
     ],
   },
@@ -168,8 +209,8 @@ export const SECTIONS = [
         source: 'IC p. 29, first system',
         note: '“What if 5ths are dissonant?” Jv = −7. Cho wrote each note’s interval from the '
           + 'cantus above it and below it; the 5ths (4) become 4ths (−3) and fall on weak beats.',
-        caption: 'The page’s Jv = −11 system is crossed out, and the last system is unfinished; '
-          + 'both are left out.',
+        caption: 'The page’s crossed-out Jv = −11 system is on the <a href="../wip/#ic29c-invertible-12th-crossed-out">WIP page</a>, '
+          + 'with the other failed attempts. The last system is unfinished and is left out.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
       {
@@ -179,6 +220,15 @@ export const SECTIONS = [
         note: '“Jv = −7 = n − m.” The same exercise over Fux’s dorian cantus, with C♯ at the cadences.',
         caption: 'The derivative is drawn a step or so low on the bass staff in places; it is read '
           + 'here from the interval numbers.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
+        file: 'ic30a-invertible-octave-a-minor.abc',
+        title: 'Invertible counterpoint at the octave, in A minor',
+        source: 'IC p. 30, first system',
+        note: 'Jv = −7 around an alto cantus. The page writes the derivative out on the bass staff, an octave below the original. '
+          + 'Bar 2 opens with a 7–6 suspension over the cantus’s B. The 5th on the downbeat of bar 6 becomes a 4th in the derivative.',
+        caption: 'The cantus in bars 2 and 6 is faint; B and F are best guesses.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
     ],
@@ -215,23 +265,23 @@ export const SECTIONS = [
   {
     id: 'canon-over-cantus',
     title: 'Canons over a cantus firmus, with the imaginary cantus',
-    intro: 'The hardest here: a two-part canon over a cantus firmus, written with the imaginary cantus (I.C.F.) of the '
-      + '<a href="../canon/over-cantus.html">Canon over a c.f.</a> page. The gray I.C.F. staff is drawn but not played. '
+    intro: 'The hardest here: a two-part canon over a cantus firmus, written with the imaginary cantus (ICF) of the '
+      + '<a href="../canon/over-cantus.html">Canon over a CF</a> page. The gray ICF staff is drawn but not played. '
       + 'It is worked out from the cantus here, so it can sit an octave or two away from where it is on paper.',
     diagram: 'icf',
     procedure: [
-      step('Choose the interval of entry and the delay. The I.C.F. is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “I.C.F. is a 5th below, since R follows 5th above”).',
+      step('Choose the interval of entry and the delay. The ICF is the cantus moved the other way by that interval and one delay earlier (IC p. 5: “ICF is a 5th below, since R follows 5th above”).',
         { file: 'ic05a-canon-5th-above.abc', bars: [1, 3], voices: ['CF', 'ICF'], color: [['CF', 2, 'a'], ['ICF', 1, 'a'], ['CF', 3, 'b'], ['ICF', 2, 'b']], labels: { ICF: { 1: 'CF bar 2, a 5th down' } } }),
-      step('Write P against both the CF and the I.C.F. What P forms against the I.C.F. now, R will form against the CF one delay later (IC p. 10: “Check P + I.C.F. ⇒ R + CF”).',
-        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the I.C.F.…' }, R: { 3: '…is R against the CF' } } }),
+      step('Write P against both the CF and the ICF What P forms against the ICF now, R will form against the CF one delay later (IC p. 10: “Check P + ICF ⇒ R + CF”).',
+        { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], color: [['P', 2, 'a'], ['ICF', 2, 'a'], ['R', 3, 'b'], ['CF', 3, 'b']], labels: { P: { 2: 'P against the ICF…' }, R: { 3: '…is R against the CF' } } }),
       step('Copy P into R as in a two-part canon, and check P against R.',
         { file: 'ic05a-canon-5th-above.abc', bars: [2, 3], voices: ['R', 'P'], color: [['P', 2, 'a'], ['R', 3, 'a']] }),
       step('With the cantus below both voices, Bathe’s table (c. 1596) gives P’s choices for each bar at once: the column is the canon’s interval (the “place”) and the row is the cantus’s next move (the “course”). '
         + 'The labels here are Bathe’s cells, counted from 1 as he prints them, and each of P’s downbeats is in its cell. <a href="../canon/bathe.html">Bathe’s table</a> has every cell, in his numbers and as Taneyev’s J<sub>v</sub>. '
-        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the I.C.F. does the same work.',
+        + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the ICF does the same work.',
         { file: 'ic05a-canon-5th-above.abc', bars: [4, 6], voices: ['R', 'P', 'CF'], labels: { P: { 4: 'Bathe: 3 5', 5: '1 3 5', 6: '6' } } }),
-      step('Bellermann’s rule: every two-voice pair must work. With the I.C.F. there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + I.C.F. '
-        + 'Those three guarantee the other three. R + CF is P + I.C.F. again, a bar later and a 5th up, so it is already right; R + I.C.F. and CF + I.C.F. are never heard, since the I.C.F. is silent. '
+      step('Bellermann’s rule: every two-voice pair must work. With the ICF there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + ICF. '
+        + 'Of the other three, only R + CF sounds, and it is P + ICF again, a bar later and a 5th up, so it is already right. R + ICF and CF + ICF need no check: the ICF is silent, so they are never heard. '
         + 'The diagram below shows it bar by bar. WIP p. 11 makes the same point for a canon with three risposte, one of them imaginary: “Check: P + R1, P + R2, P + R3 … ⇒ R1 + R2 is guaranteed!”'),
       step('When the cantus ends, or the canon can go no further, leave it for a free cadence.',
         { file: 'ic05a-canon-5th-above.abc', bars: [6, 8], voices: ['R', 'P', 'CF'] }),
@@ -241,8 +291,8 @@ export const SECTIONS = [
         file: 'ic05a-canon-5th-above.abc',
         title: 'Canon at the 5th above, delay of one bar',
         source: 'IC p. 5, top',
-        note: '“CF + 2 part canon.” The I.C.F. is a 5th below, “since R follows 5th above.” '
-          + 'Check P + CF, P + R and P + I.C.F.; P + I.C.F. never sounds but guarantees R + CF.',
+        note: '“CF + 2 part canon.” The ICF is a 5th below, “since R follows 5th above.” '
+          + 'Check P + CF, P + R and P + ICF; P + ICF never sounds but guarantees R + CF.',
         canon: canon(4, 1, [1, 5]),
         icf: true,
       },
@@ -296,7 +346,7 @@ export const SECTIONS = [
         file: 'ic10-canon-5th-below-then-free.abc',
         title: 'Canon at the 5th below, delay of two bars, then free',
         source: 'IC p. 10, top and middle',
-        note: '“I.C.F. is very important! Write w/ CF.” and “Check P + I.C.F. ⇒ R + CF.” '
+        note: '“ICF is very important! Write w/ CF.” and “Check P + ICF ⇒ R + CF.” '
           + 'From bar 8 both voices are marked “free,” stopping on the dominant.',
         canon: canon(-4, 2, [1, 5]),
         icf: true,
