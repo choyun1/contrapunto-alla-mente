@@ -212,8 +212,32 @@ export const SECTIONS = [
         title: 'Invertible counterpoint at the octave, in A minor',
         source: 'IC p. 30, first system',
         note: 'Jv = −7 around an alto cantus. The page writes the derivative out on the bass staff, an octave below the original. '
-          + 'Bar 2 opens with a 7–6 suspension over the cantus’s B. Two 5ths fall on strong beats (bar 6, beat 1, and bar 7, beat 2), and in the derivative they become 4ths.',
+          + 'Bar 2 opens with a 7–6 suspension over the cantus’s B. The 5th on the downbeat of bar 6 becomes a 4th in the derivative.',
         caption: 'The cantus in bars 2 and 6 is faint; B and F are best guesses.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
+        file: 'ic30b-invertible-octave-a-minor-second.abc',
+        title: 'Invertible counterpoint at the octave, in A minor, second try',
+        source: 'IC p. 30, second system',
+        note: 'The same cantus as the first system, with a new line over it. The page marks bar 5 with “!” above and a triangle below, where the original makes a 9th with the cantus on beat 3.',
+        caption: 'Read from a faint scan: the cantus is taken to be the same as the first system’s.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
+        file: 'ic30c-invertible-octave-d-dorian.abc',
+        title: 'Invertible counterpoint at the octave, in D dorian',
+        source: 'IC p. 30, third system',
+        note: 'Over the cantus D F E D E C A D. Both voices start together on the beat, with no rest.',
+        caption: 'Read from a faint scan: bars 5 and 7 are best guesses.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
+        file: 'ic30d-invertible-octave-g.abc',
+        title: 'Invertible counterpoint at the octave, in G',
+        source: 'IC p. 30, fourth system',
+        note: 'Over the cantus G B C A D E D G, with C♯ on the way to A in bar 4.',
+        caption: 'Read from a faint scan: the eighths in bar 6 are a best guess.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
       {
