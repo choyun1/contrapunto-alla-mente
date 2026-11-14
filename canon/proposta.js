@@ -29,7 +29,7 @@ function canonName(n) {
 
 const VERDICT_CELL = {
   [VERDICT.FREE]: '<span class="sw k-fixed-consonance">free</span>',
-  [VERDICT.PERFECT]: '<span class="sw k-variable-consonance"><b>perfect</b></span>',
+  [VERDICT.PERFECT]: '<span class="sw k-fixed-consonance"><b>perfect</b></span>', // bold, as on the Jv charts
   [VERDICT.SUSPENSION]: '<span class="sw k-fixed-dissonance">susp.</span>',
 };
 

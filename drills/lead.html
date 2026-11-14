@@ -29,20 +29,22 @@
 <a href="move-chords.html">Move chords</a>
 <a href="lead.html" aria-current="page">Lead the canon</a>
 <a href="follow.html">Follow the leader</a>
+<a href="continue.html">Continue the proposta</a>
 </nav>
 <h1>Lead the canon</h1>
-<p class="lead">You make up the proposta, one note at a time, and the site sings it back as the risposta: the same notes, moved by the interval of entrance, after the delay. Every note you play is checked against the note the risposta is singing with it. Start with <b>Wait for me</b> and the hand shown, then hide the hand, lengthen the delay and set a beat.</p>
+<p class="lead">You make up the proposta, one note at a time, and the site sings it back as the risposta: the same notes, moved by the interval of entrance, after the delay. Every note you play is checked against the note the risposta is singing with it. Start with <b>Wait for me</b>, then lengthen the delay and set a beat.</p>
+<p class="see">Background: <a href="../canon/proposta.html">Canon proposta intervals</a>, <a href="../canon/handshapes.html">Canon handshapes</a>.</p>
 </header>
 <section class="chart" aria-label="Settings">
 <form class="drill-controls" id="settings">
 <label>Canon at the <select id="entry"></select></label>
+<label>Key signature <select id="signature"></select></label>
 <label>Delay <select id="delay"></select></label>
 <label>Tempo <select id="tempo"></select></label>
 <label>Length <select id="length"></select></label>
-<label><input type="checkbox" id="hints" checked> Show the hand</label>
 <button type="button" class="go" id="start">Start</button>
 </form>
-<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. On a beat, a bar of clicks counts you in; play on each click. <span id="midi"></span></p>
+<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. Black keys count on the screen and on MIDI; the letter keys follow the key signature, so with one flat J plays B♭. On a beat, a bar of clicks counts you in; play on each click. <span id="midi"></span></p>
 </section>
 <section class="chart" aria-live="polite">
 <p class="prompt" id="prompt">Press Start, then play your first note.</p>
@@ -56,13 +58,15 @@
 <section class="legend" aria-label="How to read the strip">
 <div><h3>Each note</h3><ul>
 <li><span class="sw k-fixed-consonance">free</span>Imperfect consonance with the risposta</li>
-<li><span class="sw k-variable-consonance">perfect</span>Perfect consonance: not twice in a row while both voices move</li>
+<li><span class="sw k-fixed-consonance"><b>perfect</b></span>Perfect consonance: not twice in a row while both voices move</li>
 <li><span class="sw miss-key">dissonant</span>Not allowed here in first species</li></ul></div>
 <div><h3>Also marked</h3><ul>
 <li><span class="sw miss-key">parallel</span>Two perfect consonances of the same size in a row</li>
 <li><span class="sw miss-key">direct</span>Both voices move the same way into a perfect consonance</li>
 <li><span class="sw miss-key">crossed</span>You crossed to the risposta’s side</li>
 <li><span class="sw miss-key">tritone</span>A tritone leap in your line</li></ul></div>
+<div><h3>The keyboard</h3><ul>
+<li><span class="sw kb-key-r">R</span>The risposta’s note now (CF and P mark the cantus and your last note)</li></ul></div>
 </section>
 <p class="foot">Every note is a whole note in first species, so each one is checked as on a strong beat. The checks come from the rules core (src/taneyev/canon.js), which follows Taneyev’s n = m + J<sub>v</sub> with the canon at the unison as the original (video 4, 09:06).</p>
 <footer class="foot">

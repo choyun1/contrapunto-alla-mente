@@ -176,10 +176,10 @@ function interleave(staves, lineCount) {
 /**
  * A one-chord tune: the steps sounded together as a whole note, with an
  * optional label above, in one clef (treble unless given). Used for the
- * canon page's allowed-move chords.
+ * canon page's allowed-move chords. `key` is an abc key name such as 'F'.
  */
-export function chordTune(steps, { label, clef = 'treble' } = {}) {
+export function chordTune(steps, { label, clef = 'treble', key = 'C' } = {}) {
   const text = label === undefined ? '' : `"^${label}"`;
   const notes = steps.map(abcPitch).join('');
-  return ['X:1', 'M:none', 'L:1', 'K:C', `V:1 clef=${clef}`, `${text}[${notes}]1 |]`].join('\n');
+  return ['X:1', 'M:none', 'L:1', `K:${key}`, `V:1 clef=${clef}`, `${text}[${notes}]1 |]`].join('\n');
 }
