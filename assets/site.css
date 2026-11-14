@@ -314,11 +314,9 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 @media (prefers-reduced-motion: reduce){.wheel .wh-ring{transition:none}}
 .wh-key-in{color:var(--accent)}.wh-key-out{color:var(--vd-ink);font-weight:700}.wh-key-both{background:var(--fc);color:var(--fc-ink);padding:0 4px;border-radius:4px}
 
-/* The page contents (src/ui/page-contents.js): a list of the page's sections, beside the page on wide
-   screens and following your place, or a "Contents" box under the header on narrow ones. */
-.with-contents{display:grid;gap:28px;min-width:0}
-.page-body{display:grid;gap:28px;min-width:0}
-.contents{font-size:.88rem;min-width:0}
+/* The page contents (src/ui/page-contents.js). Wide screens: a panel on the left edge of the window,
+   which folds to a small tab; the page moves over while it is open. Narrow: a folded box under the header. */
+.contents{font-size:.86rem;min-width:0}
 .contents summary{cursor:pointer;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .contents ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:1px}
 .contents ol ol{margin:0 0 4px 1.2em}
@@ -332,11 +330,16 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
   .contents{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 12px;max-width:32rem}
 }
 @media (min-width:1100px){
-  main.wrap:has(.with-contents){max-width:1220px}
-  .with-contents{grid-template-columns:15rem minmax(0,1fr);gap:40px;align-items:start}
-  .contents{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding-top:20px}
-  .contents summary{pointer-events:none;list-style:none}
+  .contents{position:fixed;z-index:15;left:0;top:0;bottom:0;width:14rem;overflow:auto;padding:24px 12px 24px max(12px,env(safe-area-inset-left,0px));
+    background:var(--panel);border-right:1px solid var(--line)}
+  body:has(.contents[open]){padding-left:14rem}
+  .contents summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:0 8px}
   .contents summary::-webkit-details-marker{display:none}
+  .contents[open] summary::after{content:"\00AB";font-size:1rem;letter-spacing:0} /* « hide */
   .contents ol ol{display:none}
   .contents li.current > ol{display:grid}
+  /* folded: just a tab at the bottom of the left edge, clear of the page header */
+  .contents:not([open]){top:auto;bottom:16px;width:auto;padding:8px 12px 8px max(10px,env(safe-area-inset-left,0px));
+    border:1px solid var(--line);border-left:0;border-radius:0 8px 8px 0}
+  .contents:not([open]) summary::after{content:"\00BB";font-size:1rem;margin-left:8px;letter-spacing:0} /* » show */
 }
