@@ -152,8 +152,7 @@ test('IC p. 15: P leaves the canon at bar 15 and both voices cadence from bar 18
 });
 
 test('IC p. 20 and its rework: P leads a canon at the 12th to bar 10, then R leads one at the 12th below from bar 12', () => {
-  // in the rework R's bar 10 is free, leading to the half cadence, so the first canon ends a bar sooner
-  const firstSpans = { 'ic20-canon-12th-c-minor.abc': [[2, 9]], 'ic20r-canon-12th-c-minor-rework.abc': [[2, 8]] };
+  const firstSpans = { 'ic20-canon-12th-c-minor.abc': [[2, 9]], 'ic20r-canon-12th-c-minor-rework.abc': [[2, 9]] };
   // R's bar 13 has quarters where P answers with a dotted rhythm, so it is left out
   const second = { lead: 'R', follow: 'P', entry: -11, delay: 1, spans: [[12, 12], [14, 20]] };
   for (const [file, spans] of Object.entries(firstSpans)) {
