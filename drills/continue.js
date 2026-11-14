@@ -6,7 +6,6 @@
 
 import { checkAll, countWrite, canonVoices, writeWindow, worstOf, VOICE } from '../src/taneyev/canon-continue.js';
 import { isStrongBeat } from '../src/taneyev/florid.js';
-import { handMoves } from '../src/taneyev/canon-hands.js';
 import { drillFrom, givenChoices } from '../src/drills/continue-drill.js';
 import { nameInKey, semitonesInKey, semitonesOf, parsePitch } from '../src/common/diatonic.js';
 import { keyLabels } from '../src/input/key-map.js';
@@ -86,21 +85,18 @@ function promptFor(k) {
     + `Against ${against.join(' and ') || 'nothing'}; ${beat}.`;
 }
 
-/** Draws the keyboard: R and CF on their notes now, P on your last note, and the hand from R if asked for. */
+/** Draws the keyboard: R and CF on their notes now, and P on your last note. */
 function drawKeys() {
   const { drill, steps, octaves } = state;
   const voices = canonVoices(drill, steps);
   const k = steps.length;
   const tags = [];
-  let marks = [];
   if (k < countWrite(drill)) {
     const t = writeWindow(drill, k).start;
     const risposta = soundingAt(voices.R, t);
     const cantus = soundingAt(voices.CF, t);
     if (risposta) tags.push({ step: risposta.step, text: 'R', kind: 'r' });
     if (cantus) tags.push({ step: cantus.step, text: 'CF', kind: 'p' });
-    const showHand = document.getElementById('hints').checked && risposta;
-    if (showHand) marks = handMoves(risposta.step - drill.entry, drill.entry);
   }
   const last = voices.P.findLast((note) => note.step !== null);
   if (last && !tags.some((tag) => tag.step === last.step)) tags.push({ step: last.step, text: 'P', kind: 'p' });
@@ -108,7 +104,7 @@ function drawKeys() {
   const low = LOW + 7 * octaves;
   const high = HIGH + 7 * octaves;
   const box = document.getElementById('keys');
-  box.innerHTML = keyboard(low, high, marks.filter((m) => m.step >= low && m.step <= high), tags, { labels });
+  box.innerHTML = keyboard(low, high, tags, { labels });
   // on a narrow screen, scroll the keyboard so the first tag (R, or your last note) is in the middle
   const tag = box.querySelector('.kb-tag');
   if (tag) box.scrollLeft = Number(tag.getAttribute('x')) - box.clientWidth / 2;
@@ -243,7 +239,6 @@ fillGiven();
 document.getElementById('example').addEventListener('change', fillGiven);
 document.getElementById('start').addEventListener('click', start);
 document.getElementById('undo').addEventListener('click', undo);
-document.getElementById('hints').addEventListener('change', () => state && drawKeys());
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Backspace' && !event.target.closest?.('input, select, textarea')) {
     event.preventDefault();
@@ -251,4 +246,4 @@ document.addEventListener('keydown', (event) => {
   }
 });
 listenForNotes({ screen: document.getElementById('keys'), onStep, octaves: () => state?.octaves ?? 0 });
-document.getElementById('keys').innerHTML = keyboard(LOW, HIGH, [], [], { labels: keyLabels() });
+document.getElementById('keys').innerHTML = keyboard(LOW, HIGH, [], { labels: keyLabels() });

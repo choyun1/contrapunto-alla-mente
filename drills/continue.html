@@ -38,7 +38,6 @@
 <form class="drill-controls" id="settings">
 <label>Canon <select id="example"></select></label>
 <label>Given <select id="given"></select></label>
-<label><input type="checkbox" id="hints" checked> Show the hand</label>
 <button type="button" class="go" id="start">Start</button>
 </form>
 <p class="note">Play on the keys below, or on your computer keyboard: the three rows of letters (Z to M, A to J, Q to I) are three octaves, moved to wherever the proposta sits. The keys follow the key signature, so in F major the B key plays B♭; ficta are not entered here. Backspace takes back your last note. <span id="midi"></span></p>
@@ -62,10 +61,7 @@
 <li><span class="sw check-key">check</span>Worth a second look, as the Notebook page marks it: a weak-beat dissonance that is not passing or neighbor, or a voice crossing</li>
 <li><span class="sw miss-key">miss</span>Against the rules: consecutive perfects, a strong-beat dissonance that is not a suspension, a 7th, tritone or other leap the line may not make</li></ul></div>
 <div><h3>The keyboard</h3><ul>
-<li><span class="sw kb-key-r">R</span>The risposta’s note now (CF and P mark the cantus and your last note)</li>
-<li><span class="sw kb-key-perfect">1 3</span>Thumb and middle finger of the hand: a perfect consonance with R</li>
-<li><span class="sw kb-key-free">2 4</span>Index and ring finger: an imperfect consonance with R</li>
-<li><span>The hand is the one on the <a href="../canon/handshapes.html">Canon handshapes</a> page: thumb on R, reaching toward your side.</span></li></ul></div>
+<li><span class="sw kb-key-r">R</span>The risposta’s note now (CF and P mark the cantus and your last note)</li></ul></div>
 </section>
 <p class="foot">The checks come from src/taneyev/canon-continue.js, which uses the same florid rules as the Notebook page (src/taneyev/florid.js and parallels.js). Only the strict part of each canon is drilled, up to where the notebook marks it free or cadencing. Some of the notebook’s own notes are flagged as well; the Notebook page lists the same dissonances and parallels under each example.</p>
 <footer class="foot">

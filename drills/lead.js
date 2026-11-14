@@ -5,7 +5,6 @@
 // Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic steps.
 
 import { checkProposta, crossesVoices } from '../src/taneyev/canon.js';
-import { handMoves } from '../src/taneyev/canon-hands.js';
 import { pitchName, isTritone } from '../src/common/diatonic.js';
 import { listenForNotes, connectMidi } from '../src/input/listen.js';
 import { tone, VOICE } from '../src/audio/tone.js';
@@ -42,16 +41,14 @@ function promptFor(i) {
   return `${total}: the risposta sings ${pitchName(rispostaPitch(i))}.`;
 }
 
-/** Draws the keyboard for beat i: R on the risposta's note, P on your last note, and the hand if hints are on. */
+/** Draws the keyboard for beat i: R on the risposta's note and P on your last note. */
 function drawBeat(i) {
   const tags = [];
   const risposta = rispostaPitch(i);
   if (risposta !== null) tags.push({ step: risposta, text: 'R', kind: 'r' });
   const last = state.proposta[i - 1];
   if (last != null && last !== risposta) tags.push({ step: last, text: 'P', kind: 'p' });
-  const showHand = document.getElementById('hints').checked && risposta !== null && i < state.length;
-  const marks = showHand ? handMoves(rispostaAt(i), state.entry) : [];
-  drawKeys(document.getElementById('keys'), { marks, tags });
+  drawKeys(document.getElementById('keys'), { tags });
 }
 
 /** Redraws the strip of beats so far, with the current beat outlined. */

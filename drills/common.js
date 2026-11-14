@@ -51,11 +51,11 @@ export const numberIn = (id) => Number(document.getElementById(id).value);
 
 /**
  * Draws the on-screen keyboard into `box`, with the computer key for each
- * white key printed on it. marks and tags as in src/ui/keyboard.js; lit maps a
+ * white key printed on it. tags as in src/ui/keyboard.js; lit maps a
  * step to 'kb-good', 'kb-bad' or 'kb-on'.
  */
-export function drawKeys(box, { marks = [], tags = [], lit = new Map() } = {}) {
-  box.innerHTML = keyboard(LOW, HIGH, marks, tags, { lit, labels: keyLabels() });
+export function drawKeys(box, { tags = [], lit = new Map() } = {}) {
+  box.innerHTML = keyboard(LOW, HIGH, tags, { lit, labels: keyLabels() });
 }
 
 /**

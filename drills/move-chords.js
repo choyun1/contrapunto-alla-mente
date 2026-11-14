@@ -15,7 +15,7 @@ import {
 import { chordTune } from '../src/notation/abc.js';
 import { drawSmall } from '../src/notation/playback.js';
 import { CANONS, drawKeys, fillSelect, numberIn } from './common.js';
-import { entryName, handName } from '../canon/names.js';
+import { entryName } from '../canon/names.js';
 
 /** Which canons each level asks about, easiest first (see CANONS). */
 const LEVELS = [
@@ -69,8 +69,7 @@ function newPrompt() {
 
 /** The prompt line, e.g. "Canon at the 5th above: risposta on D4". */
 function promptText() {
-  const hint = document.getElementById('hints').checked ? ` (${handName(prompt.entry)})` : '';
-  return `Canon at the ${entryName(prompt.entry)}: risposta on ${pitchName(prompt.risposta)}${hint}`;
+  return `Canon at the ${entryName(prompt.entry)}: risposta on ${pitchName(prompt.risposta)}`;
 }
 
 /** The found-so-far line: names found, how many to go, wrong notes. */
@@ -80,15 +79,17 @@ function foundText() {
   return `Found ${prompt.found.size} of ${prompt.names.length}: ${found}${wrong}`;
 }
 
-/** Draws the keyboard: R on the risposta, your notes lit, and the hand once done. */
+/** Draws the keyboard: R on the risposta, your notes lit, and once done the ones you missed. */
 function render() {
   document.getElementById('prompt').textContent = promptText();
   document.getElementById('found').textContent = foundText();
   const lit = new Map();
   prompt.good.forEach((step) => lit.set(step, 'kb-good'));
   prompt.bad.forEach((step) => lit.set(step, 'kb-bad'));
-  const marks = prompt.done ? handMoves(prompt.from, prompt.entry) : [];
-  drawKeys(document.getElementById('keys'), { marks, lit, tags: [{ step: prompt.risposta, text: 'R', kind: 'r' }] });
+  if (prompt.done) {
+    handMoves(prompt.from, prompt.entry).forEach((move) => { if (!lit.has(move.step)) lit.set(move.step, 'kb-on'); });
+  }
+  drawKeys(document.getElementById('keys'), { lit, tags: [{ step: prompt.risposta, text: 'R', kind: 'r' }] });
 }
 
 /** Draws the answer as a chord under the hand and stacked in thirds. */

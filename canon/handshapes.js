@@ -26,6 +26,9 @@ function spanName(span) {
 /** Treble or bass, whichever suits the notes. */
 const clefFor = (steps) => (Math.min(...steps) < MIDDLE_C - 3 ? 'bass' : 'treble');
 
+/** The allowed notes lit on the keyboard (no finger numbers on the keys). */
+const litMoves = (moves) => new Map(moves.map((m) => [m.step, 'kb-on']));
+
 /** The keyboard for one canon from `from`, with P on the old note and R on the risposta's. */
 function canonKeyboard(from, entry) {
   const moves = handMoves(from, entry);
@@ -33,7 +36,7 @@ function canonKeyboard(from, entry) {
   const steps = [...moves.map((m) => m.step), from, risposta];
   const tags = [{ step: risposta, text: 'R', kind: 'r' }];
   if (from !== risposta) tags.push({ step: from, text: 'P', kind: 'p' });
-  return keyboard(Math.min(...steps) - 1, Math.max(...steps) + 1, moves, tags);
+  return keyboard(Math.min(...steps) - 1, Math.max(...steps) + 1, tags, { lit: litMoves(moves) });
 }
 
 /** Draws the hand chord and the stacked chord for one canon into `box`. */
@@ -81,8 +84,8 @@ function showShapes() {
     const figure = document.getElementById(id);
     const moves = handMoves(from, entry);
     const steps = moves.map((m) => m.step);
-    figure.querySelector('.kb').innerHTML = keyboard(Math.min(...steps) - 1, Math.max(...steps) + 1, moves,
-      [{ step: c4, text: 'R', kind: 'r' }]);
+    figure.querySelector('.kb').innerHTML = keyboard(Math.min(...steps) - 1, Math.max(...steps) + 1,
+      [{ step: c4, text: 'R', kind: 'r' }], { lit: litMoves(moves) });
     drawChords(figure.querySelector('.chords'), from, entry);
   }
 }
