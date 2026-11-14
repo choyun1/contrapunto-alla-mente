@@ -126,9 +126,12 @@ export const SECTIONS = [
         title: 'Canon at the 12th above, in G, out to the dominant',
         source: 'IC p. 17, third and fourth systems',
         note: '“OK!” From the page “Hexachords / modulations for canon @ 5th”: P in the bass, R a 12th above a bar later. '
-          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”), and it turns to IV at bar 8 with F♮.',
+          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”). '
+          + 'P’s neighbor at the end of bar 8 was F♮ on the page; it is F♯ here (Cho, 2026-11-14), '
+          + 'to avoid a cross relation with R’s F♯ on the next downbeat.',
         canon: canon(11, 1, [1, 12]),
         icf: false,
+        tempo: 100,
       },
       {
         file: 'ic15-canon-12th-below-g-minor.abc',
