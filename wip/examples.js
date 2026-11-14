@@ -44,7 +44,17 @@ export const WIP_SECTIONS = [
       + `${notebookLink('ic15-canon-12th-below-g-minor', 'IC p. 15')} (parallel unisons in bar 14, octaves going into bar 6) and `
       + `${notebookLink('ic19c-canon-5th-below-f-with-ficta', 'IC p. 19, third and fourth systems')}.`,
     procedure: [],
-    examples: [],
+    examples: [
+      {
+        file: 'ic20r-canon-12th-c-minor-rework.abc',
+        title: 'Canon at the 12th in C minor, reworked',
+        source: 'IC p. 20, reworked 2026-11-13',
+        note: `A rework of ${notebookLink('ic20-canon-12th-c-minor', 'IC p. 20')}, which the page marks “needs editing.” `
+          + 'Three bars of P are new, to give the line more shape: bar 3 (F, E♭, F, G), bar 6 (D, a leap down to B♭ and up to F, '
+          + 'then E♭ D) and bar 8 (B♭, A♭, G). R answers each a 12th above, a bar later. From bar 12 the voices trade names, as in the original.',
+        roles: { R: { 12: 'P' }, P: { 12: 'R' } },
+      },
+    ],
   },
   {
     id: 'failed-attempts',
