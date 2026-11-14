@@ -15,7 +15,7 @@ import { keyLabels } from '../src/input/key-map.js';
 import { listenForNotes, connectMidi } from '../src/input/listen.js';
 import { tone, VOICE as SOUND_VOICE } from '../src/audio/tone.js';
 import { keyboard } from '../src/ui/keyboard.js';
-import { TEMPO, block, showWithAudio } from '../src/notation/playback.js';
+import { TEMPO } from '../src/notation/playback.js';
 import { drillExamples } from './continue-examples.js';
 import { drawScore } from './continue-score.js';
 import { drawLengths, listenForLengths, pickedLength, roomName, valueName, whereName } from './continue-rhythm.js';
@@ -75,7 +75,7 @@ const soundingAt = (voice, t) => voice?.find((note) => note.step !== null && t >
 /** The prompt for the next note you write, with what it sounds against. */
 function promptFor(k) {
   const { drill, steps } = state;
-  if (isComplete(drill, steps)) return 'Done: the canon is complete as far as the notebook keeps it strict.';
+  if (isComplete(drill, steps)) return doneText();
   const start = nextStart();
   const voices = canonVoices(drill, steps);
   const against = [VOICE.R, VOICE.CF].map((id) => [id, soundingAt(voices[id], start)])
@@ -157,8 +157,6 @@ function redraw() {
   const lengths = document.getElementById('lengths');
   lengths.hidden = isComplete(drill, steps);
   if (!lengths.hidden) drawLengths(lengths, roomLeft(state.base, state.entries));
-  if (isComplete(drill, steps)) showResult();
-  else document.getElementById('result').hidden = true;
 }
 
 /** Plays your note at its written length, with R and the CF that sound against it. */
@@ -174,30 +172,18 @@ function hear(k) {
   }
 }
 
-/** The summary under the finished canon: clean notes, problems, and how many notes match the notebook. */
-function summaryText() {
-  const { base, steps, results, example } = state;
-  const notes = writtenPitches();
-  const count = (kind) => results.filter((result) => worstOf(result) === kind).length;
-  const clean = results.filter((result) => worstOf(result) === null).length;
-  // the notebook's own: the same step at the same time as one of the notebook's notes
-  const theirs = base.slots.filter((slot) => slot.slot === SLOT.WRITE);
-  const same = notes.filter((note) => theirs.some((slot) => Math.abs(slot.start - note.start) < 1e-9 && slot.step === note.step)).length;
-  return `${example.title}: ${clean} of ${steps.length} notes clean, `
-    + `${count('miss')} against the rules, ${count('check')} to check. `
-    + `${same} of ${steps.length} notes are the notebook’s own.`;
+/** Where the opening comes from, with a link to the canon on its page. */
+function sourceHtml() {
+  const { example } = state;
+  const page = example.page === 'WIP' ? '../wip/' : '../notebook/';
+  return `The opening is from ${example.source}. <a href="${page}#${example.id}">See that canon on the ${example.page} page</a>.`;
 }
 
-/** The drill is done: the summary and the notebook's own version to compare. */
-function showResult() {
-  const { abc, example } = state;
-  document.getElementById('summary').textContent = summaryText();
-  const box = document.getElementById('original');
-  box.innerHTML = '';
-  const page = example.page === 'WIP' ? '../wip/' : '../notebook/';
-  const wrap = block(box, 'The notebook’s version', `${example.source}. <a href="${page}#${example.id}">See it on the ${example.page} page</a>.`);
-  showWithAudio(wrap, abc, abc);
-  document.getElementById('result').hidden = false;
+/** The count of your notes by verdict, once the canon is done. */
+function doneText() {
+  const { steps, results } = state;
+  const count = (kind) => results.filter((result) => worstOf(result) === kind).length;
+  return `Done: ${count(null)} of ${steps.length} notes clean, ${count('miss')} against the rules, ${count('check')} to check.`;
 }
 
 /**
@@ -260,6 +246,7 @@ async function start() {
   const base = drillFrom(abc, example.canon, Number(document.getElementById('given').value));
   state = { example, abc, base, entries: [], octaves: octavesFor(base) };
   refresh();
+  document.getElementById('source').innerHTML = sourceHtml();
   document.getElementById('start').textContent = 'Start again';
   redraw();
 }
