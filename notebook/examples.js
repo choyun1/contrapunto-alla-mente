@@ -67,6 +67,50 @@ export const SECTIONS = [
         icf: false,
       },
       {
+        file: 'ic28a-canon-octave-below-f.abc',
+        title: 'Canon at the octave below, in F',
+        source: 'IC p. 28, first system',
+        note: 'P on top, R an octave below a bar later, strict until R breaks off for the cadence in bar 8. '
+          + 'The intervals are numbered on the page, zero-indexed with a tick for an added octave, and they confirm the reading. '
+          + 'Bar 7 has a 9–8 suspension, and bar 8 a 4–3 over the cadence.',
+        canon: canon(-7, 1, [1, 6]),
+        icf: false,
+      },
+      {
+        file: 'ic28b-canon-octave-d-minor.abc',
+        title: 'Canon at the octave above, in D minor',
+        source: 'IC p. 28, second system',
+        note: 'P in the bass, R an octave above a bar later; the C♯ leading tone is copied too. The page numbers every interval.',
+        canon: canon(7, 1, [1, 6]),
+        icf: false,
+      },
+      {
+        file: 'ic28c-canon-octave-below-g.abc',
+        title: 'Canon at the octave below, in G',
+        source: 'IC p. 28, third system',
+        note: 'P on top, R an octave below a bar later, strict to the final G. P leaps an octave in bar 2, and both voices touch F♮ on the way down.',
+        canon: canon(-7, 1, [1, 6]),
+        icf: false,
+      },
+      {
+        file: 'ic28d-canon-octave-two-phrases-f.abc',
+        title: 'Canon at the octave, in two phrases, in F',
+        source: 'IC p. 28, fourth and fifth systems',
+        note: 'P in the bass, R an octave above a bar later. The first phrase cadences on D in bar 8; both voices rest and P starts again from B♭, '
+          + 'so the canon runs strict from start to finish across the break.',
+        caption: 'Read from the scan without interval numbers: bars 13–15 have several 4ths and 9ths the checker can’t place, so they may be misread.',
+        canon: canon(7, 1, [1, 16]),
+        icf: false,
+      },
+      {
+        file: 'ic28e-canon-double-octave-a-minor.abc',
+        title: 'Canon at the double octave, in A minor',
+        source: 'IC p. 28, last system',
+        note: 'P in the bass, R two octaves above a bar later, strict until both voices close on A. A triangle is drawn above R’s C in bar 4.',
+        canon: canon(14, 1, [1, 7]),
+        icf: false,
+      },
+      {
         file: 'ic19a-canon-5th-below-b-flat.abc',
         title: 'Two-part canon at the 5th (a 12th below), in B♭',
         source: 'IC p. 19, top',
