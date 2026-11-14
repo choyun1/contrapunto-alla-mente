@@ -151,6 +151,15 @@ test('IC p. 15: P leaves the canon at bar 15 and both voices cadence from bar 18
   assert.deepEqual(canonMarks(load(example.file), example), { P: { 15: 'free', 18: 'cadence' }, R: { 18: 'cadence' } });
 });
 
+test('IC p. 20: P leads a canon at the 12th to bar 10, then R leads one at the 12th below from bar 12', () => {
+  const voices = readVoices(load('ic20-canon-12th-c-minor.abc'));
+  const first = { lead: 'P', follow: 'R', entry: 11, delay: 1, spans: [[2, 9]] };
+  // R's bar 13 has quarters where P answers with a dotted rhythm, so it is left out
+  const second = { lead: 'R', follow: 'P', entry: -11, delay: 1, spans: [[12, 12], [14, 20]] };
+  assert.equal(firstUncopied(voices, first), null);
+  assert.equal(firstUncopied(voices, second), null);
+});
+
 test('IC p. 7: the cadence between the two canons is marked, and so is the one at the end', () => {
   const example = EXAMPLES.find((e) => e.file.startsWith('ic07'));
   const marks = canonMarks(load(example.file), example);

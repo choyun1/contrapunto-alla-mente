@@ -119,6 +119,16 @@ export const SECTIONS = [
         canon: canon(-11, 3, [1, 14]),
         icf: false,
       },
+      {
+        file: 'ic20-canon-12th-c-minor.abc',
+        title: 'Canon at the 12th in C minor, the voices trading the lead',
+        source: 'IC p. 20',
+        note: '“Needs editing.” P leads in the bass and R answers a 12th above, a bar later, to the half cadence on G in bar 11. '
+          + 'From bar 12 R leads and P answers a 12th below, to the close on C. R’s B♮ in bar 10 and P’s B♮ in bar 20 are ficta; '
+          + 'P’s A♮ in bar 2 is answered by E♭.',
+        caption: 'R’s bar 13 is read as quarters, F E♭, where P answers with a dotted rhythm. '
+          + 'The page marks no free bars or cadences, so none are drawn here.',
+      },
     ],
   },
   {
