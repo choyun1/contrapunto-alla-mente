@@ -8,7 +8,7 @@ test('eighths share a beam within each quarter beat', () => {
   assert.equal(beamed('C/ D/ E F/ G/ A |', Q), 'C/D/ E F/G/ A |');
 });
 
-test('four eighths filling beats 1–2 or 3–4 share one beam (common engraving practice, as in Gould's Behind Bars)', () => {
+test('four eighths filling beats 1–2 or 3–4 share one beam (common engraving practice, as in Gould, Behind Bars)', () => {
   assert.equal(beamed('C/ D/ E/ F/ G/ A/ B/ c/ |', Q), 'C/D/E/F/ G/A/B/c/ |');
   assert.equal(beamed('C2 G/ A/ B/ c/ |', Q), 'C2 G/A/B/c/ |');
 });
