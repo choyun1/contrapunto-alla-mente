@@ -1,9 +1,0 @@
-X:1
-T:Canon at the double octave, in D
-M:C
-L:1/4
-K:D
-V:P clef=treble name="P"
-V:R clef=bass name="R"
-[V:P] z2 d2- | d c B c | d3 e | f g a2- | a3 g/f/ | e A f e | c d2 c | d4 |]
-[V:R] z4 | z2 D,2- | D, C, B,, C, | D,3 E, | F, G, A,2- | A,3 G,/F,/ | E,2 A,,2 | D,4 |]

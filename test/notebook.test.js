@@ -134,6 +134,10 @@ test('every example beams its eighth notes as engraved: by the beat, four eighth
   }
 });
 
+test('no example has a T: title line, since the page writes its own titles', () => {
+  for (const example of EXAMPLES) assert.doesNotMatch(load(example.file), /^T:/m, example.file);
+});
+
 test('IC p. 15: P leaves the canon at bar 15 and both voices cadence from bar 18', () => {
   const example = EXAMPLES.find((e) => e.file.startsWith('ic15'));
   assert.deepEqual(canonMarks(load(example.file), example), { P: { 15: 'free', 18: 'cadence' }, R: { 18: 'cadence' } });

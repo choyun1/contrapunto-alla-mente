@@ -58,6 +58,15 @@ export const SECTIONS = [
     ],
     examples: [
       {
+        file: 'ic27a-canon-octave-f.abc',
+        title: 'Canon at the octave, in F',
+        source: 'IC p. 27, fourth system',
+        note: '“Canon @ octave.” P in the bass, R an octave above a bar later, strict to the end. '
+          + 'The page numbers every interval between the voices, zero-indexed, with a tick for one octave more (2′ is a 10th).',
+        canon: canon(7, 1, [1, 7]),
+        icf: false,
+      },
+      {
         file: 'ic19a-canon-5th-below-b-flat.abc',
         title: 'Two-part canon at the 5th (a 12th below), in B♭',
         source: 'IC p. 19, top',
@@ -91,24 +100,6 @@ export const SECTIONS = [
         note: '“OK!” From the page “Hexachords / modulations for canon @ 5th”: P in the bass, R a 12th above a bar later. '
           + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”), and it turns to IV at bar 8 with F♮.',
         canon: canon(11, 1, [1, 12]),
-        icf: false,
-      },
-      {
-        file: 'ic27a-canon-octave-f.abc',
-        title: 'Canon at the octave, in F',
-        source: 'IC p. 27, fourth system',
-        note: '“Canon @ octave.” P in the bass, R an octave above a bar later, strict to the end. '
-          + 'The page numbers every interval between the voices, zero-indexed, with a tick for one octave more (2′ is a 10th).',
-        canon: canon(7, 1, [1, 7]),
-        icf: false,
-      },
-      {
-        file: 'ic27b-canon-double-octave-d.abc',
-        title: 'Canon at the double octave, in D',
-        source: 'IC p. 27, last system',
-        note: 'P on top, R two octaves below a bar later, strict for five bars, then free into the cadence. '
-          + 'The interval numbers on the page (9′ is a 17th) confirm the reading.',
-        canon: canon(-14, 1, [1, 5]),
         icf: false,
       },
       {
