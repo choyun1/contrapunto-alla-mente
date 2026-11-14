@@ -248,8 +248,8 @@ export const SECTIONS = [
         + 'The labels here are Bathe’s cells, counted from 1 as he prints them, and each of P’s downbeats is in its cell. <a href="../canon/bathe.html">Bathe’s table</a> has every cell, in his numbers and as Taneyev’s J<sub>v</sub>. '
         + 'With the cantus between the voices, as on IC p. 7, the table no longer applies, and the ICF does the same work.',
         { file: 'ic05a-canon-5th-above.abc', bars: [4, 6], voices: ['R', 'P', 'CF'], labels: { P: { 4: 'Bathe: 3 5', 5: '1 3 5', 6: '6' } } }),
-      step('Bellermann’s rule: every two-voice pair must work. With the ICF there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + ICF '
-        + 'Those three guarantee the other three. R + CF is P + ICF again, a bar later and a 5th up, so it is already right; R + ICF and CF + ICF are never heard, since the ICF is silent. '
+      step('Bellermann’s rule: every two-voice pair must work. With the ICF there are four voices and six pairs, but only the three with P are checked, as P is written: P + CF, P + R and P + ICF. '
+        + 'Of the other three, only R + CF sounds, and it is P + ICF again, a bar later and a 5th up, so it is already right. R + ICF and CF + ICF need no check: the ICF is silent, so they are never heard. '
         + 'The diagram below shows it bar by bar. WIP p. 11 makes the same point for a canon with three risposte, one of them imaginary: “Check: P + R1, P + R2, P + R3 … ⇒ R1 + R2 is guaranteed!”'),
       step('When the cantus ends, or the canon can go no further, leave it for a free cadence.',
         { file: 'ic05a-canon-5th-above.abc', bars: [6, 8], voices: ['R', 'P', 'CF'] }),
