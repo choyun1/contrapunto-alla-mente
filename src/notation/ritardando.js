@@ -4,14 +4,14 @@
 // It stretches time in the note map abcjs makes just before it renders the
 // sound (as final-chord.js and breaths.js do), so every voice slows together,
 // long notes included. Through the bar the tempo falls in a straight line
-// from the starting tempo to SLOWEST of it; after the bar it stays there, for
+// from the starting tempo to SLOWEST of it (75%, Cho); after the bar it stays there, for
 // the final chord. Times are in whole notes. This holds no music theory.
 //
 // An example asks for one with `ritardando: 8`, the bar to slow through,
 // counted from 1, in common time.
 
 /** The tempo at the end of the ritardando, as a share of the starting tempo. */
-export const SLOWEST = 0.85;
+export const SLOWEST = 0.75;
 
 /**
  * A function from written time to played time, for a ritardando from
