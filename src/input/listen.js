@@ -15,14 +15,14 @@ function ignoredPress(event) {
   return event.target.closest?.('input, select, textarea') != null;
 }
 
-/** Computer keys: calls onStep(step) for each key that plays a note. */
-function listenToKeys(onStep) {
+/** Computer keys: calls onStep(step) for each key that plays a note, `octaves()` octaves up from key-map.js. */
+function listenToKeys(onStep, octaves) {
   document.addEventListener('keydown', (event) => {
     if (ignoredPress(event)) return;
     const step = stepOfKey(event.key);
     if (step === null) return;
     event.preventDefault();
-    onStep(step);
+    onStep(step + 7 * octaves());
   });
 }
 
@@ -76,9 +76,11 @@ function onMidiMessage({ data }, onStep) {
 /**
  * Starts listening to the computer keys and the on-screen keyboard. `screen`
  * is the element holding the on-screen keyboard; `onStep(step)` gets every
- * note. MIDI is added with connectMidi.
+ * note. `octaves()`, when given, moves the computer keys that many octaves up
+ * (negative: down), for a drill whose voice sits lower or higher. MIDI is
+ * added with connectMidi.
  */
-export function listenForNotes({ screen, onStep }) {
-  listenToKeys(onStep);
+export function listenForNotes({ screen, onStep, octaves = () => 0 }) {
+  listenToKeys(onStep, octaves);
   listenToScreen(screen, onStep);
 }

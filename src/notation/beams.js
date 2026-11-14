@@ -3,7 +3,8 @@
 // beats 1–2 or 3–4 share one beam across the half bar; an eighth left over from a dotted quarter
 // joins the eighths of the next beat (a beam of three).
 
-const TOKEN = /(\|\]|\|\||\|:|:\||\|)|([_=^]*[A-Ga-gz][,']*)([\d/]*)(-?)/y;
+// a rest is z, or x when it is invisible
+const TOKEN = /(\|\]|\|\||\|:|:\||\|)|([_=^]*[A-Ga-gzx][,']*)([\d/]*)(-?)/y;
 const EPS = 1e-9;
 const BEAT = 1 / 4; // a quarter, in whole notes
 const HALF = 1 / 2; // half a bar of common time
@@ -35,7 +36,7 @@ function tokens(music, unit) {
       continue;
     }
     const length = lengthOf(match[3], unit);
-    const rest = match[2].includes('z');
+    const rest = /[zx]/.test(match[2]);
     out.push({ text: match[0], at: time, length, rest, short: length < BEAT - EPS && !rest });
     time += length;
   }

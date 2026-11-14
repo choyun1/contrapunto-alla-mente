@@ -248,6 +248,15 @@ button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);borde
 .strip li.free{background:var(--fc);color:var(--fc-ink)}.strip li.perfect{background:var(--vc);color:var(--vc-ink)}
 .strip li.miss{border-color:var(--no);color:var(--no);font-weight:600}.strip li.now{border-color:var(--accent);border-width:2px}
 .miss-key{border:1px solid var(--no);color:var(--no)}
+/* Continue the proposta drill: notes to check or still waiting on the next note, and your notes on the score */
+.strip li.check{background:var(--vc);color:var(--vc-ink)}.strip li.pending{border-style:dashed;color:var(--muted)}
+.check-key{background:var(--vc);color:var(--vc-ink)}.pending-key{border:1px dashed var(--muted);color:var(--muted)}
+.problems{margin:0;padding-left:18px}.problems li.miss{color:var(--no)}.problems li.check{color:var(--vc-ink)}.problems li.pending{color:var(--muted)}
+.cont-ok{fill:var(--yes);color:var(--yes)}.cont-check{fill:#c27a12;color:#c27a12}.cont-miss{fill:var(--no);color:var(--no)}.cont-pending{fill:var(--muted);color:var(--muted)}
+.drill-buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button.plain{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 14px;cursor:pointer}
+button.plain:disabled{opacity:.5;cursor:default}
+#example{flex:1;min-width:0;width:100%}.drill-controls label:has(#example){flex:1 1 100%;min-width:0}
 /* chart cards: the self-questions that sum up a shift (src/taneyev/self-questions.js) */
 .ask{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--panel);border-radius:0 6px 6px 0}
 .ask h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}

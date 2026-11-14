@@ -1,4 +1,4 @@
-// Diatonic pitch arithmetic in C major, counted in steps.
+// Diatonic pitch arithmetic, counted in steps: C major, and other keys at the end.
 //
 // A pitch is a step number: C4 (middle C) = 28, D4 = 29, ... B4 = 34, C5 = 35.
 // Steps line up with Taneyev's zero-indexed intervals: two pitches `i` steps
@@ -36,3 +36,19 @@ export const semitonesOf = (step) => octaveOf(step) * 12 + SEMITONES[((step % 7)
 
 /** Is the distance between two steps a tritone (augmented 4th or diminished 5th)? */
 export const isTritone = (a, b) => Math.abs(semitonesOf(a) - semitonesOf(b)) % 12 === 6;
+
+// Keys other than C major. A key is the signature from abc-read.js's
+// keySignature: semitones per letter, e.g. { B: -1 } for F major. Steps stay
+// diatonic; only the sound and the spelling change.
+
+/** Semitones from C0 to a step in a key, e.g. 58 for B4 in F major (B♭). */
+export const semitonesInKey = (step, key = {}) => semitonesOf(step) + (key[letterOf(step)] ?? 0);
+
+/** Accidental signs by semitones raised: −1 ♭, +1 ♯. */
+const SIGNS = { '-2': '𝄫', '-1': '♭', 0: '', 1: '♯', 2: '𝄪' };
+
+/** A step's letter in a key, with the key's accidental, e.g. 'B♭' in F major. */
+export const letterInKey = (step, key = {}) => `${letterOf(step)}${SIGNS[key[letterOf(step)] ?? 0]}`;
+
+/** A step's scientific name in a key, e.g. 'B♭4' in F major. */
+export const nameInKey = (step, key = {}) => `${letterInKey(step, key)}${octaveOf(step)}`;
