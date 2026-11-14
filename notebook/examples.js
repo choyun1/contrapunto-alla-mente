@@ -36,7 +36,7 @@
 const step = (text, snippet = null, moves = null) => ({ text, snippet, moves });
 
 /** One canon over a cantus firmus in the usual voice names: P leads, R follows, CF is the cantus. */
-const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
+export const canon = (entry, delay, ...spans) => ({ lead: 'P', follow: 'R', entry, delay, spans });
 
 export const SECTIONS = [
   {
@@ -194,8 +194,8 @@ export const SECTIONS = [
         source: 'IC p. 29, first system',
         note: '“What if 5ths are dissonant?” Jv = −7. Cho wrote each note’s interval from the '
           + 'cantus above it and below it; the 5ths (4) become 4ths (−3) and fall on weak beats.',
-        caption: 'The page’s Jv = −11 system is crossed out, and the last system is unfinished; '
-          + 'both are left out.',
+        caption: 'The page’s crossed-out Jv = −11 system is on the <a href="../wip/#ic29c-invertible-12th-crossed-out">WIP page</a>, '
+          + 'with the other failed attempts. The last system is unfinished and is left out.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
       {
@@ -215,16 +215,6 @@ export const SECTIONS = [
           + 'Bar 2 opens with a 7–6 suspension over the cantus’s B. The 5th on the downbeat of bar 6 becomes a 4th in the derivative.',
         caption: 'The cantus in bars 2 and 6 is faint; B and F are best guesses.',
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
-      },
-      {
-        file: 'ic29c-invertible-12th-crossed-out.abc',
-        title: 'Invertible counterpoint at the 12th, crossed out',
-        source: 'IC p. 29, second system',
-        note: '“Jv = −11.” A failed attempt, kept to learn from. The original leans on 6ths (5), and at the 12th '
-          + 'a 6th becomes a 7th (5 − 11 = −6): bars 4, 5, 6 and 9 put a 7th on the beat in the derivative. '
-          + 'The page’s row of derivative numbers stops after two bars.',
-        caption: 'The last note of the original looks like E, but its number (4) and the derivative’s C say G.',
-        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -11 },
       },
     ],
   },

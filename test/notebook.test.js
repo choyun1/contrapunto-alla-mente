@@ -1,12 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { beamedAbc } from '../src/notation/beams.js';
 import { SECTIONS } from '../notebook/examples.js';
+import { WIP_SECTIONS } from '../wip/examples.js';
 import { ICF, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
 
-const EXAMPLES = SECTIONS.flatMap((section) => section.examples);
+// the WIP page's examples are checked the same way as the Notebook's
+const EXAMPLES = [...SECTIONS, ...WIP_SECTIONS].flatMap((section) => section.examples);
 
 /** The text of a notebook example's abc file. */
 const load = (file) => readFileSync(new URL(`../notebook/examples/${file}`, import.meta.url), 'utf8');
@@ -128,10 +130,16 @@ test('alternative staves are heard one pair after the other, with a bar of rest 
 
 /** One token of a music line: a bar line, or a note or rest with its length text. */
 test('every example beams its eighth notes as engraved: by the beat, four eighths by the half bar', () => {
-  for (const file of [...EXAMPLES.map((e) => e.file), 'ic14-three-voice-canon-c-minor.abc', 'wip07-canon-over-leoni.abc']) {
+  for (const file of EXAMPLES.map((e) => e.file)) {
     const abc = load(file);
     assert.equal(abc, beamedAbc(abc), file);
   }
+});
+
+test('every abc file in notebook/examples/ is shown on the Notebook or the WIP page', () => {
+  const shown = new Set(EXAMPLES.map((e) => e.file));
+  const files = readdirSync(new URL('../notebook/examples/', import.meta.url)).filter((f) => f.endsWith('.abc'));
+  for (const file of files) assert.ok(shown.has(file), file);
 });
 
 test('no example has a T: title line, since the page writes its own titles', () => {
