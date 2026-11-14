@@ -70,9 +70,9 @@ ul.pages .also{display:block;font-family:var(--body);font-size:.85rem;color:var(
 .k-fixed-consonance{background:var(--fc);color:var(--fc-ink)} .k-variable-consonance{background:var(--vc);color:var(--vc-ink)}
 .k-variable-dissonance{background:var(--vd);color:var(--vd-ink)} .k-fixed-dissonance{background:var(--fd);color:var(--fd-ink)}
 .sym{display:inline-block;min-width:2.2em;text-align:center;font-weight:600}
-.chart{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px 10px;scroll-margin-top:64px;display:grid;gap:8px}
-.chart>header{padding-bottom:10px;border-bottom:1px solid var(--line)}
-.chart h2{font-size:1.5rem}
+/* A page section: flat, set off by a rule above it, not a box (no cards inside cards). */
+.chart{border-top:1px solid var(--line);padding-top:20px;scroll-margin-top:64px;display:grid;gap:8px;min-width:0}
+.chart h2{font-size:1.6rem}
 .jv{font-family:var(--body);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;margin-right:6px;font-size:1.05rem}
 .formula{margin:2px 0 0;font-family:var(--body);font-variant-numeric:tabular-nums}
 .terms{margin:10px 0 0;display:grid;gap:4px;max-width:70ch}
@@ -111,11 +111,12 @@ details.notation summary::before{content:"";width:0;height:0;border-style:solid;
 details.notation[open] summary::before{transform:rotate(90deg)}
 details.notation summary:hover{border-color:var(--accent)}
 ul.dissonances{margin:8px 0 4px;padding-left:20px;font-size:.88rem;line-height:1.5}
-.examples{display:grid;gap:14px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
-.example{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px 6px}
-.example-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  padding-bottom:6px;border-bottom:1px solid var(--line)}
-.example h3{font-family:var(--body);font-size:.95rem;font-weight:600;margin:0}
+/* Examples in a section: plain rows, one under another, with a line between them. */
+.examples{display:grid;margin-top:8px;min-width:0}
+.example{padding:16px 0 10px;border-top:1px solid var(--line);min-width:0;scroll-margin-top:64px}
+.example:first-child{border-top:0;padding-top:4px}
+.example-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:6px}
+.example h3{font-family:var(--display);font-size:1.15rem;font-weight:600;margin:0}
 .example button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
 .example button:hover{border-color:var(--accent)}
 .score{color:var(--ink);max-width:720px}
@@ -167,7 +168,7 @@ ul.dissonances{margin:8px 0 4px;padding-left:20px;font-size:.88rem;line-height:1
 .controls input,.controls select{font:inherit;font-size:1rem;width:7em;padding:3px 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--ink)}
 .controls button{font:inherit;font-weight:600;color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:3px 14px;background:var(--panel);cursor:pointer}
 /* The shift as a 3D motion (taneyev/shift-model.js, cayley.js): the guide page and the dock. */
-.model{display:grid;gap:10px;margin-top:12px;padding:14px;background:var(--bg);border-radius:8px}
+.model{display:grid;gap:10px;margin-top:12px;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
 .model-bar{display:flex;flex-wrap:wrap;gap:6px}
 .model-bar button{font:inherit;font-size:.85rem;font-weight:600;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 12px;cursor:pointer}
 .model-bar button:hover{border-color:var(--accent)}
@@ -248,7 +249,7 @@ button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);borde
 .strip li.miss{border-color:var(--no);color:var(--no);font-weight:600}.strip li.now{border-color:var(--accent);border-width:2px}
 .miss-key{border:1px solid var(--no);color:var(--no)}
 /* chart cards: the self-questions that sum up a shift (src/taneyev/self-questions.js) */
-.ask{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--bg);border-radius:0 6px 6px 0}
+.ask{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--accent);background:var(--panel);border-radius:0 6px 6px 0}
 .ask h3{font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
 .ask ul{margin:0;padding-left:18px}.ask li{max-width:70ch}
 /* the imaginary-cantus diagram on the notebook page (notebook/icf-diagram.js) */
@@ -312,3 +313,30 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .bathe-wheel button[aria-pressed="true"]{color:var(--panel);background:var(--accent);border-color:var(--accent)}
 @media (prefers-reduced-motion: reduce){.wheel .wh-ring{transition:none}}
 .wh-key-in{color:var(--accent)}.wh-key-out{color:var(--vd-ink);font-weight:700}.wh-key-both{background:var(--fc);color:var(--fc-ink);padding:0 4px;border-radius:4px}
+
+/* The page contents (src/ui/page-contents.js): a list of the page's sections, beside the page on wide
+   screens and following your place, or a "Contents" box under the header on narrow ones. */
+.with-contents{display:grid;gap:28px;min-width:0}
+.page-body{display:grid;gap:28px;min-width:0}
+.contents{font-size:.88rem;min-width:0}
+.contents summary{cursor:pointer;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.contents ol{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:1px}
+.contents ol ol{margin:0 0 4px 1.2em}
+.contents a{display:block;padding:2px 8px;border-left:2px solid transparent;color:var(--muted);text-decoration:none}
+.contents a:hover{color:var(--accent)}
+.contents .n{display:inline-block;min-width:1.8em;margin-right:.3em;font-variant-numeric:tabular-nums}
+.contents ol ol .n{min-width:2.2em}
+.contents li.current > a{color:var(--ink);font-weight:600;border-left-color:var(--accent)}
+.contents li.on > a{color:var(--accent);font-weight:600}
+@media (max-width:1099px){
+  .contents{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:8px 12px;max-width:32rem}
+}
+@media (min-width:1100px){
+  main.wrap:has(.with-contents){max-width:1220px}
+  .with-contents{grid-template-columns:15rem minmax(0,1fr);gap:40px;align-items:start}
+  .contents{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;padding-top:20px}
+  .contents summary{pointer-events:none;list-style:none}
+  .contents summary::-webkit-details-marker{display:none}
+  .contents ol ol{display:none}
+  .contents li.current > ol{display:grid}
+}
