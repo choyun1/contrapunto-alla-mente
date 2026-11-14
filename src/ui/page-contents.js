@@ -1,7 +1,8 @@
 // The page contents: a numbered list of a long page's sections (its h2 headings) and, under
 // each, the examples in it (the h3 of each .example). On wide screens it is a panel on the left
-// edge that marks the section you are reading and folds to a thin strip; on narrow ones it is a
-// folded "On this page" box under the header.
+// edge that marks the section you are reading and folds to a thin strip of section numbers (the
+// current one still marked; pointing at a number shows its title); on narrow ones it is a folded "On this page" box under the header.
+// Each section's list of examples folds too.
 // Styles: assets/site.css. A page opts in with <script type="module" src="../src/ui/page-contents.js">.
 // Pages that draw their sections after loading (the notebook) are picked up as they appear.
 
@@ -29,18 +30,42 @@ function readSections(body) {
         title: h3.textContent.trim(),
         id: targetId(h3.closest('.example'), h3),
       }));
-      return { title: h2.textContent.trim(), id: targetId(target, h2), examples };
+      return { heading: h2, title: h2.textContent.trim(), id: targetId(target, h2), examples };
     });
 }
 
-// Returns the list items for the sections, numbered 1, 1.1, 1.2, 2 ...
+// Returns the list items for the sections, numbered 1, 1.1, 1.2, 2 ... A section with examples
+// gets a small button that folds its examples in and out.
 function listHtml(sections) {
   return sections.map((section, i) => {
     const subs = section.examples.map((ex, j) =>
-      `<li data-for="${ex.id}"><a href="#${ex.id}"><span class="n">${i + 1}.${j + 1}</span>${ex.title}</a></li>`).join('');
-    const sublist = subs ? `<ol>${subs}</ol>` : '';
-    return `<li data-for="${section.id}"><a href="#${section.id}"><span class="n">${i + 1}</span>${section.title}</a>${sublist}</li>`;
+      `<li data-for="${ex.id}"><a href="#${ex.id}"><span class="n">${i + 1}.${j + 1}</span><span class="t">${ex.title}</span></a></li>`).join('');
+    const sublist = subs
+      ? `<button class="sub-toggle" type="button" aria-expanded="false" aria-label="Examples in ${section.title}"></button><ol>${subs}</ol>`
+      : '';
+    return `<li data-for="${section.id}"><a href="#${section.id}"><span class="n">${i + 1}</span><span class="t">${section.title}</span></a>${sublist}</li>`;
   }).join('');
+}
+
+// Shows or hides a section's examples in the list, and says so on its button.
+function setExpanded(item, expanded) {
+  const button = item.querySelector(':scope > .sub-toggle');
+  if (!button) return;
+  item.classList.toggle('expanded', expanded);
+  button.setAttribute('aria-expanded', String(expanded));
+}
+
+// Lets each section's button fold its examples. A section the reader opened by hand stays open
+// as they scroll on; one they folded stays folded.
+function foldSubLists(contents) {
+  contents.querySelector('nav').addEventListener('click', (event) => {
+    const button = event.target.closest('.sub-toggle');
+    if (!button) return;
+    const item = button.parentElement;
+    const expanded = !item.classList.contains('expanded');
+    setExpanded(item, expanded);
+    item.dataset.kept = 'yes';
+  });
 }
 
 const SAVED = 'contents-open'; // remembers, per browser, whether the side panel was left open
@@ -87,10 +112,31 @@ function buildContents(main) {
     setOpen(contents, open);
     rememberOpen(open);
   });
+  foldSubLists(contents);
   const header = main.querySelector(':scope > header');
   if (header) header.after(contents);
   else main.prepend(contents);
   return contents;
+}
+
+// Numbers the section headings on the page to match the list (drawn by assets/site.css from
+// data-n, so the number stays out of the heading's text).
+function numberHeadings(sections) {
+  sections.forEach((section, i) => {
+    section.heading.dataset.n = String(i + 1);
+  });
+}
+
+// Marks a section as the one being read, opening its examples and folding the last one's,
+// unless the reader opened or folded them by hand.
+function markCurrent(contents, section) {
+  if (section.classList.contains('current')) return;
+  for (const before of contents.querySelectorAll('li.current')) {
+    before.classList.remove('current');
+    if (!before.dataset.kept) setExpanded(before, false);
+  }
+  section.classList.add('current');
+  if (!section.dataset.kept) setExpanded(section, true);
 }
 
 // Marks the section (and example) at the top of the screen as current in the list.
@@ -102,12 +148,11 @@ function followPlace(contents, sections) {
       const item = items.get(entry.target.id);
       if (!item) continue;
       const isSection = !item.parentElement.closest('li');
-      const mark = isSection ? 'current' : 'on';
-      contents.querySelectorAll(`li.${mark}`).forEach((li) => li.classList.remove(mark));
-      item.classList.add(mark);
-      if (!isSection) {
-        contents.querySelectorAll('li.current').forEach((li) => li.classList.remove('current'));
-        item.parentElement.closest('li').classList.add('current');
+      contents.querySelectorAll('li.on').forEach((li) => li.classList.remove('on'));
+      if (isSection) markCurrent(contents, item);
+      else {
+        item.classList.add('on');
+        markCurrent(contents, item.parentElement.closest('li'));
       }
     }
   }, { rootMargin: '-15% 0px -75% 0px' });
@@ -128,6 +173,7 @@ function refresh() {
   if (sections.length < MIN_SECTIONS) return;
   if (!contents) contents = buildContents(main);
   contents.querySelector('ol').innerHTML = listHtml(sections);
+  numberHeadings(sections);
   watcher?.disconnect();
   watcher = followPlace(contents, sections);
 }
