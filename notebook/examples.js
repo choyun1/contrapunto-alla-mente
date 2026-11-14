@@ -29,6 +29,13 @@
 // bar 12 on, for a canon whose voices trade the lead; the page marks it
 // "now P" there.
 //
+// With `tempo`, an example plays at its own speed, in quarter notes per
+// minute, instead of the Notebook's TEMPO.NOTEBOOK (118). With `breaths`, a
+// voice breathes in playback only, at a bar and beat: `{ P: [[4, 1]] }` is a
+// short silence after beat 1 of P's bar 4 (src/notation/breaths.js). With
+// `ritardando: 8`, playback slows slightly through bar 8 and stays there
+// (src/notation/ritardando.js).
+//
 // With `rounds`, an infinite canon is drawn with its repeat signs and heard
 // going round the repeat that many times before the ending.
 
@@ -55,7 +62,7 @@ export const SECTIONS = [
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [1, 3], color: [['P', 1, 'a'], ['R', 2, 'a'], ['P', 2, 'b'], ['R', 3, 'b']] }),
       step('Write P’s next bar against the R already written under it. Each new P bar also fixes an R bar to come, so check the melodic step it makes in R too (IC p. 13: “the melodic interval must follow the rules @ distance of two measures”).',
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [2, 3], color: [['P', 2, 'a'], ['R', 2, 'a'], ['R', 3, 'b']], labels: { P: { 2: 'new bar of P' }, R: { 2: 'checked against this', 3: 'and copied here' } } }),
-      step('Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”).',
+      step('Use ficta (B♭, F♯) where the copy needs it to keep its interval exact (IC p. 19, “w/ ficta”). <a href="../canon/ficta.html#copy-h">Ficta</a> explains when an exact copy is needed and when an in-key one is fine.',
         { file: 'ic19b-canon-5th-above-with-ficta.abc', bars: [4, 5], color: [['P', 4, 'a'], ['R', 5, 'a']], labels: { P: { 4: 'B♭ in P' }, R: { 5: 'answered by F' } } }),
       step('When the canon can go no further, let both voices go free into a cadence. The scores mark where the strict canon stops.',
         { file: 'ic19a-canon-5th-below-b-flat.abc', bars: [6, 8] }),
@@ -92,9 +99,17 @@ export const SECTIONS = [
         title: 'Canon at the 5th above, with ficta',
         source: 'IC p. 19, second system',
         note: '“w/ ficta.” P leads in the alto clef and R answers a 5th above; the B♭s are the ficta. '
-          + 'P’s last C is held over two bars while R answers it.',
+          + 'P drops to the low C for the last bar while R answers it. '
+          + 'R copies in key by default (<a href="../canon/ficta.html#spiral-h">the spiral, and two ways out</a>): '
+          + 'P’s B♮ comes back as F♮, not F♯, so in bar 2 R’s F is a diminished 5th against P’s B, a passing liberty; '
+          + 'an F♯ there would pull R toward G just before bar 4. Bar 4 is a deliberate turn to the flat side: both voices take B♭ (a C7 sound) and land in F. '
+          + 'P’s leap to B♭ on beat 2, against R’s held E, is a liberty in strict style, though the B♭ falls to A as a 7th would.',
         canon: canon(4, 1, [1, 8]),
         icf: false,
+        tempo: 90, // slower than the Notebook's 118 (Cho, 2026-11-14)
+        // after beat 1 of P's bars 4 and 7 and of the same places in R a bar later; heard, not drawn
+        breaths: { P: [[4, 1], [7, 1]], R: [[5, 1], [8, 1]] },
+        ritardando: 8, // the bar before the last
       },
       {
         file: 'ic19c-canon-5th-below-f-with-ficta.abc',
