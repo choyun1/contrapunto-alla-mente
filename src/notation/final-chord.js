@@ -28,3 +28,18 @@ export function holdFinalNotes(voices) {
   }
   return voices;
 }
+
+/**
+ * Lets the final chord ring `extra` whole notes past the end of the piece, so
+ * there is sound left for the fade-out (fade-out.js) to taper. Changes the
+ * note map in place and returns it.
+ */
+export function ringOn(voices, extra) {
+  const pieceEnd = Math.max(0, ...voices.map(lastEnd));
+  for (const notes of voices) {
+    for (const note of notes) {
+      if (note.end === pieceEnd) note.end += extra;
+    }
+  }
+  return voices;
+}

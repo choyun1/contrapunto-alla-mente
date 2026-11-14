@@ -6,7 +6,11 @@
 // This runs only in the browser; it holds no music theory.
 
 import { staffSpotAt } from './staff-click.js';
-import { holdFinalNotes } from './final-chord.js';
+import { holdFinalNotes, ringOn } from './final-chord.js';
+import { fadeOut, RING_SECONDS } from './fade-out.js';
+import { breathTimes, breatheAt } from './breaths.js';
+import { voiceIds } from './abc-read.js';
+import { ritardandoInBar, stretchNotes } from './ritardando.js';
 
 const RENDER_OPTIONS = {
   add_classes: true,
@@ -75,18 +79,27 @@ const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine
  * Renders abc into a block and wires the play button to `audioAbc`, which
  * may differ from what is drawn, played by a string trio (inStrings). Staff `silentVoice` (counted from 0, top
  * down), when given, is drawn in gray: the audio leaves it out, so it is seen
- * but not heard (the imaginary cantus). It plays at TEMPO.NOTEBOOK. The
+ * but not heard (the imaginary cantus). It plays at `tempo`, TEMPO.NOTEBOOK
+ * unless an example asks for its own, with any `breaths` the example lists
+ * (breaths.js) and a `ritardando` through the bar it names (ritardando.js). The
  * playback tune is made at the first click, so a page of many examples draws
  * only what it shows.
  */
-export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
+export function showWithAudio(wrap, abc, audioAbc, { silentVoice, tempo = TEMPO.NOTEBOOK, breaths, ritardando } = {}) {
   const score = wrap.querySelector('.score');
   const [tune] = ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
   if (silentVoice !== undefined) {
     score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
   }
   const button = wrap.querySelector('button');
-  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, TEMPO.NOTEBOOK));
+  const times = breathTimes(breaths, voiceIds(audioAbc));
+  const playedTime = ritardando ? ritardandoInBar(ritardando) : (t) => t;
+  const timing = {
+    // breaths are placed in written time, then the ritardando stretches it
+    shape: (voices) => holdFinalNotes(stretchNotes(breatheAt(voices, times), playedTime)),
+    playedTime,
+  };
+  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, tempo, timing));
   return tune;
 }
 
@@ -161,6 +174,13 @@ export function inStrings(abc) {
 }
 
 let current = null; // { synth, button, timer } for the tune that is playing
+
+/**
+ * How a tune is timed in playback: `shape` changes the note map before it
+ * sounds, and `playedTime` maps a written time to when it is heard (the same
+ * time, unless an example has a ritardando).
+ */
+const DEFAULT_TIMING = { shape: holdFinalNotes, playedTime: (t) => t };
 let audioContext = null;
 
 const PLAY_LABEL = '▶ Play';
@@ -175,11 +195,20 @@ function stop() {
   current = null;
 }
 
+/** Fades the last `seconds` of a primed synth's sound to silence, in place. */
+function fadeTail(synth, seconds) {
+  for (const buffer of synth.audioBuffers ?? []) {
+    const channels = [];
+    for (let c = 0; c < buffer.numberOfChannels; c += 1) channels.push(buffer.getChannelData(c));
+    fadeOut(channels, buffer.sampleRate, seconds);
+  }
+}
+
 /** Play button handler: stops this tune if it is playing, otherwise plays it. */
-function toggle(tune, button, sound, tempo) {
+function toggle(tune, button, sound, tempo, timing) {
   const wasThisOne = current?.button === button;
   stop();
-  if (!wasThisOne) play(tune, button, sound, tempo);
+  if (!wasThisOne) play(tune, button, sound, tempo, timing);
 }
 
 /**
@@ -187,7 +216,7 @@ function toggle(tune, button, sound, tempo) {
  * The audio context is created and resumed inside the click itself, before any
  * await, because Safari only allows sound to start from a user gesture.
  */
-function play(tune, button, program, qpm) {
+function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
   if (!ABCJS.synth.supportsAudio()) return;
   audioContext ??= new AudioContext();
   audioContext.resume();
@@ -197,12 +226,21 @@ function play(tune, button, program, qpm) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  // Voices that end early hold their last note to the end (final-chord.js).
-  const options = { qpm, program, sequenceCallback: holdFinalNotes };
+  // timing.shape changes the notes just before they sound: by default, voices
+  // that end early hold their last note to the end (final-chord.js). Then the
+  // final chord rings on for RING_SECONDS, to be faded out (fade-out.js).
+  const ring = (RING_SECONDS * qpm) / 240; // in whole notes: a whole note lasts 240 / qpm seconds
+  const options = { qpm, program, sequenceCallback: (voices) => ringOn(timing.shape(voices), ring) };
   synth.init({ visualObj: tune, audioContext, options })
-    .then(() => synth.prime())
+    .then(() => {
+      // abcjs sizes the sound from the written length, so it is lengthened
+      // first for a ritardando's stretch and for the ring at the end
+      synth.flattened.totalDuration = timing.playedTime(synth.flattened.totalDuration) + ring;
+      return synth.prime();
+    })
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
+      fadeTail(synth, RING_SECONDS + synth.fadeLength / 1000);
       synth.start();
       playing.timer = setTimeout(stop, duration * 1000);
     })

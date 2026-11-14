@@ -91,6 +91,11 @@ function relabelSystems(wrap, tune, drawn, example) {
   });
 }
 
+/** An example's own playback settings, if any: its tempo, breaths and ritardando. */
+function playbackOf(example) {
+  return { tempo: example.tempo, breaths: example.breaths, ritardando: example.ritardando };
+}
+
 /** Draws one example into `parent`, gray imaginary cantus and all. */
 async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
@@ -101,17 +106,17 @@ async function drawExample(parent, example) {
     const { upper, shared, lower } = example.alternatives;
     wrap.insertAdjacentHTML('beforeend', checksHtml(abc, [upper, shared], `${upper} over ${shared}`)
       + checksHtml(abc, [shared, lower], `${shared} over ${lower}`));
-    showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example));
+    showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example), playbackOf(example));
     return;
   }
   wrap.insertAdjacentHTML('beforeend', checksHtml(abc));
   if (!example.icf) {
     const drawn = drawnAbc(abc, example);
-    relabelSystems(wrap, showWithAudio(wrap, drawn, abc), drawn, example);
+    relabelSystems(wrap, showWithAudio(wrap, drawn, abc, playbackOf(example)), drawn, example);
     return;
   }
   const drawn = drawnAbc(abc, example);
-  showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1);
+  showWithAudio(wrap, drawn, abc, { ...playbackOf(example), silentVoice: voiceIds(drawn).length - 1 });
 }
 
 /** Draws one procedure step's excerpt into `item`: a few bars of its example, with the named bars colored. */
