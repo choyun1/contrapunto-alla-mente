@@ -55,6 +55,18 @@ export const WIP_SECTIONS = [
           + 'R answers each bar a bar later. From bar 12 the voices trade names, as in the original.',
         roles: { R: { 12: 'P' }, P: { 12: 'R' } },
       },
+      {
+        file: 'ic17r-canon-12th-above-g-rework.abc',
+        title: 'Canon at the 12th above, in G, out to the dominant, reworked',
+        source: 'IC p. 17, reworked 2026-11-14',
+        note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
+          + 'There, P’s lower neighbor at the end of bar 8 is F♮, half a beat before R enters on F♯: a cross relation. '
+          + 'Here the neighbor is F♯, the leading tone. R still answers it with C♮ in bar 9, '
+          + 'an in-key answer rather than the exact C♯, so R stays in G.',
+        caption: 'One note changed: P’s F in bar 8.',
+        canon: canon(11, 1, [1, 12]),
+        icf: false,
+      },
     ],
   },
   {
