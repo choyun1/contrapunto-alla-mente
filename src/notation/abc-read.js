@@ -68,11 +68,10 @@ function stepOf(letter, marks) {
 
 /**
  * One voice's music as bars of notes: [[{ step, semitones, length, tie }, ...], ...].
- * A rest has step and semitones null. With `withPositions`, each note also
- * has `at`, where its text starts in `music`. Lengths are in whole notes, given the
+ * A rest has step and semitones null. Lengths are in whole notes, given the
  * unit length; `key` is the signature from keySignature (none by default).
  */
-export function readBars(music, unit, key = {}, withPositions = false) {
+export function readBars(music, unit, key = {}) {
   const bars = [[]];
   let inBar = {}; // accidentals written so far in this bar, by step
   let previous = null;
@@ -96,7 +95,6 @@ export function readBars(music, unit, key = {}, withPositions = false) {
     if (!match) { at += 1; continue; } // a space or anything not read
     const [, sign, letter, marks, length, tie] = match;
     const note = { step: null, semitones: null, length: lengthOf(length) * unit, tie: tie === '-' };
-    if (withPositions) note.at = at;
     if (letter !== 'z') {
       note.step = stepOf(letter, marks);
       if (sign) inBar[note.step] = ALTERATION[sign];

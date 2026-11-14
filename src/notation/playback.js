@@ -9,7 +9,7 @@ import { staffSpotAt } from './staff-click.js';
 import { holdFinalNotes } from './final-chord.js';
 import { breathTimes, breatheAt } from './breaths.js';
 import { voiceIds } from './abc-read.js';
-import { withRitardando } from './ritardando.js';
+import { ritardandoInBar, stretchNotes } from './ritardando.js';
 
 const RENDER_OPTIONS = {
   add_classes: true,
@@ -92,9 +92,13 @@ export function showWithAudio(wrap, abc, audioAbc, { silentVoice, tempo = TEMPO.
   }
   const button = wrap.querySelector('button');
   const times = breathTimes(breaths, voiceIds(audioAbc));
-  const shape = (voices) => holdFinalNotes(breatheAt(voices, times));
-  const heard = ritardando ? withRitardando(audioAbc, ritardando, tempo) : audioAbc;
-  button.addEventListener('click', () => toggle(audioTune(inStrings(heard)), button, STRINGS.treble, tempo, shape));
+  const playedTime = ritardando ? ritardandoInBar(ritardando) : (t) => t;
+  const timing = {
+    // breaths are placed in written time, then the ritardando stretches it
+    shape: (voices) => holdFinalNotes(stretchNotes(breatheAt(voices, times), playedTime)),
+    playedTime,
+  };
+  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, tempo, timing));
   return tune;
 }
 
@@ -169,6 +173,13 @@ export function inStrings(abc) {
 }
 
 let current = null; // { synth, button, timer } for the tune that is playing
+
+/**
+ * How a tune is timed in playback: `shape` changes the note map before it
+ * sounds, and `playedTime` maps a written time to when it is heard (the same
+ * time, unless an example has a ritardando).
+ */
+const DEFAULT_TIMING = { shape: holdFinalNotes, playedTime: (t) => t };
 let audioContext = null;
 
 const PLAY_LABEL = '▶ Play';
@@ -184,10 +195,10 @@ function stop() {
 }
 
 /** Play button handler: stops this tune if it is playing, otherwise plays it. */
-function toggle(tune, button, sound, tempo, shape) {
+function toggle(tune, button, sound, tempo, timing) {
   const wasThisOne = current?.button === button;
   stop();
-  if (!wasThisOne) play(tune, button, sound, tempo, shape);
+  if (!wasThisOne) play(tune, button, sound, tempo, timing);
 }
 
 /**
@@ -195,7 +206,7 @@ function toggle(tune, button, sound, tempo, shape) {
  * The audio context is created and resumed inside the click itself, before any
  * await, because Safari only allows sound to start from a user gesture.
  */
-function play(tune, button, program, qpm, shape = holdFinalNotes) {
+function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
   if (!ABCJS.synth.supportsAudio()) return;
   audioContext ??= new AudioContext();
   audioContext.resume();
@@ -205,11 +216,15 @@ function play(tune, button, program, qpm, shape = holdFinalNotes) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  // `shape` changes the notes just before they sound: by default, voices that
-  // end early hold their last note to the end (final-chord.js).
-  const options = { qpm, program, sequenceCallback: shape };
+  // timing.shape changes the notes just before they sound: by default, voices
+  // that end early hold their last note to the end (final-chord.js).
+  const options = { qpm, program, sequenceCallback: timing.shape };
   synth.init({ visualObj: tune, audioContext, options })
-    .then(() => synth.prime())
+    .then(() => {
+      // abcjs sizes the sound from the written length, so a stretched piece needs it lengthened first
+      synth.flattened.totalDuration = timing.playedTime(synth.flattened.totalDuration);
+      return synth.prime();
+    })
     .then(({ duration }) => {
       if (current !== playing) return; // stopped while loading
       synth.start();

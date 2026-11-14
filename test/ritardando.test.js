@@ -1,15 +1,27 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ritardandoTempos, withRitardando } from '../src/notation/ritardando.js';
+import { ritardandoInBar, stretchNotes, SLOWEST } from '../src/notation/ritardando.js';
 
-test('the ritardando slows a little each beat, to 85% by the end of the bar (IC p. 19, Cho 2026-11-14)', () => {
-  assert.deepEqual(ritardandoTempos(90), [87, 83, 80, 77]);
+const close = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-9, `${actual} ≠ ${expected}`);
+
+test('time before the ritardando bar is unchanged; the bar itself is played longer (IC p. 19, bar 8, Cho 2026-11-14)', () => {
+  const played = ritardandoInBar(8);
+  close(played(3.25), 3.25);
+  close(played(7), 7);
+  // tempo falls in a line from 1 to 0.85, so the bar lasts −ln(0.85)/0.15 ≈ 1.0835 bars
+  close(played(8), 7 - Math.log(SLOWEST) / (1 - SLOWEST));
 });
 
-test('each beat of the bar gets a tempo field before the first note that starts in it, in any voice', () => {
-  const abc = 'L:1/4\nK:C\n[V:R] z4 | E C E3/2 F/ | G4 |]\n[V:P] C4 | C2 D2 | C,4 |]';
-  const out = withRitardando(abc, 2, 90).split('\n');
-  // R has notes on beats 1, 2 and 3; nothing starts on beat 4, so its field goes before R's F on 4½
-  assert.equal(out[2], '[V:R] z4 | [Q:1/4=87] E [Q:1/4=83] C [Q:1/4=80] E3/2 [Q:1/4=77] F/ | G4 |]');
-  assert.equal(out[3], '[V:P] C4 | C2 D2 | C,4 |]'); // P's notes on beats 1 and 3 are already covered by R
+test('after the ritardando the tempo stays at the slowest', () => {
+  const played = ritardandoInBar(8);
+  close(played(9) - played(8), 1 / SLOWEST);
+});
+
+test('every voice is stretched alike, so a long note in one voice still ends with the bar in the other', () => {
+  const played = ritardandoInBar(2);
+  const whole = [{ start: 1, end: 2 }];
+  const quarters = [0, 1, 2, 3].map((beat) => ({ start: 1 + beat / 4, end: 1.25 + beat / 4 }));
+  stretchNotes([whole, quarters], played);
+  close(whole[0].end, quarters[3].end);
+  assert.ok(quarters[3].end - quarters[3].start > quarters[0].end - quarters[0].start); // later beats are longer
 });
