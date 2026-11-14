@@ -253,6 +253,8 @@ button.go{font:inherit;font-weight:600;color:#fff;background:var(--accent);borde
 .check-key{background:var(--vc);color:var(--vc-ink)}.pending-key{border:1px dashed var(--muted);color:var(--muted)}
 .problems{margin:0;padding-left:18px}.problems li.miss{color:var(--no)}.problems li.check{color:var(--vc-ink)}.problems li.pending{color:var(--muted)}
 .cont-ok{fill:var(--yes);color:var(--yes)}.cont-check{fill:#c27a12;color:#c27a12}.cont-miss{fill:var(--no);color:var(--no)}.cont-pending{fill:var(--muted);color:var(--muted)}
+.see{margin:6px 0 0;color:var(--muted)}
+.kb-key-r{color:var(--accent);border:1px solid var(--line)}.kb-key-perfect{background:#c27a12;color:#fff}.kb-key-free{background:#2f8f7a;color:#fff}
 .drill-buttons{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 button.plain{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 14px;cursor:pointer}
 button.plain:disabled{opacity:.5;cursor:default}
