@@ -8,7 +8,7 @@
 import { staffSpotAt } from './staff-click.js';
 import { holdFinalNotes, ringOn } from './final-chord.js';
 import { fadeOut, RING_SECONDS } from './fade-out.js';
-import { MAX_NOTE_SECONDS, restrikeLongNotes } from './sustain.js';
+import { MAX_NOTE_SECONDS, takeLongNotes, placeLongNotes } from './sustain.js';
 import { breathTimes, breatheAt } from './breaths.js';
 import { voiceIds } from './abc-read.js';
 import { ritardandoInBar, stretchNotes } from './ritardando.js';
@@ -177,7 +177,8 @@ export function inStrings(abc) {
 /**
  * Where the recorded notes come from: the soundfont made for abcjs, whose
  * notes last about 6 seconds, twice as long as those of abcjs's default
- * (FluidR3), so held notes need fewer restrikes (sustain.js). Cho chose it,
+ * (FluidR3). Notes held longer are looped (sustain.js). Cho chose it for the
+ * whole site,
  * 2026-11-14.
  */
 export const SOUND_FONT_URL = 'https://paulrosen.github.io/midi-js-soundfonts/abcjs/';
@@ -238,10 +239,15 @@ function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
   // timing.shape changes the notes just before they sound: by default, voices
   // that end early hold their last note to the end (final-chord.js). Then the
   // final chord rings on for RING_SECONDS, to be faded out (fade-out.js), and
-  // notes too long for their sample are restruck (sustain.js).
+  // notes too long for their sample are taken out, to be looped seamlessly
+  // into the sound once abcjs has made it (sustain.js).
   const wholeNotes = (seconds) => (seconds * qpm) / 240; // a whole note lasts 240 / qpm seconds
   const ring = wholeNotes(RING_SECONDS);
-  const shape = (voices) => restrikeLongNotes(ringOn(timing.shape(voices), ring), wholeNotes(MAX_NOTE_SECONDS));
+  let longNotes = [];
+  const shape = (voices) => {
+    ringOn(timing.shape(voices), ring);
+    longNotes = takeLongNotes(voices, wholeNotes(MAX_NOTE_SECONDS));
+  };
   const options = { qpm, program, soundFontUrl: SOUND_FONT_URL, sequenceCallback: shape };
   synth.init({ visualObj: tune, audioContext, options })
     .then(() => {
@@ -250,7 +256,8 @@ function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
       synth.flattened.totalDuration = timing.playedTime(synth.flattened.totalDuration) + ring;
       return synth.prime();
     })
-    .then(({ duration }) => {
+    .then(async ({ duration }) => {
+      await placeLongNotes(synth, longNotes, audioContext, SOUND_FONT_URL);
       if (current !== playing) return; // stopped while loading
       fadeTail(synth, RING_SECONDS + synth.fadeLength / 1000);
       synth.start();
