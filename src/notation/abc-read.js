@@ -5,8 +5,7 @@
 // The examples are written one line per voice, `[V:P] z2 A B | c3 d/c/ | ...`,
 // with an `L:` unit length and a `K:` key. Read here: pitches A–G and a–g
 // with commas and apostrophes, accidentals ^ = _, rests `z`, lengths such as
-// 2, 3/2, / and //, ties `-` and bar lines; annotations in quotes and
-// decorations between !s (such as !breath!) are skipped.
+// 2, 3/2, / and //, ties `-` and bar lines; annotations in quotes are skipped.
 // Nothing else.
 //
 // Pitches come back twice: as diatonic steps (src/common/diatonic.js: C4 = 28),
@@ -69,10 +68,11 @@ function stepOf(letter, marks) {
 
 /**
  * One voice's music as bars of notes: [[{ step, semitones, length, tie }, ...], ...].
- * A rest has step and semitones null. Lengths are in whole notes, given the
+ * A rest has step and semitones null. With `withPositions`, each note also
+ * has `at`, where its text starts in `music`. Lengths are in whole notes, given the
  * unit length; `key` is the signature from keySignature (none by default).
  */
-export function readBars(music, unit, key = {}) {
+export function readBars(music, unit, key = {}, withPositions = false) {
   const bars = [[]];
   let inBar = {}; // accidentals written so far in this bar, by step
   let previous = null;
@@ -86,11 +86,6 @@ export function readBars(music, unit, key = {}) {
       inBar = {};
       continue;
     }
-    if (char === '!') {
-      // a decoration, such as !breath!: a mark on the next note, not a note
-      at = music.indexOf('!', at + 1) + 1 || music.length;
-      continue;
-    }
     if (char === '"') {
       // an annotation or chord symbol, such as "^free": text, not notes
       at = music.indexOf('"', at + 1) + 1 || music.length;
@@ -101,6 +96,7 @@ export function readBars(music, unit, key = {}) {
     if (!match) { at += 1; continue; } // a space or anything not read
     const [, sign, letter, marks, length, tie] = match;
     const note = { step: null, semitones: null, length: lengthOf(length) * unit, tie: tie === '-' };
+    if (withPositions) note.at = at;
     if (letter !== 'z') {
       note.step = stepOf(letter, marks);
       if (sign) inBar[note.step] = ALTERATION[sign];

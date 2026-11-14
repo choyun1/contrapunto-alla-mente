@@ -7,7 +7,9 @@
 
 import { staffSpotAt } from './staff-click.js';
 import { holdFinalNotes } from './final-chord.js';
-import { breathMarks, breatheAfter } from './breaths.js';
+import { breathTimes, breatheAt } from './breaths.js';
+import { voiceIds } from './abc-read.js';
+import { withRitardando } from './ritardando.js';
 
 const RENDER_OPTIONS = {
   add_classes: true,
@@ -77,18 +79,22 @@ const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine
  * may differ from what is drawn, played by a string trio (inStrings). Staff `silentVoice` (counted from 0, top
  * down), when given, is drawn in gray: the audio leaves it out, so it is seen
  * but not heard (the imaginary cantus). It plays at `tempo`, TEMPO.NOTEBOOK
- * unless an example asks for its own. The
+ * unless an example asks for its own, with any `breaths` the example lists
+ * (breaths.js) and a `ritardando` through the bar it names (ritardando.js). The
  * playback tune is made at the first click, so a page of many examples draws
  * only what it shows.
  */
-export function showWithAudio(wrap, abc, audioAbc, silentVoice, tempo = TEMPO.NOTEBOOK) {
+export function showWithAudio(wrap, abc, audioAbc, { silentVoice, tempo = TEMPO.NOTEBOOK, breaths, ritardando } = {}) {
   const score = wrap.querySelector('.score');
   const [tune] = ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
   if (silentVoice !== undefined) {
     score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
   }
   const button = wrap.querySelector('button');
-  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, tempo));
+  const times = breathTimes(breaths, voiceIds(audioAbc));
+  const shape = (voices) => holdFinalNotes(breatheAt(voices, times));
+  const heard = ritardando ? withRitardando(audioAbc, ritardando, tempo) : audioAbc;
+  button.addEventListener('click', () => toggle(audioTune(inStrings(heard)), button, STRINGS.treble, tempo, shape));
   return tune;
 }
 
@@ -178,10 +184,10 @@ function stop() {
 }
 
 /** Play button handler: stops this tune if it is playing, otherwise plays it. */
-function toggle(tune, button, sound, tempo) {
+function toggle(tune, button, sound, tempo, shape) {
   const wasThisOne = current?.button === button;
   stop();
-  if (!wasThisOne) play(tune, button, sound, tempo);
+  if (!wasThisOne) play(tune, button, sound, tempo, shape);
 }
 
 /**
@@ -189,7 +195,7 @@ function toggle(tune, button, sound, tempo) {
  * The audio context is created and resumed inside the click itself, before any
  * await, because Safari only allows sound to start from a user gesture.
  */
-function play(tune, button, program, qpm) {
+function play(tune, button, program, qpm, shape = holdFinalNotes) {
   if (!ABCJS.synth.supportsAudio()) return;
   audioContext ??= new AudioContext();
   audioContext.resume();
@@ -199,10 +205,8 @@ function play(tune, button, program, qpm) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  // Notes with a breath mark are cut short (breaths.js), and voices that end
-  // early hold their last note to the end (final-chord.js).
-  const marks = breathMarks(tune);
-  const shape = (voices) => holdFinalNotes(breatheAfter(voices, marks));
+  // `shape` changes the notes just before they sound: by default, voices that
+  // end early hold their last note to the end (final-chord.js).
   const options = { qpm, program, sequenceCallback: shape };
   synth.init({ visualObj: tune, audioContext, options })
     .then(() => synth.prime())

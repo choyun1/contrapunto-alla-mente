@@ -3,9 +3,7 @@
 // beats 1–2 or 3–4 share one beam across the half bar; an eighth left over from a dotted quarter
 // joins the eighths of the next beat (a beam of three).
 
-// A barline, a spacer `y` with any decorations (such as !breath!y), or a note
-// with any decorations before it, its length and tie.
-const TOKEN = /(\|\]|\|\||\|:|:\||\||(?:![^!]*!)*y\d*)|((?:![^!]*!)*[_=^]*[A-Ga-gz][,']*)([\d/]*)(-?)/y;
+const TOKEN = /(\|\]|\|\||\|:|:\||\|)|([_=^]*[A-Ga-gz][,']*)([\d/]*)(-?)/y;
 const EPS = 1e-9;
 const BEAT = 1 / 4; // a quarter, in whole notes
 const HALF = 1 / 2; // half a bar of common time
@@ -31,10 +29,6 @@ function tokens(music, unit) {
     const match = TOKEN.exec(music);
     if (!match) throw new Error(`cannot read abc at: ${music.slice(at)}`);
     at = TOKEN.lastIndex;
-    if (match[1] && /y\d*$/.test(match[1])) {
-      out.push({ text: match[1], spacer: true }); // takes no time and doesn't break a beam
-      continue;
-    }
     if (match[1]) {
       out.push({ text: match[1], bar: true });
       time = 0;
@@ -57,7 +51,6 @@ function joinsByBeat(list) {
   let previous = null;
   for (const t of list) {
     if (t.bar) { joins.push(false); previous = null; continue; }
-    if (t.spacer) { joins.push(false); continue; }
     const beat = Math.floor((t.at + EPS) / BEAT);
     const midBeat = t.at - beat * BEAT > EPS;
     const leftOver = t.short && midBeat && previous?.dotted; // the eighth after a dotted quarter
