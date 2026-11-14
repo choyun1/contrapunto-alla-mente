@@ -298,3 +298,17 @@ table.bathe button.bn{font:inherit;color:var(--accent);background:none;border:0;
 table.bathe button.bn[aria-pressed="true"]{color:var(--panel);background:var(--accent)}
 table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .bathe-chord-note{border-left:3px solid var(--accent);padding:2px 12px;margin:8px 0;max-width:72ch}.bathe-chord-note p{margin:4px 0}
+/* Cho's 0–6 wheel on the Bathe page (canon/bathe-wheel.js): consonances inside, the ring turned by Jv outside */
+.bathe-wheel{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}.bathe-wheel .wh-side{flex:1 1 220px;min-width:0}
+.wheel{flex:none;max-width:100%;height:auto}
+.wheel .wh-line{fill:none;stroke:var(--line);stroke-width:1}
+.wheel .wh-in{fill:var(--accent)}
+.wheel .wh-out{fill:none;stroke:var(--vd-ink);stroke-width:2}
+.wheel .wh-ring{transition:transform .6s ease}
+.wheel .wh-corner circle{fill:var(--panel);stroke:var(--line)}
+.wheel .wh-corner text{fill:var(--ink);font-size:13px;text-anchor:middle;dominant-baseline:central;font-variant-numeric:tabular-nums}
+.wheel .wh-corner.wh-both circle{fill:var(--fc);stroke:var(--fc-ink)}.wheel .wh-corner.wh-both text{fill:var(--fc-ink);font-weight:700}
+.bathe-wheel button{font:inherit;font-size:.85rem;color:var(--accent);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:2px 10px;cursor:pointer}
+.bathe-wheel button[aria-pressed="true"]{color:var(--panel);background:var(--accent);border-color:var(--accent)}
+@media (prefers-reduced-motion: reduce){.wheel .wh-ring{transition:none}}
+.wh-key-in{color:var(--accent)}.wh-key-out{color:var(--vd-ink);font-weight:700}.wh-key-both{background:var(--fc);color:var(--fc-ink);padding:0 4px;border-radius:4px}
