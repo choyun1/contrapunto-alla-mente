@@ -343,6 +343,8 @@ table.bathe td.bathe-chord{background:var(--fc);color:var(--fc-ink)}
 .contents .n{font-variant-numeric:tabular-nums}
 .contents li.current > a{color:var(--ink);font-weight:600;border-left-color:var(--accent)}
 .contents li.on > a{color:var(--accent);font-weight:600}
+/* the section headings on the page carry the same numbers as the list */
+h2[data-n]::before{content:attr(data-n);margin-right:.5em;color:var(--muted);font-variant-numeric:tabular-nums}
 @media (max-width:1099px){
   .contents{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 8px;max-width:32rem}
 }

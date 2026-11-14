@@ -30,7 +30,7 @@ function readSections(body) {
         title: h3.textContent.trim(),
         id: targetId(h3.closest('.example'), h3),
       }));
-      return { title: h2.textContent.trim(), id: targetId(target, h2), examples };
+      return { heading: h2, title: h2.textContent.trim(), id: targetId(target, h2), examples };
     });
 }
 
@@ -119,6 +119,14 @@ function buildContents(main) {
   return contents;
 }
 
+// Numbers the section headings on the page to match the list (drawn by assets/site.css from
+// data-n, so the number stays out of the heading's text).
+function numberHeadings(sections) {
+  sections.forEach((section, i) => {
+    section.heading.dataset.n = String(i + 1);
+  });
+}
+
 // Marks a section as the one being read, opening its examples and folding the last one's,
 // unless the reader opened or folded them by hand.
 function markCurrent(contents, section) {
@@ -165,6 +173,7 @@ function refresh() {
   if (sections.length < MIN_SECTIONS) return;
   if (!contents) contents = buildContents(main);
   contents.querySelector('ol').innerHTML = listHtml(sections);
+  numberHeadings(sections);
   watcher?.disconnect();
   watcher = followPlace(contents, sections);
 }
