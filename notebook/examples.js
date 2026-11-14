@@ -29,6 +29,11 @@
 // bar 12 on, for a canon whose voices trade the lead; the page marks it
 // "now P" there.
 //
+// With `tempo`, an example plays at its own speed, in quarter notes per
+// minute, instead of the Notebook's TEMPO.NOTEBOOK (118). A breath is written
+// `!breath!y` between two notes: a comma drawn there, and a short silence
+// there in playback (src/notation/breaths.js).
+//
 // With `rounds`, an infinite canon is drawn with its repeat signs and heard
 // going round the repeat that many times before the ending.
 
@@ -92,9 +97,11 @@ export const SECTIONS = [
         title: 'Canon at the 5th above, with ficta',
         source: 'IC p. 19, second system',
         note: '“w/ ficta.” P leads in the alto clef and R answers a 5th above; the B♭s are the ficta. '
-          + 'P’s last C is held over two bars while R answers it.',
+          + 'P takes a breath after the first beat of bar 4, and R the same in bar 5; '
+          + 'P drops to the low C for the last bar while R answers it.',
         canon: canon(4, 1, [1, 8]),
         icf: false,
+        tempo: 100, // 15% slower than the Notebook's 118 (Cho, 2026-11-14)
       },
       {
         file: 'ic19c-canon-5th-below-f-with-ficta.abc',

@@ -5,7 +5,8 @@
 // The examples are written one line per voice, `[V:P] z2 A B | c3 d/c/ | ...`,
 // with an `L:` unit length and a `K:` key. Read here: pitches A–G and a–g
 // with commas and apostrophes, accidentals ^ = _, rests `z`, lengths such as
-// 2, 3/2, / and //, ties `-` and bar lines; annotations in quotes are skipped.
+// 2, 3/2, / and //, ties `-` and bar lines; annotations in quotes and
+// decorations between !s (such as !breath!) are skipped.
 // Nothing else.
 //
 // Pitches come back twice: as diatonic steps (src/common/diatonic.js: C4 = 28),
@@ -83,6 +84,11 @@ export function readBars(music, unit, key = {}) {
       at += music.slice(at).match(/^\|[|\]]?/)[0].length;
       bars.push([]);
       inBar = {};
+      continue;
+    }
+    if (char === '!') {
+      // a decoration, such as !breath!: a mark on the next note, not a note
+      at = music.indexOf('!', at + 1) + 1 || music.length;
       continue;
     }
     if (char === '"') {

@@ -101,17 +101,17 @@ async function drawExample(parent, example) {
     const { upper, shared, lower } = example.alternatives;
     wrap.insertAdjacentHTML('beforeend', checksHtml(abc, [upper, shared], `${upper} over ${shared}`)
       + checksHtml(abc, [shared, lower], `${shared} over ${lower}`));
-    showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example));
+    showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example), undefined, example.tempo);
     return;
   }
   wrap.insertAdjacentHTML('beforeend', checksHtml(abc));
   if (!example.icf) {
     const drawn = drawnAbc(abc, example);
-    relabelSystems(wrap, showWithAudio(wrap, drawn, abc), drawn, example);
+    relabelSystems(wrap, showWithAudio(wrap, drawn, abc, undefined, example.tempo), drawn, example);
     return;
   }
   const drawn = drawnAbc(abc, example);
-  showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1);
+  showWithAudio(wrap, drawn, abc, voiceIds(drawn).length - 1, example.tempo);
 }
 
 /** Draws one procedure step's excerpt into `item`: a few bars of its example, with the named bars colored. */

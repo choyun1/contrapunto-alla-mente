@@ -7,6 +7,7 @@
 
 import { staffSpotAt } from './staff-click.js';
 import { holdFinalNotes } from './final-chord.js';
+import { breathMarks, breatheAfter } from './breaths.js';
 
 const RENDER_OPTIONS = {
   add_classes: true,
@@ -75,18 +76,19 @@ const LINE_BREAKS = { minSpacing: 1.8, maxSpacing: 2.7, preferredMeasuresPerLine
  * Renders abc into a block and wires the play button to `audioAbc`, which
  * may differ from what is drawn, played by a string trio (inStrings). Staff `silentVoice` (counted from 0, top
  * down), when given, is drawn in gray: the audio leaves it out, so it is seen
- * but not heard (the imaginary cantus). It plays at TEMPO.NOTEBOOK. The
+ * but not heard (the imaginary cantus). It plays at `tempo`, TEMPO.NOTEBOOK
+ * unless an example asks for its own. The
  * playback tune is made at the first click, so a page of many examples draws
  * only what it shows.
  */
-export function showWithAudio(wrap, abc, audioAbc, silentVoice) {
+export function showWithAudio(wrap, abc, audioAbc, silentVoice, tempo = TEMPO.NOTEBOOK) {
   const score = wrap.querySelector('.score');
   const [tune] = ABCJS.renderAbc(score, abc, { ...RENDER_OPTIONS, wrap: LINE_BREAKS });
   if (silentVoice !== undefined) {
     score.querySelectorAll(`.abcjs-v${silentVoice}`).forEach((element) => element.classList.add('silent-voice'));
   }
   const button = wrap.querySelector('button');
-  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, TEMPO.NOTEBOOK));
+  button.addEventListener('click', () => toggle(audioTune(inStrings(audioAbc)), button, STRINGS.treble, tempo));
   return tune;
 }
 
@@ -197,8 +199,11 @@ function play(tune, button, program, qpm) {
   button.textContent = STOP_LABEL;
   // abcjs 6.4.4 reads options.swing in prime(), so options must be an object.
   // Tempo and instrument are set here, so no tempo or MIDI line is printed.
-  // Voices that end early hold their last note to the end (final-chord.js).
-  const options = { qpm, program, sequenceCallback: holdFinalNotes };
+  // Notes with a breath mark are cut short (breaths.js), and voices that end
+  // early hold their last note to the end (final-chord.js).
+  const marks = breathMarks(tune);
+  const shape = (voices) => holdFinalNotes(breatheAfter(voices, marks));
+  const options = { qpm, program, sequenceCallback: shape };
   synth.init({ visualObj: tune, audioContext, options })
     .then(() => synth.prime())
     .then(({ duration }) => {
