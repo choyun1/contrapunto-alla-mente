@@ -34,6 +34,21 @@ export const WIP_SECTIONS = [
         canon: canon(-4, 2, [1, 4]),
         icf: false,
       },
+      {
+        file: 'ic17s-canon-12th-above-g-new-middle.abc',
+        title: 'Canon at the 12th above, in G, a new middle (in progress)',
+        source: 'IC p. 17, reworked 2026-11-14, unfinished',
+        note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
+          + 'The middle wandered, so bar 7 now cadences on the dominant: P’s A goes to D under R’s C♯ going to D, '
+          + 'and both voices stop on a half note in bar 8 (R leaves the canon there). P starts a new phrase in bar 9, '
+          + 'R takes it up a bar later, and it leads back into the original ending. '
+          + 'The F♮ neighbor of the original, and its cross relation, are gone.',
+        caption: 'Cadence on D in bar 8; new phrase from bar 9.',
+        canon: canon(11, 1, [1, 6], [9, 13]),
+        marks: { P: { 7: 'cadence', 8: null }, R: { 9: null } },
+        icf: false,
+        tempo: 100,
+      },
     ],
   },
   {
@@ -60,14 +75,13 @@ export const WIP_SECTIONS = [
         title: 'Canon at the 12th above, in G, out to the dominant, reworked',
         source: 'IC p. 17, reworked 2026-11-14',
         note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
-          + 'The middle wandered, so bar 7 now cadences on the dominant: P’s A goes to D under R’s C♯ going to D, '
-          + 'and both voices stop on a half note in bar 8 (R leaves the canon there). P starts a new phrase in bar 9, '
-          + 'R takes it up a bar later, and it leads back into the original ending. '
-          + 'The F♮ neighbor of the original, and its cross relation, are gone.',
-        caption: 'Cadence on D in bar 8; new phrase from bar 9.',
-        canon: canon(11, 1, [1, 6], [9, 13]),
-        marks: { P: { 7: 'cadence', 8: null }, R: { 9: null } },
+          + 'There, P’s lower neighbor at the end of bar 8 is F♮, half a beat before R enters on F♯: a cross relation. '
+          + 'Here the neighbor is F♯, the leading tone. R still answers it with C♮ in bar 9, '
+          + 'an in-key answer rather than the exact C♯, so R stays in G.',
+        caption: 'One note changed: P’s F in bar 8.',
+        canon: canon(11, 1, [1, 12]),
         icf: false,
+        tempo: 100,
       },
     ],
   },
