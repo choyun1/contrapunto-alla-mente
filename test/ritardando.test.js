@@ -8,7 +8,7 @@ test('time before the ritardando bar is unchanged; the bar itself is played long
   const played = ritardandoInBar(8);
   close(played(3.25), 3.25);
   close(played(7), 7);
-  // tempo falls in a line from 1 to 0.75, so the bar lasts −ln(0.75)/0.25 ≈ 1.15 bars
+  // tempo falls in a line from 1 to 0.8, so the bar lasts −ln(0.8)/0.2 ≈ 1.12 bars
   close(played(8), 7 - Math.log(SLOWEST) / (1 - SLOWEST));
 });
 
