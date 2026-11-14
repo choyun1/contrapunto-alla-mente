@@ -41,8 +41,8 @@ export const WIP_SECTIONS = [
     title: 'Reworks',
     intro: 'New versions of Notebook examples that are marked as not working. Each will link back to its original, '
       + 'which stays on the Notebook page as written. Waiting to be reworked: '
-      + `${notebookLink('ic15-canon-12th-below-g-minor', 'IC p. 15')} (parallel unisons in bar 14, octaves going into bar 6) and `
-      + `${notebookLink('ic19c-canon-5th-below-f-with-ficta', 'IC p. 19, third and fourth systems')}.`,
+      + `${notebookLink('ic19c-canon-5th-below-f-with-ficta', 'IC p. 19, third and fourth systems')} `
+      + '(octaves going into bar 6, unisons at the end of bar 14).',
     procedure: [],
     examples: [
       {

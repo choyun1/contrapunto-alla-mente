@@ -10,6 +10,7 @@ import { abcPitch } from '../src/notation/abc.js';
 import { clefsForVoice } from '../src/notation/clefs.js';
 import { imaginaryCantus } from '../src/taneyev/imaginary-cantus.js';
 import { dissonances, worthShowing } from '../src/taneyev/florid.js';
+import { parallels } from '../src/taneyev/parallels.js';
 
 /** The id and staff name of the imaginary cantus voice. */
 export const ICF = { id: 'ICF', name: 'ICF' };
@@ -194,6 +195,9 @@ function onlyVoices(voices, ids) {
  * pair of alternative staves.
  */
 export const dissonancesOf = (abc, ids) => worthShowing(dissonances(onlyVoices(timelines(abc), ids)));
+
+/** The parallel unisons, octaves and 5ths to list under an example (src/taneyev/parallels.js); `ids` as for dissonancesOf. */
+export const parallelsOf = (abc, ids) => parallels(onlyVoices(timelines(abc), ids));
 
 /** The abc with each voice's |: … :| repeat written out `times` times, for playback (abcjs plays a repeat twice). */
 export function withRounds(abc, times) {

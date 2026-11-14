@@ -58,6 +58,7 @@ Intervals are zero-indexed, as Taneyev numbers them: unison 0, 2nd 1, 3rd 2, 5th
 | `src/taneyev/canon-check.js` | Checks a canon over a cantus bar by bar and says what is wrong in words. |
 | `src/taneyev/canon-over-cantus.js` | Finds a whole-note canon framework over a cantus by the imaginary-cantus method, and lists the setups that have one. |
 | `src/taneyev/florid.js` | Finds every dissonance between two voices of florid counterpoint and names it: a suspension (9–8, 7–6, 4–3 ...), a passing or neighbor tone, or "check" (a leap in or out, or a tritone). The notebook lists them under each example. |
+| `src/taneyev/parallels.js` | Finds parallel unisons, octaves and 5ths (simple or compound) between florid voices, from one attack to the next while both voices move, as in Fux. The notebook lists them under each example. |
 | `src/taneyev/examples.js` | Builds the generated examples (interval strips, parallel chains) from the rules core. |
 | `src/taneyev/motion.js` | Motion between two dyads (similar, contrary, oblique) and which moves survive a shift (Fux; §101). |
 | `src/taneyev/first-species.js` | Finds a four-bar first-species phrase for a shift that is correct both before and after it. |
@@ -91,7 +92,7 @@ See [CLAUDE.md](CLAUDE.md) for the code organization and style rules.
 
 - **Tune screening.** Rank a tune's canon intervals and time distances by how hard their indices are, to find hymn tunes that take a canon well.
 - **More drills.** Counterpoint over a hymn tune (and hearing it shifted by J<sub>v</sub>), then a live canon over a hymn tune with imaginary-cantus hints, starting from standard Lutheran chorale tunes. Singing input through the microphone later.
-- **Reworks.** Cho's fixes for Notebook examples marked as not working (IC p. 15, IC p. 19's last canon), on the WIP page, each linked to its original.
+- **Reworks.** Cho's fixes for Notebook examples marked as not working (IC p. 19's last canon so far), on the WIP page, each linked to its original. IC p. 20's rework is the first.
 - **Notebook, IC p. 20.** The last page left to transcribe, once the scan can be read.
 - **Continue the proposta.** A drill built from the notebook canons: the site plays a few bars, you continue the proposta, and Cho's own continuation is the answer to compare with.
 - **Ficta in the move chords.** Flag the two B–F tritones Cho's paper chart marks (F♯ at the 2nd with the proposta on top, B♭ at the 4th with it below); the move chords are purely diatonic for now.

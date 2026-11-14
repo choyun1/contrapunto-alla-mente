@@ -3,7 +3,7 @@
 // the notes are in examples/*.abc, and the imaginary cantus comes from score.js
 // (and from there the rules core).
 
-import { ICF, drawnAbc, dissonancesOf, heardAbc } from './score.js';
+import { ICF, drawnAbc, dissonancesOf, heardAbc, parallelsOf } from './score.js';
 import { snippetAbc } from './snippets.js';
 import { KIND } from '../src/taneyev/florid.js';
 import { intervalName } from '../src/taneyev/rules.js';
@@ -60,6 +60,21 @@ function dissonanceList(abc, ids, label) {
 /** An example's anchor on the page: its file name without '.abc', e.g. 'ic15-canon-12th-below-g-minor'. */
 export const exampleId = (example) => example.file.replace(/\.abc$/, '');
 
+/**
+ * A closed list of the example's parallel unisons, octaves and 5ths
+ * (src/taneyev/parallels.js), limited to some voices like dissonanceList.
+ */
+function parallelList(abc, ids, label) {
+  const list = parallelsOf(abc, ids);
+  const items = list.map((p) => `<li>${whereText(p.start)}: ${p.voices.join(' and ')}, ${intervalName(p.steps)}</li>`).join('');
+  const which = label ? ` (${label})` : '';
+  return `<details class="notation"><summary>Parallel unisons, octaves and 5ths${which}: ${list.length}</summary>`
+    + `<ul class="dissonances">${items}</ul></details>`;
+}
+
+/** The checks under a score: dissonances, then parallels, for the voices `ids` (all when not given). */
+const checksHtml = (abc, ids, label) => dissonanceList(abc, ids, label) + parallelList(abc, ids, label);
+
 /** Draws one example into `parent`, gray imaginary cantus and all. */
 async function drawExample(parent, example) {
   const wrap = block(parent, example.title, captionOf(example));
@@ -68,12 +83,12 @@ async function drawExample(parent, example) {
   if (example.alternatives) {
     // two settings of the middle voice: each pair is checked, and heard, on its own
     const { upper, shared, lower } = example.alternatives;
-    wrap.insertAdjacentHTML('beforeend', dissonanceList(abc, [upper, shared], `${upper} over ${shared}`)
-      + dissonanceList(abc, [shared, lower], `${shared} over ${lower}`));
+    wrap.insertAdjacentHTML('beforeend', checksHtml(abc, [upper, shared], `${upper} over ${shared}`)
+      + checksHtml(abc, [shared, lower], `${shared} over ${lower}`));
     showWithAudio(wrap, drawnAbc(abc, example), heardAbc(abc, example));
     return;
   }
-  wrap.insertAdjacentHTML('beforeend', dissonanceList(abc));
+  wrap.insertAdjacentHTML('beforeend', checksHtml(abc));
   if (!example.icf) {
     showWithAudio(wrap, drawnAbc(abc, example), abc);
     return;
