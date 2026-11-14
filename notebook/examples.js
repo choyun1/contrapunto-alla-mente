@@ -208,6 +208,15 @@ export const SECTIONS = [
         alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
       },
       {
+        file: 'ic30a-invertible-octave-a-minor.abc',
+        title: 'Invertible counterpoint at the octave, in A minor',
+        source: 'IC p. 30, first system',
+        note: 'Jv = −7 around an alto cantus. The page writes the derivative out on the bass staff, an octave below the original. '
+          + 'Bar 2 opens with a 7–6 suspension over the cantus’s B. Two 5ths fall on strong beats (bar 6, beat 1, and bar 7, beat 2), and in the derivative they become 4ths.',
+        caption: 'The cantus in bars 2 and 6 is faint; B and F are best guesses.',
+        alternatives: { upper: 'O', shared: 'CF', lower: 'D', shift: -7 },
+      },
+      {
         file: 'ic29c-invertible-12th-crossed-out.abc',
         title: 'Invertible counterpoint at the 12th, crossed out',
         source: 'IC p. 29, second system',
