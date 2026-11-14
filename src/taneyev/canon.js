@@ -159,7 +159,8 @@ const fold = (span, low) => ((((span - low) % 7) + 7) % 7) + low;
  * C), moved. With the proposta on top it is transposed down by the interval
  * of entrance; with the proposta below it is first turned upside down, then
  * transposed up. So the two cases mirror each other around the proposta's
- * note (n = Jv − span). Cho's chord chart; to check against Cho's paper notes.
+ * note (n = Jv − span). Cho's chord chart, checked against Cho's notes: Canons p. 1
+ * and the chord stacks and move lists on IC p. 27 (see test/canon.test.js).
  *
  * Spelled rising from just below the note when the proposta is the lower
  * voice, falling from just above it when it is the upper voice, and around

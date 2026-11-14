@@ -120,3 +120,18 @@ test('IC p. 21 margin, “5 over 8”: answers a 5th above and an octave below l
 test('IC p. 21 margin, “8 over 5”: answers an octave above and a 5th below leave C → C F A (3rd down, 4th up, unison)', () => {
   assert.deepEqual(sharedMoves([7, -4]), [0, 3, 5]);
 });
+
+test('IC p. 27 margin lists: the proposta’s moves for a canon at the 5th below and above', () => {
+  // “Canon 5th below: +3, +1, 0, −2, −4” and “5th above: +4, +2, 0, −1, −3”, steps from the proposta’s note
+  const withinFifth = (entry) => consonantSpans(entry).filter((span) => Math.abs(span) <= 4);
+  assert.deepEqual(withinFifth(-4), [-4, -2, 0, 1, 3]);
+  assert.deepEqual(withinFifth(4), [-3, -1, 0, 2, 4]);
+});
+
+test('IC p. 27 chord stacks: the move chords for the 5th and the octave, on C', () => {
+  // treble “5th” F A C D, bass “5th” B C E G, treble “oct.” G A C E, bass “oct.” A C E F
+  assert.deepEqual(moveChord(-4), [-4, -2, 0, 1]);
+  assert.deepEqual(moveChord(4), [-1, 0, 2, 4]);
+  assert.deepEqual(moveChord(-7), [-3, -2, 0, 2]);
+  assert.deepEqual(moveChord(7), [-2, 0, 2, 3]);
+});
