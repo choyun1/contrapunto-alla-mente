@@ -61,12 +61,12 @@ export const WIP_SECTIONS = [
         source: 'IC p. 17, reworked 2026-11-14',
         note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
           + 'The middle wandered, so bar 7 now cadences on the dominant: P’s A goes to D under R’s C♯ going to D, '
-          + 'and both voices stop on a half note in bar 8 (R leaves the canon there). R echoes the D a 12th up, as A, in bar 9, '
-          + 'under P’s new phrase, which leads back into the original ending. '
+          + 'and both voices stop on a half note in bar 8 (R leaves the canon there). P starts a new phrase in bar 9, '
+          + 'R takes it up a bar later, and it leads back into the original ending. '
           + 'The F♮ neighbor of the original, and its cross relation, are gone.',
         caption: 'Cadence on D in bar 8; new phrase from bar 9.',
-        canon: canon(11, 1, [1, 6], [8, 13]),
-        marks: { P: { 7: 'cadence' }, R: { 8: 'cadence' } },
+        canon: canon(11, 1, [1, 6], [9, 13]),
+        marks: { P: { 7: 'cadence', 8: null }, R: { 9: null } },
         icf: false,
       },
     ],
