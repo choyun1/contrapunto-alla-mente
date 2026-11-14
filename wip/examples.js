@@ -60,7 +60,7 @@ export const WIP_SECTIONS = [
         title: 'Canon at the 12th above, in G, out to the dominant, reworked',
         source: 'IC p. 17, reworked 2026-11-14',
         note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
-          + 'The middle wandered, so P’s bars 7–8 are broadened (a long G and A, then a whole-note B) to mark the arrival on the dominant, '
+          + 'The middle wandered, so P’s bars 7–8 are broadened (G and A in half notes, then a whole-note B) to mark the arrival on the dominant, '
           + 'and a new bar 9 rests for half a bar before P picks up on D; R copies the rest a bar later. The old bar 9, which circled A and B, is cut. '
           + 'The new bar 8 also drops the original’s F♮ neighbor, and with it the F♮/F♯ cross relation into bar 9.',
         caption: 'P’s bars 7–8 broadened; a new bar 9 with a rest.',
