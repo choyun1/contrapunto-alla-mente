@@ -15,6 +15,9 @@ change. Treat these as rules, not suggestions.
   something truly local.
 - **Fixed music examples** are LilyPond files in `scores/`, named for what they
   show (`parallel-thirds-jv-7.ly`). CI compiles them; don't commit generated SVG.
+- **Plans live in one place.** What the site plans to add is listed only in the home
+  page's Planned section (and the README Roadmap). Other pages, like `intro/`, link there
+  instead of naming plans, so nothing goes stale when a page is built.
 - **No build step and no dependencies** unless there's a clear need. Plain ES
   modules that run as-is in the browser and in Node.
 
