@@ -94,6 +94,24 @@ export const SECTIONS = [
         icf: false,
       },
       {
+        file: 'ic27a-canon-octave-f.abc',
+        title: 'Canon at the octave, in F',
+        source: 'IC p. 27, fourth system',
+        note: '“Canon @ octave.” P in the bass, R an octave above a bar later, strict to the end. '
+          + 'The page numbers every interval between the voices, zero-indexed, with a tick for one octave more (2′ is a 10th).',
+        canon: canon(7, 1, [1, 7]),
+        icf: false,
+      },
+      {
+        file: 'ic27b-canon-double-octave-d.abc',
+        title: 'Canon at the double octave, in D',
+        source: 'IC p. 27, last system',
+        note: 'P on top, R two octaves below a bar later, strict for five bars, then free into the cadence. '
+          + 'The interval numbers on the page (9′ is a 17th) confirm the reading.',
+        canon: canon(-14, 1, [1, 5]),
+        icf: false,
+      },
+      {
         file: 'ic15-canon-12th-below-g-minor.abc',
         title: 'Canon at the 12th below, delay of three bars, in G minor',
         source: 'IC p. 15',
