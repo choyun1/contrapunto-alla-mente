@@ -50,8 +50,9 @@ export const WIP_SECTIONS = [
         title: 'Canon at the 12th in C minor, reworked',
         source: 'IC p. 20, reworked 2026-11-13',
         note: `A rework of ${notebookLink('ic20-canon-12th-c-minor', 'IC p. 20')}, which the page marks “needs editing.” `
-          + 'Three bars of P are new, to give the line more shape: bar 3 (F, E♭, F, G), bar 6 (D, a leap down to B♭ and up to F, '
-          + 'then E♭ D) and bar 8 (B♭, A♭, G). R answers each a 12th above, a bar later. From bar 12 the voices trade names, as in the original.',
+          + 'P’s bars 3–6 and 8 are new, to give the line more shape, with a run of eighths in bar 5; '
+          + 'bar 4 holds a half note so that R, answering bar 3 a 12th above, does not move in step with it. '
+          + 'R answers each bar a bar later. From bar 12 the voices trade names, as in the original.',
         roles: { R: { 12: 'P' }, P: { 12: 'R' } },
       },
     ],

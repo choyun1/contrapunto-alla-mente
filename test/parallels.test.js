@@ -24,9 +24,17 @@ test('no parallel when one voice holds, or when a diminished 5th goes to a perfe
   assert.deepEqual(parallelsBetween(quarters([[32, 55], [33, 57]]), quarters([[28, 48], null])), []); // a rest breaks it
 });
 
-test('IC p. 20 rework: the parallel octaves in bar 4 that Cho heard (B♭–B♭ to C–C), and the 12ths into bar 19', () => {
-  const found = parallels(timelines(load('ic20r-canon-12th-c-minor-rework.abc')));
-  assert.deepEqual(found.map((p) => [p.start, p.steps]), [[3.5, 7], [18, 11]]);
+test('IC p. 20: parallel 12ths into bar 19 (C over F to B♭ over E♭)', () => {
+  const found = parallels(timelines(load('ic20-canon-12th-c-minor.abc')));
+  assert.deepEqual(found.map((p) => [p.start, p.steps]), [[18, 11]]);
+});
+
+test('the octaves Cho heard in an early IC p. 20 rework, bar 4: B♭–B♭ on the off-beat eighth, then C–C', () => {
+  // R: C5 dotted quarter, B♭4 eighth, C5; P: A♭3 dotted quarter, B♭3 eighth, C4 (eighths here)
+  const eighths = (notes) => notes.map(([step, semitones], k) => ({ step, semitones, start: k / 8, length: 1 / 8 }));
+  const r = eighths([[35, 60], [35, 60], [35, 60], [34, 58], [35, 60]]);
+  const p = eighths([[26, 44], [26, 44], [26, 44], [27, 46], [28, 48]]);
+  assert.deepEqual(parallelsBetween(r, p), [{ start: 0.5, steps: 7 }]);
 });
 
 test('IC p. 19, last canon: octaves on the eighth into bar 6 and unisons at the end of bar 14', () => {
