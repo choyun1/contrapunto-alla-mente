@@ -29,6 +29,10 @@
 // bar 12 on, for a canon whose voices trade the lead; the page marks it
 // "now P" there.
 //
+// With `marks: { P: { 7: 'cadence' } }`, a bar takes that label instead of the
+// one worked out from `spans` (for a cadence in the middle of a canon, where
+// only one voice leaves it); a bar set to null is left unmarked.
+//
 // With `tempo`, an example plays at its own speed, in quarter notes per
 // minute, instead of the Notebook's TEMPO.NOTEBOOK (118). With `breaths`, a
 // voice breathes in playback only, at a bar and beat: `{ P: [[4, 1]] }` is a
@@ -126,9 +130,12 @@ export const SECTIONS = [
         title: 'Canon at the 12th above, in G, out to the dominant',
         source: 'IC p. 17, third and fourth systems',
         note: '“OK!” From the page “Hexachords / modulations for canon @ 5th”: P in the bass, R a 12th above a bar later. '
-          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”), and it turns to IV at bar 8 with F♮.',
+          + 'R’s C♯s are the ficta for V/V (“no leading tone in the proposta!”). '
+          + 'P’s neighbor at the end of bar 8 was F♮ on the page; it is F♯ here (Cho, 2026-11-14), '
+          + 'to avoid a cross relation with R’s F♯ on the next downbeat.',
         canon: canon(11, 1, [1, 12]),
         icf: false,
+        tempo: 100,
       },
       {
         file: 'ic15-canon-12th-below-g-minor.abc',

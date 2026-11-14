@@ -34,6 +34,21 @@ export const WIP_SECTIONS = [
         canon: canon(-4, 2, [1, 4]),
         icf: false,
       },
+      {
+        file: 'ic17s-canon-12th-above-g-new-middle.abc',
+        title: 'Canon at the 12th above, in G, a new middle (in progress)',
+        source: 'IC p. 17, reworked 2026-11-14, unfinished',
+        note: `A rework of ${notebookLink('ic17a-canon-12th-above-g', 'Canon at the 12th above, in G, out to the dominant')}. `
+          + 'The middle wandered, so bar 7 now cadences on the dominant: P’s A goes to D under R’s C♯ going to D, '
+          + 'and both voices stop on a half note in bar 8 (R leaves the canon there). P starts a new phrase in bar 9, '
+          + 'R takes it up a bar later, and it leads back into the original ending. '
+          + 'Unfinished: in bar 11, R’s copy of the new bar 10 clashes with P (9ths on beats 1 and 2).',
+        caption: 'Cadence on D in bar 8; new phrase from bar 9.',
+        canon: canon(11, 1, [1, 6], [9, 13]),
+        marks: { P: { 7: 'cadence', 8: null }, R: { 9: null } },
+        icf: false,
+        tempo: 100,
+      },
     ],
   },
   {
