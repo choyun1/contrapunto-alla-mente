@@ -29,6 +29,10 @@
 // bar 12 on, for a canon whose voices trade the lead; the page marks it
 // "now P" there.
 //
+// With `marks: { P: { 7: 'cadence' } }`, a bar takes that label instead of the
+// one worked out from `spans` (for a cadence in the middle of a canon, where
+// only one voice leaves it); a bar set to null is left unmarked.
+//
 // With `tempo`, an example plays at its own speed, in quarter notes per
 // minute, instead of the Notebook's TEMPO.NOTEBOOK (118). With `breaths`, a
 // voice breathes in playback only, at a bar and beat: `{ P: [[4, 1]] }` is a

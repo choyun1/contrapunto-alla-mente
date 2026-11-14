@@ -5,7 +5,7 @@ import { readBars, readVoices, voiceIds } from '../src/notation/abc-read.js';
 import { beamedAbc } from '../src/notation/beams.js';
 import { SECTIONS } from '../notebook/examples.js';
 import { WIP_SECTIONS } from '../wip/examples.js';
-import { ICF, roleAt, systemFirstBars, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks } from '../notebook/score.js';
+import { ICF, roleAt, systemFirstBars, canonMarks, delayAt, drawnAbc, heardAbc, imaginaryBars, withMarks, overrideMarks } from '../notebook/score.js';
 
 // the WIP page's examples are checked the same way as the Notebook's
 const EXAMPLES = [...SECTIONS, ...WIP_SECTIONS].flatMap((section) => section.examples);
@@ -210,4 +210,11 @@ test('an infinite canon is heard three times round its repeat, and stays a canon
       assert.deepEqual(copy, heard.P[bar].map((note) => (note.step === null ? null : note.step + entry)), `${example.file}, bar ${bar + 1}`);
     }
   }
+});
+
+test('an example’s own marks replace the computed ones bar by bar, and null clears one (WIP G canon rework)', () => {
+  const computed = { P: { 7: 'free', 13: 'free' }, R: { 8: 'free' } };
+  const marks = overrideMarks(computed, { P: { 7: 'cadence' }, R: { 8: null } });
+  assert.deepEqual(marks, { P: { 7: 'cadence', 13: 'free' }, R: { 8: null } });
+  assert.deepEqual(overrideMarks(computed), computed);
 });

@@ -172,12 +172,25 @@ export function joinMarks(first, second) {
 }
 
 /**
+ * The canon marks with an example's own `marks` laid over them: a bar the
+ * example labels itself takes that label instead of the computed one.
+ */
+export function overrideMarks(marks, overrides = {}) {
+  const out = {};
+  for (const id of new Set([...Object.keys(marks), ...Object.keys(overrides)])) {
+    out[id] = { ...marks[id], ...overrides[id] };
+  }
+  return out;
+}
+
+/**
  * The example as drawn: its abc, with where the canon goes free marked
- * (canonMarks) and any change of role (roleMarks), plus the imaginary cantus
- * as the bottom staff when asked for.
+ * (canonMarks, or the example's own `marks`) and any change of role
+ * (roleMarks), plus the imaginary cantus as the bottom staff when asked for.
  */
 export function drawnAbc(written, example) {
-  const abc = withMarks(written, joinMarks(roleMarks(example), canonMarks(written, example)));
+  const marks = overrideMarks(canonMarks(written, example), example.marks);
+  const abc = withMarks(written, joinMarks(roleMarks(example), marks));
   if (!example.icf) return abc;
   const steps = imaginaryBars(written, example.canon);
   const sounding = steps.filter((step) => step !== null);
