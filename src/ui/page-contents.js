@@ -1,7 +1,7 @@
 // The page contents: a numbered list of a long page's sections (its h2 headings) and, under
 // each, the examples in it (the h3 of each .example). On wide screens it is a panel on the left
-// edge that marks the section you are reading and folds away to a small tab; on narrow ones it
-// is a folded "On this page" box under the header.
+// edge that marks the section you are reading and folds to a thin strip; on narrow ones it is a
+// folded "On this page" box under the header.
 // Styles: assets/site.css. A page opts in with <script type="module" src="../src/ui/page-contents.js">.
 // Pages that draw their sections after loading (the notebook) are picked up as they appear.
 
@@ -55,23 +55,38 @@ function startsOpen() {
 }
 
 // Remembers whether the side panel is open, when it is the side panel (wide screens).
-function rememberOpen(contents) {
+function rememberOpen(open) {
   if (!WIDE.matches) return;
   try {
-    localStorage.setItem(SAVED, contents.open ? 'yes' : 'no');
+    localStorage.setItem(SAVED, open ? 'yes' : 'no');
   } catch {
     // storage blocked: the panel just starts open next time
   }
 }
 
-// Adds the contents after the page's header: a panel on the left edge that folds away on wide
-// screens, a folded box under the header on narrow ones. Both are the same <details>.
+// Opens or folds the contents, and says so on its button.
+function setOpen(contents, open) {
+  contents.classList.toggle('open', open);
+  const button = contents.querySelector('.contents-toggle');
+  button.setAttribute('aria-expanded', String(open));
+  button.title = open ? 'Hide the contents' : 'Show the contents';
+}
+
+// Adds the contents after the page's header: a panel on the left edge that folds to a strip on
+// wide screens, a folded box under the header on narrow ones. The one button that opens and folds
+// it stays in the same place, top left, either way.
 function buildContents(main) {
-  const contents = document.createElement('details');
+  const contents = document.createElement('aside');
   contents.className = 'contents';
-  contents.open = WIDE.matches && startsOpen();
-  contents.innerHTML = '<summary title="Show or hide the contents">On this page</summary><nav aria-label="On this page"><ol></ol></nav>';
-  contents.addEventListener('toggle', () => rememberOpen(contents));
+  contents.innerHTML = `<button class="contents-toggle" type="button" aria-controls="contents-list">
+    <span class="contents-arrow" aria-hidden="true"></span><span class="contents-label">On this page</span></button>
+    <nav id="contents-list" aria-label="On this page"><ol></ol></nav>`;
+  setOpen(contents, WIDE.matches && startsOpen());
+  contents.querySelector('.contents-toggle').addEventListener('click', () => {
+    const open = !contents.classList.contains('open');
+    setOpen(contents, open);
+    rememberOpen(open);
+  });
   const header = main.querySelector(':scope > header');
   if (header) header.after(contents);
   else main.prepend(contents);
@@ -120,7 +135,7 @@ function refresh() {
 refresh();
 // Moving between wide and narrow: the side panel opens as last left, the box under the header folds.
 WIDE.addEventListener('change', () => {
-  if (contents) contents.open = WIDE.matches && startsOpen();
+  if (contents) setOpen(contents, WIDE.matches && startsOpen());
 });
 // Rebuild when a page adds its sections later; wait for a quiet moment so it happens once.
 let pending = 0;
