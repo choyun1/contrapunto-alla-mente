@@ -63,7 +63,7 @@ export const WIP_SECTIONS = [
           + 'There, P’s lower neighbor at the end of bar 8 is F♮, half a beat before R enters on F♯: a cross relation. '
           + 'Here the neighbor is F♯, the leading tone. R still answers it with C♮ in bar 9, '
           + 'an in-key answer rather than the exact C♯, so R stays in G.',
-        caption: 'One note changed: P’s F in bar 8, now F♯ (the ♯ is a courtesy; the key already has it).',
+        caption: 'One note changed: P’s F in bar 8.',
         canon: canon(11, 1, [1, 12]),
         icf: false,
       },
