@@ -16,8 +16,8 @@ export function audio() {
   return context;
 }
 
-/** Frequency in hertz of a step, at A4 = 440. */
-const frequencyOf = (step) => 440 * 2 ** ((midiOfStep(step) - 69) / 12);
+/** Frequency in hertz of a step raised `alter` semitones (−1 for a flat), at A4 = 440. */
+const frequencyOf = (step, alter = 0) => 440 * 2 ** ((midiOfStep(step) + alter - 69) / 12);
 
 /**
  * Strengths of the first few harmonics of the site's voice, like a flute
@@ -52,13 +52,14 @@ function oscillatorFor(ctx, voice, frequency) {
 
 /**
  * Plays one step. `seconds` is how long it lasts; `at` is when to start, in
- * audio-context time (default now). Returns { stop() } to cut it short.
+ * audio-context time (default now); `alter` raises it by semitones (−1 for
+ * the B♭ of F major). Returns { stop() } to cut it short.
  */
-export function tone(step, { seconds = 1, at = 0, voice = VOICE.PLAYER } = {}) {
+export function tone(step, { seconds = 1, at = 0, voice = VOICE.PLAYER, alter = 0 } = {}) {
   const ctx = audio();
   const start = Math.max(at, ctx.currentTime);
   const end = start + seconds;
-  const oscillator = oscillatorFor(ctx, voice, frequencyOf(step));
+  const oscillator = oscillatorFor(ctx, voice, frequencyOf(step, alter));
   const gain = new GainNode(ctx, { gain: 0 });
   gain.gain.setValueAtTime(0, start);
   gain.gain.linearRampToValueAtTime(voice.level, start + voice.attack);

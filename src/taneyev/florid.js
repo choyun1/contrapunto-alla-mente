@@ -46,6 +46,24 @@ export function isAltered(lower, upper) {
   return !SIZES[steps].includes(semitones);
 }
 
+/** Simple interval names, zero-indexed by steps (unison 0, 2nd 1, 4th 3, 5th 4). */
+const SIMPLE_NAMES = ['unison', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+
+/**
+ * An augmented or diminished interval in words: "tritone" for the augmented
+ * 4th and diminished 5th, else e.g. "augmented 2nd", "diminished 4th",
+ * "augmented unison". Call only when isAltered(lower, upper).
+ */
+export function alteredName(lower, upper) {
+  const steps = simple(upper.step - lower.step);
+  let semitones = (((upper.semitones - lower.semitones) % 12) + 12) % 12;
+  if (steps === 0 && semitones > 6) semitones -= 12; // a diminished unison comes out as 11
+  if (steps >= 5 && semitones < 3) semitones += 12; // an augmented 6th or 7th comes out as 0 to 2
+  const isAugmented = semitones > Math.max(...SIZES[steps]);
+  if ((steps === 3 && isAugmented) || (steps === 4 && !isAugmented)) return 'tritone';
+  return `${isAugmented ? 'augmented' : 'diminished'} ${SIMPLE_NAMES[steps]}`;
+}
+
 /**
  * Is the pair dissonant? 2nds, 7ths and altered intervals always; a 4th only
  * against the lowest sounding voice (between upper voices it is consonant,
@@ -162,18 +180,20 @@ function classify(voices, a, b, t, bassId) {
   const upper = lowerId === a ? y : x;
   if (!isDissonantPair(lower, upper, lowerId === bassId)) return null;
   const found = { start: t, voices: [upperId, lowerId], steps: upper.step - lower.step, tritone: isAltered(lower, upper) };
+  if (found.tritone) found.altered = alteredName(lower, upper);
   for (const [id, note, other] of [[a, x, b], [b, y, a]]) {
     const label = suspensionLabel(voices[id], note, voices[other], t, lowerId === bassId);
     if (label) return { ...found, kind: KIND.SUSPENSION, label, suspended: id };
   }
-  // a struck note explains the dissonance if it passes or neighbors; when both
-  // voices are struck together, either one may be the one that does
+  // a struck note explains the dissonance if it passes or neighbors. When both
+  // voices are struck together, both must move so: a note that leaps or
+  // repeats into the dissonance is not covered by the other voice's step
+  // (Fux, third species: the dissonance is a note on its way by step, against
+  // a note that holds; struck against a fresh leap or repeat it is heard as one)
   const struckNow = [[a, x], [b, y]].filter(([, note]) => note.start >= t - 1e-9);
-  for (const [id, note] of struckNow) {
-    const kind = motionKind(voices[id], note);
-    const allowed = kind === KIND.PASSING || (kind === KIND.NEIGHBOR && !isStrongBeat(t));
-    if (allowed && !found.tritone) return { ...found, kind, moving: id };
-  }
+  const moves = struckNow.map(([id, note]) => ({ id, kind: motionKind(voices[id], note) }));
+  const isAllowed = ({ kind }) => kind === KIND.PASSING || (kind === KIND.NEIGHBOR && !isStrongBeat(t));
+  if (!found.tritone && moves.every(isAllowed)) return { ...found, kind: moves[0].kind, moving: moves[0].id };
   return { ...found, kind: KIND.CHECK };
 }
 

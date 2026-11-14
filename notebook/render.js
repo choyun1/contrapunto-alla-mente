@@ -31,7 +31,7 @@ function kindText(d) {
   if (d.kind === KIND.SUSPENSION) return `${d.label} suspension`;
   if (d.kind === KIND.PASSING) return 'passing tone';
   if (d.kind === KIND.NEIGHBOR) return 'neighbor tone';
-  return d.tritone ? '<b>check:</b> tritone' : '<b>check:</b> approached or left by leap';
+  return d.tritone ? `<b>check:</b> ${d.altered}` : '<b>check:</b> approached or left by leap';
 }
 
 /** Where a dissonance falls: 'Bar 3, beat 1', or 'beat 2½' for an eighth between beats. */

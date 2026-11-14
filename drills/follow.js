@@ -1,12 +1,16 @@
 // Renders the Follow the leader drill: the site plays a proposta, and you
 // answer as the risposta, playing (checked) or singing (heard back at the end).
 // The prompts come from src/taneyev/canon-walk.js; this file runs the drill.
-// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic steps.
+// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic
+// steps in C, played in the chosen key signature (signature.js).
 
 import { randomProposta, rispostaFor } from '../src/taneyev/canon-walk.js';
-import { pitchName, letterOf } from '../src/common/diatonic.js';
+import { letterOf } from '../src/common/diatonic.js';
 import { listenForNotes, connectMidi } from '../src/input/listen.js';
-import { tone, VOICE } from '../src/audio/tone.js';
+import { VOICE } from '../src/audio/tone.js';
+import {
+  abcInKey, fillSignatures, measuresInKey, nameOf, outsideName, play, playPlayed, stepOfPlayed,
+} from './signature.js';
 import { startRun } from '../src/drills/run.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
@@ -69,7 +73,7 @@ function promptFor(i) {
 function propostaLabel(k) {
   if (k >= state.length) return '—';
   const showNotes = document.getElementById('hints').checked || !state.run;
-  return showNotes ? pitchName(state.proposta[k]) : '♪';
+  return showNotes ? nameOf(state.proposta[k]) : '♪';
 }
 
 /** Redraws the strip: one cell per beat so far, proposta on top, your answer below. */
@@ -88,7 +92,7 @@ function onBeat(i, at, seconds) {
   state.held?.stop();
   state.held = null;
   if (i < state.length) {
-    state.held = tone(state.proposta[i], { at, seconds: seconds ?? HOLD, voice: VOICE.SITE });
+    state.held = play(state.proposta[i], { at, seconds: seconds ?? HOLD, voice: VOICE.SITE });
   }
   state.cells[i] = { middle: '…', bottom: i < state.delay ? 'listen' : '', kind: '' };
   if (state.singing && i >= state.delay) state.cells[i] = { middle: 'sing', bottom: '', kind: '' };
@@ -96,23 +100,29 @@ function onBeat(i, at, seconds) {
   drawStrip(i);
 }
 
-/** You played `step` as the risposta on beat i: right if it is the proposta's note `delay` back, moved. */
-function onNote(i, step) {
-  tone(step, { seconds: 1 });
+/**
+ * You played a note as the risposta on beat i: right if it is the proposta's
+ * note `delay` back, moved. `played` is a step, or { outside } (semitones)
+ * for a pitch outside the key signature, which is always wrong.
+ */
+function onNote(i, played) {
+  const outside = typeof played === 'object';
   const expected = state.risposta[i];
-  const right = step === expected;
+  const right = !outside && played === expected;
+  const name = outside ? outsideName(played.outside) : nameOf(played);
   state.cells[i] = right
-    ? { middle: pitchName(step), bottom: 'right', kind: 'free' }
-    : { middle: pitchName(step), bottom: `not ${pitchName(expected)}`, kind: 'miss' };
-  drawKeys(document.getElementById('keys'), {
-    lit: new Map(right ? [[step, 'kb-good']] : [[step, 'kb-bad'], [expected, 'kb-on']]),
-  });
+    ? { middle: name, bottom: 'right', kind: 'free' }
+    : { middle: name, bottom: `not ${nameOf(expected)}`, kind: 'miss' };
+  const lit = new Map(right ? [[played, 'kb-good']] : [[expected, 'kb-on']]);
+  if (!right && !outside) lit.set(played, 'kb-bad');
+  const extraLit = new Map(outside ? [[played.outside, 'kb-bad']] : []);
+  drawKeys(document.getElementById('keys'), { lit, extraLit });
   drawStrip(i);
 }
 
 /** No note on beat i (timed runs). */
 function onMiss(i) {
-  state.cells[i] = { middle: '—', bottom: `not ${pitchName(state.risposta[i])}`, kind: 'miss' };
+  state.cells[i] = { middle: '—', bottom: `not ${nameOf(state.risposta[i])}`, kind: 'miss' };
   drawStrip(i);
 }
 
@@ -127,7 +137,7 @@ function onEnd() {
     : `Canon at the ${entryName(entry)}, delay ${delay}: ${right} of ${answered.length} notes right.`;
   const score = document.getElementById('score');
   score.innerHTML = '';
-  show(block(score, 'Proposta and risposta'), twoVoiceTune(measures, { names: ['Risposta', 'Proposta'] }));
+  show(block(score, 'Proposta and risposta'), abcInKey(twoVoiceTune(measuresInKey(measures), { names: ['Risposta', 'Proposta'] })));
   document.getElementById('result').hidden = false;
   stopRun('Done. Press Start for a new proposta.');
   drawStrip(-1);
@@ -171,11 +181,13 @@ function toggleStart() {
 }
 
 /** Every note you play: sounds it when no run is going, else hands it to the run. */
-function onStep(step) {
-  if (state?.run) state.run.note(step);
-  else tone(step, { seconds: 1 });
+function onStep(played) {
+  playPlayed(played, { seconds: 1 });
+  const step = stepOfPlayed(played);
+  if (state?.run) state.run.note(step ?? { outside: played.semitones });
 }
 
+fillSignatures();
 fillSelect(document.getElementById('entry'), canonOptions(), 0);
 fillSelect(document.getElementById('delay'), DELAYS, 1);
 fillSelect(document.getElementById('tempo'), TEMPOS, 0);

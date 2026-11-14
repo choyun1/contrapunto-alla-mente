@@ -29,13 +29,16 @@
 <a href="move-chords.html">Move chords</a>
 <a href="lead.html">Lead the canon</a>
 <a href="follow.html" aria-current="page">Follow the leader</a>
+<a href="continue.html">Continue the proposta</a>
 </nav>
 <h1>Follow the leader</h1>
 <p class="lead">The site plays a proposta, and you are the risposta: play or sing each of its notes after the delay, moved by the interval of entrance, while it goes on to new ones. It trains holding a line in your head while you hear another, which the leader needs too, since the leader has to know what the follower is about to sing. Every proposta is a correct first-species canon at the settings you pick, made up fresh each time.</p>
+<p class="see">Background: <a href="../canon/proposta.html">Canon proposta intervals</a>, <a href="../canon/handshapes.html">Canon handshapes</a>.</p>
 </header>
 <section class="chart" aria-label="Settings">
 <form class="drill-controls" id="settings">
 <label>Canon at the <select id="entry"></select></label>
+<label>Key signature <select id="signature"></select></label>
 <label>Delay <select id="delay"></select></label>
 <label>Tempo <select id="tempo"></select></label>
 <label>Length <select id="length"></select></label>
@@ -43,7 +46,7 @@
 <label><input type="checkbox" id="hints"> Show the proposta’s notes</label>
 <button type="button" class="go" id="start">Start</button>
 </form>
-<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. When you sing, nothing is checked as you go: listen back to the canon at the end and compare. <span id="midi"></span></p>
+<p class="note">Play on the keys below, or on your computer keyboard: the bottom row of letters (Z to M) is the octave below middle C, the home row (A to J) starts on middle C, the top row (Q to I) on the C above. A MIDI keyboard plugged into the computer works too. Black keys count on the screen and on MIDI; the letter keys follow the key signature, so with one flat J plays B♭. When you sing, nothing is checked as you go: listen back to the canon at the end and compare. <span id="midi"></span></p>
 </section>
 <section class="chart" aria-live="polite">
 <p class="prompt" id="prompt">Press Start, then listen.</p>

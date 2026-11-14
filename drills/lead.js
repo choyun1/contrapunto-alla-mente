@@ -2,13 +2,16 @@
 // back as the risposta after the delay, and each of your notes is checked
 // against the risposta's note under it. All the checks come from
 // src/taneyev/canon.js; this file runs the drill and draws it.
-// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic steps.
+// Intervals are zero-indexed (3rd 2, 5th 4, octave 7); pitches are diatonic
+// steps in C, played in the chosen key signature (signature.js).
 
 import { checkProposta, crossesVoices } from '../src/taneyev/canon.js';
-import { handMoves } from '../src/taneyev/canon-hands.js';
-import { pitchName, isTritone } from '../src/common/diatonic.js';
+import { isTritone } from '../src/common/diatonic.js';
 import { listenForNotes, connectMidi } from '../src/input/listen.js';
-import { tone, VOICE } from '../src/audio/tone.js';
+import { VOICE } from '../src/audio/tone.js';
+import {
+  abcInKey, fillSignatures, measuresInKey, nameOf, play, playPlayed, stepOfPlayed,
+} from './signature.js';
 import { startRun } from '../src/drills/run.js';
 import { twoVoiceTune } from '../src/notation/abc.js';
 import { block, show } from '../src/notation/playback.js';
@@ -37,21 +40,19 @@ const rispostaPitch = (i) => (rispostaAt(i) === null ? null : rispostaAt(i) + st
 /** The prompt line for beat i. */
 function promptFor(i) {
   const total = `Note ${i + 1} of ${state.length}`;
-  if (i >= state.length) return `The risposta finishes: ${pitchName(rispostaPitch(i))}.`;
+  if (i >= state.length) return `The risposta finishes: ${nameOf(rispostaPitch(i))}.`;
   if (rispostaPitch(i) === null) return `${total}: the risposta has not come in yet. Play any note.`;
-  return `${total}: the risposta sings ${pitchName(rispostaPitch(i))}.`;
+  return `${total}: the risposta sings ${nameOf(rispostaPitch(i))}.`;
 }
 
-/** Draws the keyboard for beat i: R on the risposta's note, P on your last note, and the hand if hints are on. */
+/** Draws the keyboard for beat i: R on the risposta's note and P on your last note. */
 function drawBeat(i) {
   const tags = [];
   const risposta = rispostaPitch(i);
   if (risposta !== null) tags.push({ step: risposta, text: 'R', kind: 'r' });
   const last = state.proposta[i - 1];
   if (last != null && last !== risposta) tags.push({ step: last, text: 'P', kind: 'p' });
-  const showHand = document.getElementById('hints').checked && risposta !== null && i < state.length;
-  const marks = showHand ? handMoves(rispostaAt(i), state.entry) : [];
-  drawKeys(document.getElementById('keys'), { marks, tags });
+  drawKeys(document.getElementById('keys'), { tags });
 }
 
 /** Redraws the strip of beats so far, with the current beat outlined. */
@@ -65,7 +66,7 @@ function onBeat(i, at, seconds) {
   state.held?.stop();
   state.held = null;
   const risposta = rispostaPitch(i);
-  if (risposta !== null) state.held = tone(risposta, { at, seconds: seconds ?? HOLD, voice: VOICE.SITE });
+  if (risposta !== null) state.held = play(risposta, { at, seconds: seconds ?? HOLD, voice: VOICE.SITE });
   document.getElementById('prompt').textContent = promptFor(i);
   drawBeat(i);
 }
@@ -73,16 +74,16 @@ function onBeat(i, at, seconds) {
 /** The strip cell for your note on beat i, checked against the risposta (canon.js). */
 function gradeNote(i) {
   const step = state.proposta[i];
-  if (i < state.delay) return { top: pitchName(step), middle: '—', bottom: 'alone', kind: '' };
+  if (i < state.delay) return { top: nameOf(step), middle: '—', bottom: 'alone', kind: '' };
   const result = checkProposta(state.proposta.slice(0, i + 1), state.entry, state.delay).at(-1);
   const tritone = i > 0 && isTritone(step, state.proposta[i - 1]);
   const label = verdictLabel(result, { crossed: crossesVoices(result.n, state.entry), tritone });
-  return { top: pitchName(step), middle: betweenName(result.n), bottom: label.text, kind: label.kind };
+  return { top: nameOf(step), middle: betweenName(result.n), bottom: label.text, kind: label.kind };
 }
 
 /** You played `step` on beat i. */
 function onNote(i, step) {
-  tone(step, { seconds: PLAYER_SECONDS });
+  play(step, { seconds: PLAYER_SECONDS });
   state.proposta[i] = step;
   state.cells[i] = gradeNote(i);
   drawStrip(i);
@@ -119,7 +120,7 @@ function onEnd() {
     + `${clean} of ${length} notes clean${mistakes.length ? ` (${mistakeCounts(mistakes)})` : ''}.`;
   const score = document.getElementById('score');
   score.innerHTML = '';
-  show(block(score, 'Proposta and risposta'), twoVoiceTune(measures, { names: ['Risposta', 'Proposta'] }));
+  show(block(score, 'Proposta and risposta'), abcInKey(twoVoiceTune(measuresInKey(measures), { names: ['Risposta', 'Proposta'] })));
   document.getElementById('result').hidden = false;
   stopRun('Done. Press Start for another.');
 }
@@ -154,11 +155,14 @@ function toggleStart() {
 }
 
 /** Every note you play: sounds it when no run is going, else hands it to the run. */
-function onStep(step) {
-  if (state?.run) state.run.note(step);
-  else tone(step, { seconds: PLAYER_SECONDS });
+function onStep(played) {
+  const step = stepOfPlayed(played);
+  if (!state?.run || step === null) playPlayed(played, { seconds: PLAYER_SECONDS });
+  if (state?.run && step === null) document.getElementById('prompt').textContent = 'That note is outside the key signature; play one in it.';
+  else if (state?.run) state.run.note(step);
 }
 
+fillSignatures();
 fillSelect(document.getElementById('entry'), canonOptions(), 0);
 fillSelect(document.getElementById('delay'), DELAYS, 1);
 fillSelect(document.getElementById('tempo'), TEMPOS, 0);
