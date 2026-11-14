@@ -174,6 +174,14 @@ export function inStrings(abc) {
   }).join('\n');
 }
 
+/**
+ * Where the recorded notes come from: the soundfont made for abcjs, whose
+ * notes last about 6 seconds, twice as long as those of abcjs's default
+ * (FluidR3), so held notes need fewer restrikes (sustain.js). Cho chose it,
+ * 2026-11-14.
+ */
+export const SOUND_FONT_URL = 'https://paulrosen.github.io/midi-js-soundfonts/abcjs/';
+
 let current = null; // { synth, button, timer } for the tune that is playing
 
 /**
@@ -234,7 +242,7 @@ function play(tune, button, program, qpm, timing = DEFAULT_TIMING) {
   const wholeNotes = (seconds) => (seconds * qpm) / 240; // a whole note lasts 240 / qpm seconds
   const ring = wholeNotes(RING_SECONDS);
   const shape = (voices) => restrikeLongNotes(ringOn(timing.shape(voices), ring), wholeNotes(MAX_NOTE_SECONDS));
-  const options = { qpm, program, sequenceCallback: shape };
+  const options = { qpm, program, soundFontUrl: SOUND_FONT_URL, sequenceCallback: shape };
   synth.init({ visualObj: tune, audioContext, options })
     .then(() => {
       // abcjs sizes the sound from the written length, so it is lengthened
